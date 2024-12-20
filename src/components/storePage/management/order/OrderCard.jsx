@@ -92,7 +92,9 @@ const OrderCard = ({
         <div className="relative flex justify-between rounded-lg p-4 shadow-lg mb-6 bg-gray-50">
             {/* Order Info */}
             <div className="flex flex-col items-start text-start">
-                <p className="text-lg font-bold">單號 {order.id}</p>
+                <p className="text-xl font-bold ">
+                    單號： {order.id.slice(-5)}
+                </p>
                 <p className="text-sm">下單時間: {order.orderTime}</p>
                 <p className="text-sm ">預估取餐時間: {order.estimatedTime}</p>
                 <button className="bg-orange-500 mt-6 text-white px-3 py-1 text-sm font-bold rounded hover:bg-orange-600">

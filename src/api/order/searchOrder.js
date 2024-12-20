@@ -13,7 +13,7 @@ import axios from "axios";
  */
 export const searchOrder = async (params = {}, signal) => {
     try {
-        const { page = 0, size = 10, status } = params;
+        const { page = 0, size = 3, status } = params;
 
         const queryParams = new URLSearchParams({
             page: page.toString(),
