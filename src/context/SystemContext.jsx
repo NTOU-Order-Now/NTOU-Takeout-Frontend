@@ -14,7 +14,6 @@ export const useSystemContext = () => useContext(SystemContext);
 export const SystemContextProvider = ({ children }) => {
     console.debug("SystemContextProvider mounted");
     const authToken = Cookies.get("authToken");
-    console.debug("Auth token: ", authToken);
     const { userInfo, isUserInfoLoading } = useUserInfoQuery(
         authToken !== undefined,
     );
@@ -77,11 +76,11 @@ export const SystemContextProvider = ({ children }) => {
         }
     }, [cartData?.orderedDishes]);
     const cartCount = cartData?.orderedDishes?.length;
-    // console.debug("cartCount:", cartCount);
-    // console.debug("cartData:", cartData);
-    // console.debug("merchantData:", merchantData);
-    // console.debug("totalSpend:", totalSpend);
-    // console.debug("totalQuantity:", totalQuantity);
+    console.debug("cartCount:", cartCount);
+    console.debug("cartData:", cartData);
+    console.debug("merchantData:", merchantData);
+    console.debug("totalSpend:", totalSpend);
+    console.debug("totalQuantity:", totalQuantity);
     return (
         <SystemContext.Provider
             value={{

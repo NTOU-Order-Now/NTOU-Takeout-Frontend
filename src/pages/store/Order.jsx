@@ -41,7 +41,7 @@ const Order = () => {
                 rightComponents={[orderCountButton]}
             />
             <div className="sticky top-[75px] z-20 mx-10 mb-8">
-                <ToggleNavBar options={options} />
+                <ToggleNavBar options={options} InitActiveTab={"未接受"} />
             </div>
             <div className="relative top-20 mx-16">
                 {navBarStatus === 0 ? <UnacceptedList /> : <AcceptedList />}

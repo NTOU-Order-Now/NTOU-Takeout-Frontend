@@ -103,7 +103,7 @@ const router = createBrowserRouter(
             errorElement: <NotFound />,
         },
         {
-            path: "/store/:storeId",
+            path: "/store/pos",
             element: (
                 <Suspense fallback={<HomeSkeleton />}>
                     <MerchantProtectedRoute>
@@ -157,14 +157,14 @@ function App() {
             <QueryClientProvider client={queryClient}>
                 <SystemContextProvider>
                     <RouterProvider router={router}></RouterProvider>
-                    <DevToolBubble
-                        router={router}
-                        endPointReplacements={{
-                            merchantId: "67178651994d5f6d435d6ef8",
-                            authType: "login",
-                            storeId: "67178651994d5f6d435d6ef8",
-                        }}
-                    />
+                    {/*<DevToolBubble*/}
+                    {/*    router={router}*/}
+                    {/*    endPointReplacements={{*/}
+                    {/*        merchantId: "67178651994d5f6d435d6ef8",*/}
+                    {/*        authType: "login",*/}
+                    {/*        storeId: "67178651994d5f6d435d6ef8",*/}
+                    {/*    }}*/}
+                    {/*/>*/}
                 </SystemContextProvider>
                 <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>

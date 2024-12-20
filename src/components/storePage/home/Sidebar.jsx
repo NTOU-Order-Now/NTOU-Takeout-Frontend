@@ -13,35 +13,48 @@ import {
     faSun,
     faChartPie,
 } from "@fortawesome/free-solid-svg-icons";
+import Cookies from "js-cookie";
+import userInfoStore from "../../../stores/user/userInfoStore.js";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = ({ merchantName }) => {
     const isOpen = useSidebarStore((state) => state.isOpen);
     const theme = useThemeStore((state) => state.themeMode);
     const toggleTheme = useThemeStore((state) => state.toggleTheme);
     const closeSidebar = useSidebarStore((state) => state.closeSidebar);
-
+    const setUser = userInfoStore((state) => state.setUser);
+    const navigate = useNavigate();
+    const handleLogout = () => {
+        Cookies.remove("authToken");
+        setUser(undefined);
+        navigate("/auth/login");
+        closeSidebar();
+    };
     return (
         <>
             {isOpen && (
                 <div
-                    className={`fixed top-0 z-40 min-h-screen min-w-full transition-all duration-300  ${isOpen ? "bg-slate-950 bg-opacity-20" : ""
-                        }`}
+                    className={`fixed top-0 z-40 min-h-screen min-w-full transition-all duration-300  ${
+                        isOpen ? "bg-slate-950 bg-opacity-20" : ""
+                    }`}
                     onClick={closeSidebar}
                 ></div>
             )}
             <div
-                className={`font-notoTC z-50 fixed inset-y-0 left-0 bg-white w-3/5 shadow-lg border-zinc-400 border-r-1 max-w-md ${isOpen ? "translate-x-0" : "-translate-x-full"
-                    } transition-transform duration-300 min-w-48`}
+                className={`font-notoTC z-50 fixed inset-y-0 left-0 bg-white w-3/5 shadow-lg border-zinc-400 border-r-1 max-w-md ${
+                    isOpen ? "translate-x-0" : "-translate-x-full"
+                } transition-transform duration-300 min-w-48`}
             >
                 <div className="p-4">
                     <SidebarButton
                         text={merchantName}
+                        setUser={merchantName + " 主頁"}
                         textStyle={"text-2xl px-2"}
                         icon={faStore}
                         iconSize="2xl"
                         iconColor={"#053766"}
                         style={"py-8"}
-                        path="/auth/login"
+                        path="/store/pos"
                     />
                     <SidebarButton
                         text="主頁"
@@ -49,7 +62,7 @@ const Sidebar = ({ merchantName }) => {
                         iconSize="lg"
                         iconColor={"#053766"}
                         style={"px-4 py-4"}
-                        path="/store/123"
+                        path="/store/pos"
                     />
                     <SidebarButton
                         text="訂單管理"
@@ -57,7 +70,7 @@ const Sidebar = ({ merchantName }) => {
                         iconSize="lg"
                         iconColor={"#053766"}
                         style={"px-4 py-4"}
-                        path="/store/123/management/order"
+                        path="/store/pos/management/order"
                     />
                     <SidebarButton
                         text="菜單管理"
@@ -65,7 +78,7 @@ const Sidebar = ({ merchantName }) => {
                         iconSize="lg"
                         iconColor={"#053766"}
                         style={"px-4 py-4"}
-                        path="/store/123/management/menu"
+                        path="/store/pos/management/menu"
                     />
                     <SidebarButton
                         text="評論"
@@ -95,13 +108,14 @@ const Sidebar = ({ merchantName }) => {
                         icon={faSignOutAlt}
                         iconSize="lg"
                         iconColor={"#606162"}
+                        onClick={handleLogout}
                     />
                     <SidebarButton
-                        icon={theme == "light" ? faMoon : faSun}
+                        icon={theme === "light" ? faMoon : faSun}
                         text="切換主題"
                         textStyle={"w-0  invisible"}
                         iconSize="lg"
-                        iconColor={theme == "light" ? "#606162" : "#FFD43B"}
+                        iconColor={theme === "light" ? "#606162" : "#FFD43B"}
                         onClick={toggleTheme}
                     />
                 </div>
