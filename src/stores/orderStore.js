@@ -73,7 +73,7 @@ const useOrderStore = create((set) => ({
     //                 storeId: 123,
     //                 dishId: 456,
     //                 dishName: "好好吃水餃",
-    //                 // imageUrl: "https://picsum.photos/200/300",
+    //                 imageUrl: "https://picsum.photos/200/300",
     //                 price: 343,
     //                 quantity: 3,
     //                 note: "不吃香菜",
@@ -95,7 +95,7 @@ const useOrderStore = create((set) => ({
     //                 storeId: 789,
     //                 dishId: 654,
     //                 dishName: "好好吃水餃",
-    //                 // imageUrl: "https://picsum.photos/200/300",
+    //                 imageUrl: "https://picsum.photos/200/300",
     //                 price: 3433,
     //                 quantity: 1,
     //                 note: "不吃香菜",
@@ -115,12 +115,7 @@ const useOrderStore = create((set) => ({
     //         ],
     //     },
     // ],
-    setOrders: (orders) => set({ orders }),
-    addOrders: (newOrders) =>
-        set((state) => ({
-            orders: [...state.orders, ...newOrders],
-        })),
-    clearOrders: () => set({ orders: [] }),
+
     updateOrderStatus: (orderId, newStatus) =>
         set((state) => ({
             orders: state.orders.map((order) =>

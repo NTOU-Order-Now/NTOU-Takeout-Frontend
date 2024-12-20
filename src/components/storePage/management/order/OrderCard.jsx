@@ -77,7 +77,7 @@ const OrderCard = ({
     );
     const isOverdue = () => {
         const now = new Date();
-        const estimate = new Date(order.estimatedTime);
+        const estimate = new Date(order.estimatedPrepTime);
         return order.status === "PROCESSING" && now > estimate;
     };
 
@@ -95,8 +95,12 @@ const OrderCard = ({
                 <p className="text-xl font-bold ">
                     單號： {order.id.slice(-5)}
                 </p>
-                <p className="text-sm">下單時間: {order.orderTime}</p>
-                <p className="text-sm ">預估取餐時間: {order.estimatedTime}</p>
+                <p className="text-sm font-semibold ">
+                    預估製作時間: {order.estimatedPrepTime} 分鐘
+                </p>
+                <p className="text-sm font-medium">
+                    下單時間: {order.orderTime}
+                </p>
                 <button className="bg-orange-500 mt-6 text-white px-3 py-1 text-sm font-bold rounded hover:bg-orange-600">
                     訂單內容
                 </button>
@@ -158,7 +162,7 @@ OrderCard.propTypes = {
         status: PropTypes.string.isRequired,
         cost: PropTypes.string.isRequired,
         orderTime: PropTypes.string.isRequired,
-        estimatedTime: PropTypes.string.isRequired,
+        estimatedPrepTime: PropTypes.string.isRequired,
     }).isRequired,
     onAccept: PropTypes.func,
     onReject: PropTypes.func,

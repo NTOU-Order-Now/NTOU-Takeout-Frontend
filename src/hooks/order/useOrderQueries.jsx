@@ -1,12 +1,17 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { searchOrder } from "../../api/order/searchOrder.js";
-import useOrderStore from "../../stores/orderStore.js";
 
 export const useOrderQueries = (status) => {
-    const { addOrders, clearOrders } = useOrderStore();
     const PAGE_SIZE = 3;
-
-    return useInfiniteQuery({
+    const {
+        data: orders,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        isLoading,
+        isError,
+        error,
+    } = useInfiniteQuery({
         queryKey: ["orders", status],
         queryFn: async ({ pageParam = 0 }) => {
             const response = await searchOrder({
@@ -14,20 +19,24 @@ export const useOrderQueries = (status) => {
                 size: PAGE_SIZE,
                 status: status,
             });
-
-            // Add new orders to store
-            addOrders(response.data);
-            return response;
+            console.debug("response", response.data);
+            return response.data;
         },
         getNextPageParam: (lastPage, allPages) => {
-            if (lastPage.data.length < PAGE_SIZE) {
-                return undefined; // No more pages
-            }
-            return allPages.length; // Next page number
+            // Assuming your API returns total pages info
+            const currentPage = allPages.length - 1;
+            return lastPage.length === PAGE_SIZE ? currentPage + 1 : undefined;
         },
-        initialPageParam: 0,
-        onError: (error) => {
-            console.error("Order fetch error:", error);
-        },
+        staleTime: 1000 * 60, // 1 minute
     });
+
+    return {
+        orders,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        isLoading,
+        isError,
+        error,
+    };
 };

@@ -16,11 +16,13 @@ export const SystemContextProvider = ({ children }) => {
     );
     console.debug("userInfo : ", userInfo);
     const setUser = userInfoStore((state) => state.setUser);
+    const setLoading = userInfoStore((state) => state.setLoading);
     useEffect(() => {
         if (userInfo) {
+            setLoading(isUserInfoLoading);
             setUser(userInfo);
         }
-    }, [userInfo, setUser]);
+    }, [userInfo, setUser, isUserInfoLoading, setLoading]);
     const {
         cartData,
         isLoading: isCartLoading,
