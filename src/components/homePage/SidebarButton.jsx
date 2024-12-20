@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 const SidebarButton = ({
     icon,
     text,
+    setTitleText,
     textStyle,
     iconSize,
     iconColor,
@@ -19,7 +20,9 @@ const SidebarButton = ({
     const handleClick = (e) => {
         e.stopPropagation();
         closeSidebar();
-        setTitle(text);
+        if (setTitleText !== undefined) {
+            setTitle(text);
+        }
         if (onClick) {
             onClick();
         } else {
@@ -51,6 +54,7 @@ const SidebarButton = ({
 SidebarButton.propTypes = {
     icon: PropTypes.object,
     text: PropTypes.string,
+    setTitleText: PropTypes.string,
     textStyle: PropTypes.string,
     iconSize: PropTypes.string,
     iconColor: PropTypes.string,

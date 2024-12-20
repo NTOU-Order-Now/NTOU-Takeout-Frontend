@@ -16,15 +16,12 @@ import {
     faSun,
 } from "@fortawesome/free-solid-svg-icons";
 import userInfoStore from "../../stores/user/userInfoStore.js";
-import { useQueryClient } from "@tanstack/react-query";
-
 const Sidebar = () => {
     const isOpen = useSidebarStore((state) => state.isOpen);
     const theme = useThemeStore((state) => state.themeMode);
     const toggleTheme = useThemeStore((state) => state.toggleTheme);
     const closeSidebar = useSidebarStore((state) => state.closeSidebar);
     const navigate = useNavigate();
-    const queryClient = useQueryClient();
     const authToken = Cookies.get("authToken");
     const user = userInfoStore((state) => state.user);
     const setUser = userInfoStore((state) => state.setUser);
