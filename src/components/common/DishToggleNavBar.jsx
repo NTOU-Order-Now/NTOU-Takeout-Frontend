@@ -1,30 +1,16 @@
-import { useEffect } from "react";
-import { useActiveTabStore } from "../../stores/common/useActiveTabStore";
 import PropTypes from "prop-types";
 
-const ToggleNavBar = ({ options, width = "w-full", height = "50px" }) => {
-    const { activeTab, setActiveTab } = useActiveTabStore();
+function DishToggleNavBar({ options, selectedOption, onChange }) {
     const keys = Object.keys(options);
-
-    // Set the first tab as activeTab
-    useEffect(() => {
-        if (!activeTab && keys.length > 0) {
-            setActiveTab(keys[0]);
-            options[keys[0]]();
-        }
-    }, [activeTab, keys, options, setActiveTab]);
-
-    const activeIndex = keys.findIndex((key) => key === activeTab);
+    const activeIndex = keys.findIndex((key) => key === selectedOption);
     const itemWidthPercent = 100 / keys.length;
 
     return (
         <div
-            className={`relative border border-gray-300 rounded-2xl p-1 ${width}`}
-            style={{ height }}
+            className="relative border border-gray-300 rounded-2xl p-1 w-full"
+            style={{ height: "50px" }}
         >
-            {/* 內層容器：透過 flex 均分按鈕區塊，不額外有 padding，highlight bar 在此絕對定位 */}
             <div className="relative w-full h-full flex overflow-hidden rounded-xl">
-                {/* Highlight bar */}
                 <div
                     className="absolute h-full bg-orange-500 transition-transform duration-300 ease-in-out rounded-xl"
                     style={{
@@ -32,16 +18,12 @@ const ToggleNavBar = ({ options, width = "w-full", height = "50px" }) => {
                         transform: `translateX(${activeIndex * 100}%)`,
                     }}
                 ></div>
-
                 {keys.map((key) => {
-                    const isActive = key === activeTab;
+                    const isActive = key === selectedOption;
                     return (
                         <button
                             key={key}
-                            onClick={() => {
-                                setActiveTab(key);
-                                options[key]();
-                            }}
+                            onClick={() => onChange(key)}
                             className={`
                                 relative flex-1 text-center text-lg font-bold 
                                 transition-colors duration-300 ease-in-out z-10
@@ -55,12 +37,12 @@ const ToggleNavBar = ({ options, width = "w-full", height = "50px" }) => {
             </div>
         </div>
     );
-};
+}
 
-ToggleNavBar.propTypes = {
-    width: PropTypes.string,
-    height: PropTypes.string,
+DishToggleNavBar.propTypes = {
     options: PropTypes.object.isRequired,
+    selectedOption: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
 };
 
-export default ToggleNavBar;
+export default DishToggleNavBar;

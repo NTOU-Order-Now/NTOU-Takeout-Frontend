@@ -2,15 +2,13 @@ import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { faTrash, faEdit, faSave } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import ToggleNavBar from "../../../../common/ToggleNavBar";
+import DishToggleNavBar from "../../../../common/DishToggleNavBar";
 import useEditDishStore from "../../../../../stores/EditDishStore";
 
 const DishOptionList = ({ group, groupIndex, onDeleteGroup }) => {
     const setGroup = useEditDishStore((state) => state.setAttribute);
-
     const [options, setOptions] = useState(group.attributeOptions);
     const [groupName, setGroupName] = useState(group.name);
-
     const [isEditingGroupName, setIsEditingGroupName] = useState(false);
     const [editingOptionIndex, setEditingOptionIndex] = useState(null);
     const [editingField, setEditingField] = useState(null);
@@ -18,8 +16,6 @@ const DishOptionList = ({ group, groupIndex, onDeleteGroup }) => {
     const [isNeedSelect, setIsNeedSelect] = useState(group.isRequired);
 
     const inputRef = useRef(null);
-
-    const dish = useEditDishStore((state) => state.dish);
     const updateGroupName = useEditDishStore(
         (state) => state.updateAttributeName,
     );
@@ -28,7 +24,7 @@ const DishOptionList = ({ group, groupIndex, onDeleteGroup }) => {
         setGroup(groupIndex, {
             name: groupName,
             attributeOptions: options,
-            type: isSingleSelect ? "single" : "multiple",
+            type: isSingleSelect === "single" ? "single" : "multiple",
             isRequired: isNeedSelect ? true : false,
         });
     }, [
@@ -100,10 +96,10 @@ const DishOptionList = ({ group, groupIndex, onDeleteGroup }) => {
         複選: () => setIsSingleSelect("multiple"),
     };
 
+    const currentSelectedKey = isSingleSelect === "single" ? "單選" : "複選";
+
     const toggleNeedSelect = () => {
-        setIsNeedSelect((prevIsNeedSelect) =>
-            prevIsNeedSelect ? false : true,
-        );
+        setIsNeedSelect((prevIsNeedSelect) => !prevIsNeedSelect);
     };
 
     const handleGroupNameSave = () => {
@@ -146,10 +142,8 @@ const DishOptionList = ({ group, groupIndex, onDeleteGroup }) => {
                         className="text-orange-500 hover:text-orange-700 text-xl"
                         onClick={() => {
                             if (isEditingGroupName) {
-                                // 點擊存檔按鈕時儲存
                                 handleGroupNameSave();
                             } else {
-                                // 如果不在編輯，點擊則進入編輯模式
                                 setIsEditingGroupName(true);
                             }
                         }}
@@ -243,7 +237,13 @@ const DishOptionList = ({ group, groupIndex, onDeleteGroup }) => {
             {/* Toggle Single/Multi Select */}
             <div className="flex justify-end space-x-4 mt-4">
                 <div className="flex border-black border-[2px] rounded-2xl overflow-hidden">
-                    <ToggleNavBar options={seleteOptions} />
+                    <DishToggleNavBar
+                        options={seleteOptions}
+                        selectedOption={currentSelectedKey}
+                        onChange={(key) => {
+                            seleteOptions[key]();
+                        }}
+                    />
                 </div>
             </div>
         </div>
