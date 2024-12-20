@@ -115,10 +115,15 @@ const Menu = () => {
         console.log(newDish, "!!!");
         setSelectedDish(null);
     };
+
+    // 取得 categoryNames
+    const categoryNames = categoryData.map((category) => category.name);
+
     if (selectedDish) {
         return (
             <DishEdit
                 dishData={selectedDish}
+                categoryNames={categoryNames}
                 onClose={(dish) => handleUpdate(dish)}
             />
         );

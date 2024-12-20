@@ -7,6 +7,7 @@ const DishForm = ({
     defaultPrice,
     defaultCategory,
     onImageUpload,
+    categoryNames = [],
 }) => {
     const updateDishDescription = useEditDishStore(
         (state) => state.updateDishDescription,
@@ -93,9 +94,15 @@ const DishForm = ({
                     type="text"
                     defaultValue={defaultCategory}
                     placeholder="請輸入類別"
+                    list="category-options"
                     className="w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
                     onChange={handleCategoryChange}
                 />
+                <datalist id="category-options">
+                    {categoryNames.map((cat, idx) => (
+                        <option key={idx} value={cat} />
+                    ))}
+                </datalist>
             </div>
         </div>
     );
@@ -107,6 +114,7 @@ DishForm.propTypes = {
     defaultPrice: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     defaultCategory: PropTypes.string,
     onImageUpload: PropTypes.func,
+    categoryNames: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default DishForm;

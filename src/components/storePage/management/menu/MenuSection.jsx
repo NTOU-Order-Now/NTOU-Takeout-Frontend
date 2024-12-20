@@ -15,6 +15,7 @@ function MenuSection({
     selectedDish,
     setSelectedDish,
 }) {
+    console.log(categoryData);
     const [localCategoryData, setLocalCategoryData] = useState(categoryData);
     const [editingCategoryIndex, setEditingCategoryIndex] = useState(null);
     const [newCategoryName, setNewCategoryName] = useState("");

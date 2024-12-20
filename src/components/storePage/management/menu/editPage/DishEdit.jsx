@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useEditDishStore from "../../../../../stores/EditDishStore";
 import useMenuStore from "../../../../../stores/menuStore";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-function DishEdit({ dishData, onClose }) {
+function DishEdit({ dishData, onClose, categoryNames }) {
     const [description, setDescription] = useState(dishData.description);
     const [name, setName] = useState(dishData.name);
     const [price, setPrice] = useState(dishData.price);
@@ -76,6 +76,7 @@ function DishEdit({ dishData, onClose }) {
                 defaultDescription={description}
                 defaultPrice={price}
                 defaultCategory={categoryName}
+                categoryNames={categoryNames}
                 onImageUpload={handleImageUpload}
                 onNameChange={setName}
                 onDescriptionChange={setDescription}
@@ -129,6 +130,7 @@ DishEdit.propTypes = {
         ),
     }).isRequired,
     onClose: PropTypes.func.isRequired,
+    categoryNames: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default DishEdit;
