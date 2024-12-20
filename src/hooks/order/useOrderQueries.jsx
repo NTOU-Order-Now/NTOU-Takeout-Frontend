@@ -12,7 +12,7 @@ export const useOrderQueries = (status) => {
         isError,
         error,
     } = useInfiniteQuery({
-        queryKey: ["orders", status],
+        queryKey: ["orders"],
         queryFn: async ({ pageParam = 0 }) => {
             const response = await searchOrder({
                 page: pageParam,
