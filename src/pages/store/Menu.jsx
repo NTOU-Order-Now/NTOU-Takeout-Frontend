@@ -37,17 +37,6 @@ const Menu = () => {
             inline: "start",
         });
     };
-    // listen for dertermine if navbar is fixed
-    useEffect(() => {
-        const handleScroll = () => {
-            const scrollPosition = window.scrollY;
-            // setIsNavbarFixed(scrollPosition > 260);
-        };
-        window.addEventListener("scroll", handleScroll);
-        return () => {
-            window.removeEventListener("scroll", handleScroll);
-        };
-    }, []);
 
     const getMerchantById = useMerchantStore((state) => state.getMerchantById);
     const [menuId, setMenuId] = useState(null);
