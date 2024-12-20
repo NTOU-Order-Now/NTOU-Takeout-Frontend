@@ -35,6 +35,7 @@ const DishOptionList = ({ group, groupIndex, onDeleteGroup }) => {
         setGroup,
         isNeedSelect,
     ]);
+    console.log(options);
 
     useEffect(() => {
         if (inputRef.current) {
@@ -227,7 +228,7 @@ const DishOptionList = ({ group, groupIndex, onDeleteGroup }) => {
                 onClick={() =>
                     setOptions((prev) => [
                         ...prev,
-                        { name: "新選項", price: 0 },
+                        { name: "新選項", extraCost: 0, isChosen: false },
                     ])
                 }
             >

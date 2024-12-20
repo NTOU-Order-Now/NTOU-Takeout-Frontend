@@ -18,6 +18,9 @@ function DishEdit({ dishData, onClose, categoryNames, selectCategory }) {
     const dish = useEditDishStore((state) => state.dish);
 
     const deleteGroup = useEditDishStore((state) => state.deleteAttribute);
+    const addEmptyAttribute = useEditDishStore(
+        (state) => state.addEmptyAttribute,
+    );
 
     const updateDishById = useMenuStore((state) => state.updateDishById);
     const removeDishFromCategory = useMenuStore(
@@ -72,6 +75,7 @@ function DishEdit({ dishData, onClose, categoryNames, selectCategory }) {
                 attributeOptions: [],
             },
         ]);
+        addEmptyAttribute();
     };
 
     return (
