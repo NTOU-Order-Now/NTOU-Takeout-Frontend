@@ -16,8 +16,12 @@ const Cart = () => {
         menuCategoryList,
         totalSpend,
         totalQuantity,
+        refetchCart,
     } = useSystemContext();
-
+    if (cartData === undefined) {
+        console.debug("Cart not found, refetchCart");
+        refetchCart();
+    }
     const { categoryData, isQueriesSuccess } = useCategoryQueries(
         menuCategoryList,
         cartData?.storeId,
@@ -39,7 +43,7 @@ const Cart = () => {
     // console.debug("isMerchantLoading:", isMerchantLoading);
     // console.debug("isQueriesSuccess:", isQueriesSuccess);
     // console.debug("dishesMap:", dishesMap);
-    if (cartData === undefined || isMerchantLoading || !isQueriesSuccess) {
+    if (cartData === undefined) {
         return <CartSkeleton />;
     }
     let predictedTime = 10 * totalQuantity;
