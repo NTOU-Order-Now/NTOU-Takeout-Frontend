@@ -17,7 +17,7 @@ const RegisterForm = () => {
             return false;
         }
 
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
         if (!passwordRegex.test(password)) {
             setError(
                 "密碼必須至少包含一個大小寫字母和一個數字，且長度至少為8個字符",
@@ -48,12 +48,6 @@ const RegisterForm = () => {
                 password,
                 role,
             });
-
-            setUsername("");
-            setEmail("");
-            setPhone("");
-            setPassword("");
-            setConfirmPassword("");
         } catch (err) {
             setError(err.message || "註冊失敗，請稍後再試");
         }
@@ -66,7 +60,6 @@ const RegisterForm = () => {
                     type="text"
                     placeholder="名稱"
                     value={username}
-                    autoComplete="username"
                     onChange={(e) => setUsername(e.target.value)}
                     className="w-full px-4 py-2 mb-4 border rounded-lg focus:outline-none focus:ring focus:ring-orange-300"
                 />

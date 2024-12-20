@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import getStoreClient from "../../api/store/getStoreClient";
-export const useMerchantDataQuery = (merchantId) => {
+export const useMerchantDataQuery = (merchantId, isEnable = true) => {
     const {
         data: merchantData,
         isLoading: isMerchantLoading,
@@ -10,14 +10,12 @@ export const useMerchantDataQuery = (merchantId) => {
     } = useQuery({
         queryKey: ["menuCategoryList", merchantId],
         queryFn: async () => {
-            const res = await getStoreClient.getMerchantsByIdList([
-                merchantId,
-            ]);
+            const res = await getStoreClient.getMerchantsByIdList([merchantId]);
             return res.data[0];
         },
-        enabled: merchantId != undefined,
+        enabled: merchantId !== undefined && isEnable,
         refetchOnWindowFocus: false,
-        staleTime: 1000 * 60 * 10, // 10 minutes
+        staleTime: 1000 * 60 ** 10, //10 min
     });
     return {
         merchantData,
@@ -26,4 +24,4 @@ export const useMerchantDataQuery = (merchantId) => {
         error,
         refetchMerchantData,
     };
-}
+};

@@ -1,34 +1,47 @@
 import OrderCard from "./OrderCard.jsx";
-import useOrderStore from "../../../../stores/orderStore.js";
-
+import { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
+import { useOrderInfiniteQuery } from "../../../../hooks/order/useOrderInfiniteQuery.jsx";
+import { useQueryClient } from "@tanstack/react-query";
 const UnacceptedList = () => {
-    const { orders, updateOrderStatus } = useOrderStore();
+    const { ref, inView } = useInView({
+        rootMargin: "100px",
+    });
+    // const queryClient = useQueryClient();
+    // queryClient.invalidateQueries(["order"]);
+    const {
+        orders,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        isLoading,
+        isError,
+        error,
+    } = useOrderInfiniteQuery("PENDING");
 
-    const handleAccept = (id) => {
-        updateOrderStatus(id, "PROCESSING");
-    };
+    useEffect(() => {
+        if (inView && !isFetchingNextPage && hasNextPage) {
+            fetchNextPage();
+        }
+    }, [inView, isFetchingNextPage, hasNextPage, fetchNextPage]);
+    if (isLoading) {
+        return <div className="text-center pt-20">Loading...</div>;
+    }
 
-    const handleReject = (id) => {
-        updateOrderStatus(id, "CANCELED");
-    };
-
-    const pendingOrders = orders.filter((order) => order.status === "PENDING");
+    if (isError) {
+        return <div className="text-center pt-20">Error: {error.message}</div>;
+    }
 
     return (
-        <div className="bg-gray-100 p-6">
-            <h1 className="text-2xl font-bold mb-4">未接單清單</h1>
-            <div>
-                {pendingOrders.length > 0 ? (
-                    pendingOrders.map((order) => (
-                        <OrderCard
-                            key={order.id}
-                            order={order}
-                            onAccept={() => handleAccept(order.id)}
-                            onReject={() => handleReject(order.id)}
-                        />
-                    ))
-                ) : (
-                    <p className="text-gray-500">目前沒有未接單的訂單。</p>
+        <div className="flex flex-col text-center justify-between ">
+            {orders?.pages.map((page) =>
+                page.map((order, _) => {
+                    return <OrderCard key={_} order={order} />;
+                }),
+            )}
+            <div ref={ref}>
+                {hasNextPage && isFetchingNextPage && (
+                    <div className="text-center py-4">Loading more...</div>
                 )}
             </div>
         </div>

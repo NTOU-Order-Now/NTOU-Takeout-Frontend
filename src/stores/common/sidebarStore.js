@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 const useSidebarStore = create((set) => ({
-    title: "",//need to get from api
+    title: "",
     setTitle: (title) => set({ title: title }),
     isOpen: false,
     toggleSidebar: () => set((state) => ({ isOpen: !state.isOpen })),

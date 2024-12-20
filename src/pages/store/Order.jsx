@@ -1,12 +1,15 @@
 import { useState } from "react";
 import Header from "../../components/storePage/home/Header";
 import useSidebarStore from "../../stores/common/sidebarStore";
-import OrderCard from "../../components/storePage/management/order/OrderCard.jsx";
-import { useSystemContext } from "../../context/SystemContext.jsx";
 import UnacceptedList from "../../components/storePage/management/order/UnacceptedList.jsx";
 import AcceptedList from "../../components/storePage/management/order/AcceptedList.jsx";
-const Home = () => {
-    const [orderCount, setOrderCount] = useState(0);
+import ToggleNavBar from "../../components/common/ToggleNavBar.jsx";
+import { useQueryClient } from "@tanstack/react-query";
+
+const Order = () => {
+    const queryClient = useQueryClient();
+    const orderCount = queryClient.getQueryData(["order", "PENDING"]);
+    const [navBarStatus, setNavBarStatus] = useState(0);
     const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
     const title = useSidebarStore((state) => state.title);
     const orderCountButton = (
@@ -14,37 +17,40 @@ const Home = () => {
             onClick={() => {
                 console.debug("orderCountButton click");
             }}
-            className=" bg-orange-500 text-gray-200 rounded-lg px-3 py-1 font-sm shadow-md"
+            className=" bg-orange-500 text-white rounded-lg px-3 py-1 font-sm shadow-md"
         >
             共計 {orderCount} 筆訂單
         </button>
     );
-    const { cartData } = useSystemContext();
-    console.debug("cartData", cartData);
-    const cartStatus = cartData.status;
+
+    const handleToUnaccepted = () => {
+        setNavBarStatus(0);
+        console.debug("handleToUnaccepted");
+    };
+    const handleToAccepted = () => {
+        setNavBarStatus(1);
+        console.debug("handleToAccepted");
+    };
+    const options = {
+        未接受: handleToUnaccepted,
+        已接受: handleToAccepted,
+    };
+
     return (
-        <div>
+        <div className="h-dvh">
             <Header
                 title={title}
                 onLeftClick={toggleSidebar}
-                rightComponents={[orderCountButton]}
+                // rightComponents={[orderCountButton]}
             />
-            <div className="relative top-20">
-                {cartData.orderedDishes.map((dish, _) => (
-                    <OrderCard
-                        key={_}
-                        order={{
-                            ...dish,
-                            status: "CANCELED",
-                        }}
-                        showStatus={true}
-                    />
-                ))}
+            <div className="sticky top-[55px] z-20 px-10   h-[85px] bg-white content-center rounded-2xl shadow-md ">
+                <ToggleNavBar options={options} InitActiveTab={"未接受"} />
             </div>
-            <UnacceptedList></UnacceptedList>
-            <AcceptedList></AcceptedList>
+            <div className="relative top-20 mx-8">
+                {navBarStatus === 0 ? <UnacceptedList /> : <AcceptedList />}
+            </div>
         </div>
     );
 };
 
-export default Home;
+export default Order;

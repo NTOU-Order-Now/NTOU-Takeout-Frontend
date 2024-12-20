@@ -9,11 +9,8 @@ const Header = ({
     rightComponents = [],
 }) => {
     const currentUrl = window.location.href;
-    console.debug("rightComponents", rightComponents);
     return (
-        <header
-            className="fixed z-30 top-0 left-0 w-full flex flex-row items-center justify-between bg-white  transition-shadow duration-300 ease-in-out p-3 font-notoTC shadow-md"
-        >
+        <header className="fixed z-30 top-0 left-0 w-full flex flex-row items-center justify-between bg-white  transition-shadow duration-300 ease-in-out p-3 font-notoTC shadow-md">
             <div
                 className="absolute left-4 text-xl cursor-pointer"
                 onClick={onLeftClick}

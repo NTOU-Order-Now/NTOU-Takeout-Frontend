@@ -1,8 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import registerClient from "../../api/auth/registerClient";
 import CryptoJS from "crypto-js";
+import { useNavigate } from "react-router-dom";
 
 export const useRegisterMutation = (isEnabled = true) => {
+    const navigate = useNavigate();
     const {
         mutateAsync: registerMutation,
         isSuccess: isRegisterSuccess,
@@ -18,14 +20,13 @@ export const useRegisterMutation = (isEnabled = true) => {
                 phoneNumber: userDetails.phone,
                 password: hashedPassword,
                 gender: "OTHER",
-                role: "CUSTOMER",
+                role: userDetails.role,
             };
 
-            const response = await registerClient.registerUser(payload);
-            return response;
+            return await registerClient.registerUser(payload);
         },
         onSuccess: () => {
-            window.location.assign("/Order-Now-Frontend/auth/login");
+            navigate("/auth/login",{replace:true})
         },
         onError: (error) => {
             console.error("Registration failed:", error);

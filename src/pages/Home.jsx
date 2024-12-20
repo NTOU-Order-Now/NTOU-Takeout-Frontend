@@ -6,6 +6,7 @@ import MerchantList from "../components/merchantPage/MerchantList";
 
 function Home() {
     const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
+
     return (
         <div>
             <Header

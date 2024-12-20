@@ -11,8 +11,8 @@ const Merchant = (props) => {
     return (
         <Link key={id} to={`/menu/${id}`}>
             <div
-                className="font-notoTC relative w-[90vw] h-[241px] m-2 bg-white border-2
-                        border-gray-300 rounded-2xl overflow-hidden"
+                className="font-notoTC relative w-[90vw] h-[241px] m-2 bg-white
+                        rounded-2xl overflow-hidden shadow-lg"
             >
                 <div className="object-cover w-full h-full">
                     <LazyLoadImage
@@ -23,7 +23,7 @@ const Merchant = (props) => {
                     />
                 </div>
 
-                <div className="box-border absolute w-[90vw] h-[87px] left-0 top-[154px] border-t-2 border-gray-300">
+                <div className="absolute w-[90vw] h-[87px] left-0 top-[154px] border-gray-300 mt-1">
                     <div className="absolute h-[22px] left-[12px] top-[9px] text-black font-bold text-lg leading-5">
                         {name}
                     </div>

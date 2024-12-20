@@ -1,7 +1,7 @@
 import { useState, lazy } from "react";
 import { useCartDeleteMutation } from "../../../hooks/cart/useCartDeleteMutation";
 import { useCartAddMutation } from "../../../hooks/cart/useCartAddMutation";
-import { useSystemContext } from "../../../context/SystemContext";
+import { useSystemContext } from "../../../context/useSystemContext.jsx";
 import PropTypes from "prop-types";
 import useDishDetailStore from "../../../stores/dishDetailStore";
 const ConfirmClearCartModal = lazy(() => import("./ConfirmClearCartModal"));
@@ -11,13 +11,15 @@ const AddToCart = ({ dishId, onRequiredMissing, onClose }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const dishes = useDishDetailStore((state) => state.dishes);
-    const allDishAttributes = useDishDetailStore((state) => state.allDishAttributes);
+    const allDishAttributes = useDishDetailStore(
+        (state) => state.allDishAttributes,
+    );
     const { deleteCartAsync } = useCartDeleteMutation();
     const { postCartAsync } = useCartAddMutation();
     const handleConfirm = async () => {
         setIsModalOpen(false);
         const dishDetail = dishes[dishId];
-        await deleteCartAsync(dishDetail)
+        await deleteCartAsync(dishDetail);
         onClose();
     };
 
@@ -27,7 +29,9 @@ const AddToCart = ({ dishId, onRequiredMissing, onClose }) => {
 
     const handleAddToCart = async () => {
         const dishDetail = dishes[dishId];
-        if (!dishDetail) { return; }
+        if (!dishDetail) {
+            return;
+        }
 
         const choosenAttributes = dishDetail.chosenAttributes || [];
         const requiredAttributes = allDishAttributes[dishId] || [];
@@ -35,7 +39,9 @@ const AddToCart = ({ dishId, onRequiredMissing, onClose }) => {
         //check if all required attributes are selected
         for (const attr of requiredAttributes) {
             if (attr.isRequired === true) {
-                const matched = choosenAttributes.filter(ca => ca.attributeName === attr.name);
+                const matched = choosenAttributes.filter(
+                    (ca) => ca.attributeName === attr.name,
+                );
                 if (matched.length === 0) {
                     onRequiredMissing(attr.name);
                     return;

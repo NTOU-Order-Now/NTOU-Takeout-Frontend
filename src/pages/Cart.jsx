@@ -4,10 +4,9 @@ import CartPageHeader from "../components/cartPage/CartPageHeader";
 import CartTotalSpend from "../components/cartPage/CartTotalSpend";
 import CartItemCardList from "../components/cartPage/CartItemCardList";
 import { useCategoryQueries } from "../hooks/menu/useCategoryQueries";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { useSystemContext } from "../context/SystemContext";
+import { useSystemContext } from "../context/useSystemContext.jsx";
 import CartRemark from "../components/cartPage/CartRemark";
+import CartSkeleton from "../skeleton/cart/CartSkeleton.jsx";
 const Cart = () => {
     const {
         cartData,
@@ -17,8 +16,12 @@ const Cart = () => {
         menuCategoryList,
         totalSpend,
         totalQuantity,
+        refetchCart,
     } = useSystemContext();
-
+    if (cartData === undefined) {
+        console.debug("Cart not found, refetchCart");
+        refetchCart();
+    }
     const { categoryData, isQueriesSuccess } = useCategoryQueries(
         menuCategoryList,
         cartData?.storeId,
@@ -40,13 +43,8 @@ const Cart = () => {
     // console.debug("isMerchantLoading:", isMerchantLoading);
     // console.debug("isQueriesSuccess:", isQueriesSuccess);
     // console.debug("dishesMap:", dishesMap);
-    if (cartData === undefined || isMerchantLoading || !isQueriesSuccess) {
-        return (
-            <div className="flex justify-center items-center mt-28 fa-2x">
-                <CartPageHeader />
-                <FontAwesomeIcon icon={faSpinner} spinPulse />
-            </div>
-        );
+    if (cartData === undefined) {
+        return <CartSkeleton />;
     }
     let predictedTime = 10 * totalQuantity;
     if (predictedTime > 150 && predictedTime < 300) {

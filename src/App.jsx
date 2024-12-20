@@ -1,9 +1,9 @@
 import { StrictMode, useEffect, lazy, Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import DevToolBubble from "./devtool/DevToolBubble";
-import { SystemContextProvider } from "./context/SystemContext";
+import { SystemContextProvider } from "./context/SystemContextProvider.jsx";
 import NotFound from "./pages/NotFound";
 import CartSkeleton from "./skeleton/cart/CartSkeleton";
 import HomeSkeleton from "./skeleton/home/HomeSkeleton";
@@ -23,6 +23,8 @@ const StoreMenu = lazy(() => import("./pages/store/Menu"));
 const StoreOrder = lazy(() => import("./pages/store/Order"));
 const queryClient = new QueryClient();
 import OrderDetails from "./pages/store/OrderDetailPage";
+import MerchantProtectedRoute from "./route/MerchantProtectedRoute.jsx";
+import CustomerProtectedRoute from "./route/CustomerProtectedRoute.jsx";
 
 const router = createBrowserRouter(
     [
@@ -39,7 +41,9 @@ const router = createBrowserRouter(
             path: "/cart",
             element: (
                 <Suspense fallback={<CartSkeleton />}>
-                    <Cart />
+                    <CustomerProtectedRoute>
+                        <Cart />
+                    </CustomerProtectedRoute>
                 </Suspense>
             ),
             errorElement: <NotFound />,
@@ -99,10 +103,12 @@ const router = createBrowserRouter(
             errorElement: <NotFound />,
         },
         {
-            path: "/store/:storeId",
+            path: "/store/pos",
             element: (
                 <Suspense fallback={<HomeSkeleton />}>
-                    <StoreHome />
+                    <MerchantProtectedRoute>
+                        <StoreHome />
+                    </MerchantProtectedRoute>
                 </Suspense>
             ),
             errorElement: <NotFound />,
@@ -151,16 +157,16 @@ function App() {
             <QueryClientProvider client={queryClient}>
                 <SystemContextProvider>
                     <RouterProvider router={router}></RouterProvider>
-                    <DevToolBubble
-                        router={router}
-                        endPointReplacements={{
-                            merchantId: "67178651994d5f6d435d6ef8",
-                            authType: "login",
-                            storeId: "67178651994d5f6d435d6ef8",
-                        }}
-                    />
+                    {/*<DevToolBubble*/}
+                    {/*    router={router}*/}
+                    {/*    endPointReplacements={{*/}
+                    {/*        merchantId: "67178651994d5f6d435d6ef8",*/}
+                    {/*        authType: "login",*/}
+                    {/*        storeId: "67178651994d5f6d435d6ef8",*/}
+                    {/*    }}*/}
+                    {/*/>*/}
                 </SystemContextProvider>
-                {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+                <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
         </StrictMode>
     );

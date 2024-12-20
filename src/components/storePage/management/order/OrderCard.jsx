@@ -1,4 +1,7 @@
 import PropTypes from "prop-types";
+import useOrderStore from "../../../../stores/orderStore.js";
+import { useCallback } from "react";
+import { useOrderStatusMutation } from "../../../../hooks/order/useOrderStatusMutation.jsx";
 
 const getStatusColors = (status) => {
     switch (status) {
@@ -48,35 +51,71 @@ const getNextStatus = (currentStatus) => {
     }
 };
 
-const OrderCard = ({
-    order,
-    onAccept,
-    onReject,
-    onStatusChange,
-    showStatus = true,
-}) => {
+const OrderCard = ({ order, showStatus = true }) => {
     const { bgColor, textColor, statusText } = getStatusColors(order.status);
+    const { updateOrderStatusAsync, isLoading } = useOrderStatusMutation();
 
+    const handleAccept = useCallback(
+        async (orderId) => {
+            try {
+                await updateOrderStatusAsync({
+                    orderId,
+                    newStatus: "PROCESSING",
+                });
+                console.debug("Accept order: ", orderId);
+            } catch (error) {
+                console.error("Failed to accept order:", error);
+            }
+        },
+        [updateOrderStatusAsync],
+    );
+    const handleReject = useCallback(
+        async (orderId) => {
+            try {
+                await updateOrderStatusAsync({
+                    orderId,
+                    newStatus: "CANCELED",
+                });
+                console.debug("Reject order: ", orderId);
+            } catch (error) {
+                console.error("Failed to reject order:", error);
+            }
+        },
+        [updateOrderStatusAsync],
+    );
     const isOverdue = () => {
         const now = new Date();
-        const estimate = new Date(order.estimateTime);
+        const estimate = new Date(order.estimatedPrepTime);
         return order.status === "PROCESSING" && now > estimate;
     };
 
-    const handleStatusClick = () => {
+    const handleStatusClick = useCallback(async () => {
         const nextStatus = getNextStatus(order.status);
         if (nextStatus) {
-            onStatusChange && onStatusChange(order.id, nextStatus);
+            try {
+                await updateOrderStatusAsync({
+                    orderId: order.id,
+                    newStatus: nextStatus,
+                });
+            } catch (error) {
+                console.error("Failed to update order status:", error);
+            }
         }
-    };
+    }, [order.id, order.status, updateOrderStatusAsync]);
 
     return (
-        <div className="relative flex justify-between rounded-lg p-4 shadow-md mb-4 bg-white">
+        <div className="relative flex justify-between rounded-lg p-4 shadow-lg mb-6 bg-gray-50">
             {/* Order Info */}
-            <div>
-                <p className="text-lg font-bold">單號 {order.id}</p>
-                <p className="text-sm">下單時間: {order.orderedTime}</p>
-                <p className="text-sm ">預估取餐時間: {order.estimateTime}</p>
+            <div className="flex flex-col items-start text-start">
+                <p className="text-xl font-bold ">
+                    單號： {order.id.slice(-5)}
+                </p>
+                <p className="text-sm font-semibold ">
+                    預估製作時間: {order.estimatedPrepTime} 分鐘
+                </p>
+                <p className="text-sm font-medium">
+                    下單時間: {order.orderTime}
+                </p>
                 <button className="bg-orange-500 mt-6 text-white px-3 py-1 text-sm font-bold rounded hover:bg-orange-600">
                     訂單內容
                 </button>
@@ -104,29 +143,29 @@ const OrderCard = ({
                 {/* Buttons */}
                 {order.status === "PENDING" && (
                     <div className="flex gap-2">
-                        {onReject && (
+                        {
                             <button
-                                onClick={() => onReject(order.id)}
+                                onClick={() => handleReject(order.id)}
                                 className="bg-red-500 text-white px-3 py-1 text-sm font-bold rounded hover:bg-red-600"
                             >
                                 拒絕
                             </button>
-                        )}
-                        {onAccept && (
+                        }
+                        {
                             <button
-                                onClick={() => onAccept(order.id)}
+                                onClick={() => handleAccept(order.id)}
                                 className="bg-green-500 text-white px-3 py-1 text-sm font-bold rounded hover:bg-green-600"
                             >
                                 接單
                             </button>
-                        )}
+                        }
                     </div>
                 )}
             </div>
 
             {/* Total price */}
             <div className="absolute bottom-4 right-4 mt-5">
-                <p className="mt-2 font-semibold">總金額: {order.total} 元</p>
+                <p className="mt-2 font-semibold">總金額: {order.cost} 元</p>
             </div>
         </div>
     );
@@ -134,11 +173,11 @@ const OrderCard = ({
 
 OrderCard.propTypes = {
     order: PropTypes.shape({
-        id: PropTypes.number.isRequired,
+        id: PropTypes.string.isRequired,
         status: PropTypes.string.isRequired,
-        total: PropTypes.number.isRequired,
-        orderedTime: PropTypes.string.isRequired,
-        estimateTime: PropTypes.string.isRequired,
+        cost: PropTypes.number.isRequired,
+        orderTime: PropTypes.string.isRequired,
+        estimatedPrepTime: PropTypes.number.isRequired,
     }).isRequired,
     onAccept: PropTypes.func,
     onReject: PropTypes.func,

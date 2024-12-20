@@ -1,33 +1,54 @@
 import OrderCard from "./OrderCard.jsx";
-import useOrderStore from "../../../../stores/orderStore.js";
-
+import PropTypes from "prop-types";
+import { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
+import { useOrderInfiniteQuery } from "../../../../hooks/order/useOrderInfiniteQuery.jsx";
 function AcceptedList() {
-    const { orders, updateOrderStatus } = useOrderStore();
+    const { ref, inView } = useInView({
+        rootMargin: "100px",
+    });
 
-    const filteredOrders = orders.filter((order) => order.status !== "PENDING");
+    const {
+        orders,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        isLoading,
+        isError,
+        error,
+    } = useOrderInfiniteQuery("PROCESSING");
 
-    const handleStatusChange = (orderId, nextStatus) => {
-        updateOrderStatus(orderId, nextStatus);
-    };
+    useEffect(() => {
+        if (inView && !isFetchingNextPage && hasNextPage) {
+            fetchNextPage();
+        }
+    }, [inView, isFetchingNextPage, hasNextPage, fetchNextPage]);
+    if (isLoading) {
+        return <div className="text-center pt-20">Loading...</div>;
+    }
+
+    if (isError) {
+        return <div className="text-center pt-20">Error: {error.message}</div>;
+    }
 
     return (
-        <div className="min-h-screen bg-gray-100 p-6">
-            <h1 className="text-2xl font-bold mb-4">已接單清單</h1>
-            <div>
-                {filteredOrders.length > 0 ? (
-                    filteredOrders.map((order) => (
-                        <OrderCard
-                            key={order.id}
-                            order={order}
-                            onStatusChange={handleStatusChange}
-                        />
-                    ))
-                ) : (
-                    <p className="text-gray-500">目前沒有已接單的訂單。</p>
+        <div className="flex flex-col text-center justify-between ">
+            {orders?.pages.map((page) =>
+                page.map((order, _) => {
+                    return <OrderCard key={_} order={order} />;
+                }),
+            )}
+            <div ref={ref}>
+                {hasNextPage && isFetchingNextPage && (
+                    <div className="text-center py-4">Loading more...</div>
                 )}
             </div>
         </div>
     );
 }
+
+AcceptedList.prototype = {
+    orderData: PropTypes.object,
+};
 
 export default AcceptedList;

@@ -6,9 +6,11 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import useDishDetailStore from "../../stores/dishDetailStore";
 import PropTypes from "prop-types";
-import Cookies from "js-cookie";
+import userInfoStore from "../../stores/user/userInfoStore.js";
 
-const OptionCardSkeleton = lazy(() => import("../../skeleton/menu/dishDetail/OptionCardSkeleton"));
+const OptionCardSkeleton = lazy(
+    () => import("../../skeleton/menu/dishDetail/OptionCardSkeleton"),
+);
 const CartRemark = lazy(() => import("../cartPage/CartRemark"));
 const OptionCard = lazy(() => import("./dishOptions/OptionCard"));
 const CartOption = lazy(() => import("./dishOptions/CartOption"));
@@ -27,10 +29,12 @@ const DishDetail = ({ dishData, onClose }) => {
     const [isExiting, setIsExiting] = useState(false);
     const [isShowError, setIsShowError] = useState(true);
     const setDishDetail = useDishDetailStore((state) => state.setDishDetail);
-    const setAllDishAttributes = useDishDetailStore((state) => state.setAllDishAttributes);
-    const authToken = Cookies.get("authToken");
+    const setAllDishAttributes = useDishDetailStore(
+        (state) => state.setAllDishAttributes,
+    );
+    const user = userInfoStore((state) => state.user);
     const optionCardRefs = useRef([]);
-    const [remark, setRemark] = useState('');
+    const [remark, setRemark] = useState("");
 
     useEffect(() => {
         setAllDishAttributes(dishId, options);
@@ -41,7 +45,7 @@ const DishDetail = ({ dishData, onClose }) => {
             price: price,
             quantity: 1,
             note: remark,
-            chosenAttributes: []
+            chosenAttributes: [],
         });
 
         setIsVisible(true);
@@ -50,7 +54,16 @@ const DishDetail = ({ dishData, onClose }) => {
         return () => {
             document.body.style.overflow = ""; // restore background scroll
         };
-    }, [setDishDetail, dishId, merchantId, options, setAllDishAttributes, name, price, remark]);
+    }, [
+        setDishDetail,
+        dishId,
+        merchantId,
+        options,
+        setAllDishAttributes,
+        name,
+        price,
+        remark,
+    ]);
 
     const handleClose = () => {
         setIsExiting(true);
@@ -64,9 +77,14 @@ const DishDetail = ({ dishData, onClose }) => {
     // handle scroll to the OptionCard that has required missing
     const handleRequiredMissing = (missingAttributeName) => {
         // find the index of the missing attribute
-        const index = options.findIndex(opt => opt.name === missingAttributeName);
+        const index = options.findIndex(
+            (opt) => opt.name === missingAttributeName,
+        );
         if (index !== -1 && optionCardRefs.current[index]) {
-            optionCardRefs.current[index].scrollIntoView({ behavior: "smooth", block: "start" });
+            optionCardRefs.current[index].scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
         }
     };
 
@@ -74,13 +92,14 @@ const DishDetail = ({ dishData, onClose }) => {
     const handleSelectNext = (currentIndex) => {
         const nextIndex = currentIndex + 1;
         if (optionCardRefs.current[nextIndex]) {
-            optionCardRefs.current[nextIndex].scrollIntoView({ behavior: 'smooth', block: 'start' });
+            optionCardRefs.current[nextIndex].scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
         }
     };
     return (
-        <div
-            className={`font-notoTC fixed z-10 top-0 left-0 right-0`}
-        >
+        <div className={`font-notoTC fixed z-10 top-0 left-0 right-0`}>
             <div
                 className={`bg-white shadow-md overflow-hidden h-dvh flex flex-col  transition-transform duration-500 ${isExiting ? "translate-y-full none" : "translate-y-0"}
                                                                                                                             ${isVisible ? "translate-y-0" : "translate-y-full none"}`}
@@ -112,7 +131,12 @@ const DishDetail = ({ dishData, onClose }) => {
 
                         {/* Customize options */}
                         {options.map((detail, index) => (
-                            <div key={index} ref={el => optionCardRefs.current[index] = el}>
+                            <div
+                                key={index}
+                                ref={(el) =>
+                                    (optionCardRefs.current[index] = el)
+                                }
+                            >
                                 <Suspense fallback={<OptionCardSkeleton />}>
                                     <OptionCard
                                         title={detail.name}
@@ -123,7 +147,9 @@ const DishDetail = ({ dishData, onClose }) => {
                                         isRequired={detail.isRequired}
                                         isShowError={isShowError}
                                         setIsShowError={setIsShowError}
-                                        onSelectNext={() => handleSelectNext(index)}
+                                        onSelectNext={() =>
+                                            handleSelectNext(index)
+                                        }
                                     />
                                 </Suspense>
                             </div>
@@ -135,7 +161,7 @@ const DishDetail = ({ dishData, onClose }) => {
                     <div className="py-5"></div>
                 </div>
                 {/* Add to cart button */}
-                {authToken && (
+                {user !== undefined && user.role === "CUSTOMER" && (
                     <CartOption
                         dishId={dishId}
                         dishAttributes={options}
@@ -151,7 +177,7 @@ const DishDetail = ({ dishData, onClose }) => {
 DishDetail.propTypes = {
     dishData: PropTypes.object.isRequired,
     onClose: PropTypes.func,
-    dishId: PropTypes.string
+    dishId: PropTypes.string,
 };
 
 export default DishDetail;
