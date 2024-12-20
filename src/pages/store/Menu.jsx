@@ -124,6 +124,7 @@ const Menu = () => {
             <DishEdit
                 dishData={selectedDish}
                 categoryNames={categoryNames}
+                selectCategory={selectedDish.category}
                 onClose={(dish) => handleUpdate(dish)}
             />
         );

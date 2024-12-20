@@ -64,7 +64,7 @@ const useEditDishStore = create((set) => ({
                 dishAttributes: [
                     ...state.dish.dishAttributes,
                     {
-                        name: "新屬性",
+                        name: "新options",
                         description: "",
                         type: "single",
                         isRequired: false,

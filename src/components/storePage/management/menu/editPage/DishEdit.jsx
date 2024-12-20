@@ -7,7 +7,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useEditDishStore from "../../../../../stores/EditDishStore";
 import useMenuStore from "../../../../../stores/menuStore";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-function DishEdit({ dishData, onClose, categoryNames }) {
+
+function DishEdit({ dishData, onClose, categoryNames, selectCategory }) {
     const [description, setDescription] = useState(dishData.description);
     const [name, setName] = useState(dishData.name);
     const [price, setPrice] = useState(dishData.price);
@@ -19,11 +20,20 @@ function DishEdit({ dishData, onClose, categoryNames }) {
     const deleteGroup = useEditDishStore((state) => state.deleteAttribute);
 
     const updateDishById = useMenuStore((state) => state.updateDishById);
+    const removeDishFromCategory = useMenuStore(
+        (state) => state.removeDishFromCategory,
+    );
+    const addDishToCategory = useMenuStore((state) => state.addDishToCategory);
 
     const handleSave = () => {
-        console.log("new dish");
-        console.log(dish);
         updateDishById(dish.id, dish);
+        const oldCategory = dishData.category;
+        const newCategory = dish.category;
+
+        if (newCategory !== oldCategory) {
+            removeDishFromCategory(oldCategory, dish.id);
+            addDishToCategory(newCategory, dish);
+        }
 
         onClose();
     };
@@ -50,11 +60,12 @@ function DishEdit({ dishData, onClose, categoryNames }) {
             ),
         );
     };
+
     const handleAddGroup = () => {
         setGroups((prevGroups) => [
             ...prevGroups,
             {
-                name: "新屬性",
+                name: "新options",
                 description: "",
                 type: "single",
                 isRequired: false,
@@ -69,8 +80,7 @@ function DishEdit({ dishData, onClose, categoryNames }) {
                 dishName={name}
                 onBack={handleBack}
                 onSave={handleSave}
-            ></EditHeader>
-
+            />
             <DishForm
                 defaultName={name}
                 defaultDescription={description}
@@ -82,8 +92,7 @@ function DishEdit({ dishData, onClose, categoryNames }) {
                 onDescriptionChange={setDescription}
                 onPriceChange={setPrice}
                 onCategoryChange={setCategoryName}
-            ></DishForm>
-
+            />
             {groups.map((singleGroup, index) => (
                 <DishOptionList
                     key={index}
@@ -93,9 +102,8 @@ function DishEdit({ dishData, onClose, categoryNames }) {
                     onUpdateGroup={(updatedGroup) =>
                         handleUpdateGroup(index, updatedGroup)
                     }
-                ></DishOptionList>
+                />
             ))}
-
             {/* Add Attribute */}
             <div className="flex justify-center mt-6 z-50">
                 <button
@@ -131,6 +139,7 @@ DishEdit.propTypes = {
     }).isRequired,
     onClose: PropTypes.func.isRequired,
     categoryNames: PropTypes.arrayOf(PropTypes.string),
+    selectCategory: PropTypes.string,
 };
 
 export default DishEdit;

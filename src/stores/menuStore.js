@@ -148,7 +148,7 @@ const useMenuStore = create((set) => ({
         ],
     },
 
-    // 更新菜品數據
+    // 更新菜單
     setMenu: (newMenu) => set({ menu: newMenu }),
 
     updateDishById: (id, newDish) =>
@@ -161,6 +161,40 @@ const useMenuStore = create((set) => ({
                         dish.id === id ? { ...dish, ...newDish } : dish,
                     ),
                 })),
+            },
+        })),
+
+    removeDishFromCategory: (categoryName, dishId) =>
+        set((state) => ({
+            menu: {
+                ...state.menu,
+                categories: state.menu.categories.map((category) => {
+                    if (category.name === categoryName) {
+                        return {
+                            ...category,
+                            dishes: category.dishes.filter(
+                                (dish) => dish.id !== dishId,
+                            ),
+                        };
+                    }
+                    return category;
+                }),
+            },
+        })),
+
+    addDishToCategory: (categoryName, dish) =>
+        set((state) => ({
+            menu: {
+                ...state.menu,
+                categories: state.menu.categories.map((category) => {
+                    if (category.name === categoryName) {
+                        return {
+                            ...category,
+                            dishes: [...category.dishes, dish],
+                        };
+                    }
+                    return category;
+                }),
             },
         })),
 }));
