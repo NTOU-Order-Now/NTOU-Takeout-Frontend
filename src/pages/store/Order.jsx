@@ -4,8 +4,11 @@ import useSidebarStore from "../../stores/common/sidebarStore";
 import UnacceptedList from "../../components/storePage/management/order/UnacceptedList.jsx";
 import AcceptedList from "../../components/storePage/management/order/AcceptedList.jsx";
 import ToggleNavBar from "../../components/common/ToggleNavBar.jsx";
+import { useQueryClient } from "@tanstack/react-query";
+
 const Order = () => {
-    const [orderCount, setOrderCount] = useState(0);
+    const queryClient = useQueryClient();
+    const orderCount = queryClient.getQueryData(["order", "PENDING"]);
     const [navBarStatus, setNavBarStatus] = useState(0);
     const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
     const title = useSidebarStore((state) => state.title);
@@ -38,7 +41,7 @@ const Order = () => {
             <Header
                 title={title}
                 onLeftClick={toggleSidebar}
-                rightComponents={[orderCountButton]}
+                // rightComponents={[orderCountButton]}
             />
             <div className="sticky top-[55px] z-20 px-10   h-[85px] bg-white content-center rounded-2xl shadow-md ">
                 <ToggleNavBar options={options} InitActiveTab={"未接受"} />
