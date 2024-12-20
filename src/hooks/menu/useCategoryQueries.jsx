@@ -7,13 +7,16 @@ export const useCategoryQueries = (menuCategoryList, merchantId) => {
         queries: menuCategoryList.map((category) => ({
             queryKey: ["categoryDishes", merchantId, category.first],
             queryFn: async () => {
-                const dishDetails = await getMenuClient.getDishsByCategory(merchantId, category.first);
+                const dishDetails = await getMenuClient.getDishsByCategory(
+                    merchantId,
+                    category.first,
+                );
                 return {
                     categoryName: category.first,
                     dishes: dishDetails,
                 };
             },
-            enabled: !!category.second.length && menuCategoryList != undefined,
+            enabled: !!category.second.length && menuCategoryList !== undefined,
             refetchOnWindowFocus: false,
             staleTime: Infinity,
         })),
@@ -27,4 +30,4 @@ export const useCategoryQueries = (menuCategoryList, merchantId) => {
         categoryData,
         isQueriesSuccess,
     };
-}
+};

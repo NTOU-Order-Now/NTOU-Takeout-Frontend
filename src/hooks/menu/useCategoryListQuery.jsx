@@ -8,12 +8,12 @@ export const useCategoryListQuery = (menuId, isEnable) => {
         queryKey: ["menuCategoryList", menuId],
         queryFn: async () => {
             const res = await getMenuClient.getMenuByMenuId(menuId);
-            const categories = res.data.categories;
-            return categories;
+            return res.data.categories;
         },
-        enabled: menuId !== undefined && isEnable,
+
+        enabled: !!menuId && isEnable,
         refetchOnWindowFocus: false,
-        staleTime: 1000 * 60 * 10, // 10 minutes
     });
+
     return menuCategoryList;
 };
