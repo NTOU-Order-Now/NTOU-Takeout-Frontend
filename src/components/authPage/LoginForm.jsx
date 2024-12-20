@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faGoogle } from "@fortawesome/free-brands-svg-icons";
-import { Link, useNavigate } from "react-router-dom";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../hooks/loginRegisterPage/useLoginMutation.jsx";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons/faEllipsis";
 const LoginForm = () => {

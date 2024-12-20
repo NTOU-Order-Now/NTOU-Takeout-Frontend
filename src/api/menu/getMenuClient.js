@@ -6,8 +6,8 @@ const getMenuClient = {
         if (!response.ok) {
             throw new Error(`Failed to fetch menu by ID: ${menuId}`);
         }
-        const res = await response.json();
-        return res;
+        console.error("getMenuByMenuId response:", response);
+        return await response.json();
     },
     getDishsByCategory: async (storeId, categoryName) => {
         const response = await fetch(
@@ -20,7 +20,9 @@ const getMenuClient = {
             },
         );
         if (!response.ok) {
-            throw new Error(`Failed to fetch dishes by category: ${categoryName}`);
+            throw new Error(
+                `Failed to fetch dishes by category: ${categoryName}`,
+            );
         }
 
         const data = await response.json();
