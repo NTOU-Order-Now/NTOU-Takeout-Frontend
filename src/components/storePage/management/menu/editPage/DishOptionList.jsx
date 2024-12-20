@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
-import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faEdit, faSave } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ToggleNavBar from "../../../../common/ToggleNavBar";
 import useEditDishStore from "../../../../../stores/EditDishStore";
@@ -28,7 +28,7 @@ const DishOptionList = ({ group, groupIndex, onDeleteGroup }) => {
         setGroup(groupIndex, {
             name: groupName,
             attributeOptions: options,
-            type: isSingleSelect ? "single" : "multi",
+            type: isSingleSelect ? "single" : "multiple",
             isRequired: isNeedSelect ? true : false,
         });
     }, [
@@ -96,14 +96,19 @@ const DishOptionList = ({ group, groupIndex, onDeleteGroup }) => {
     };
 
     const seleteOptions = {
-        單選: () => setIsSingleSelect(true),
-        複選: () => setIsSingleSelect(false),
+        單選: () => setIsSingleSelect("single"),
+        複選: () => setIsSingleSelect("multiple"),
     };
 
     const toggleNeedSelect = () => {
         setIsNeedSelect((prevIsNeedSelect) =>
             prevIsNeedSelect ? false : true,
         );
+    };
+
+    const handleGroupNameSave = () => {
+        handleSetGroupName(groupName);
+        setIsEditingGroupName(false);
     };
 
     return (
@@ -114,11 +119,10 @@ const DishOptionList = ({ group, groupIndex, onDeleteGroup }) => {
                     <input
                         type="text"
                         value={groupName}
-                        onChange={(e) => handleSetGroupName(e.target.value)}
-                        onBlur={() => setIsEditingGroupName(false)}
+                        onChange={(e) => setGroupName(e.target.value)}
                         onKeyDown={(e) => {
                             if (e.key === "Enter") {
-                                setIsEditingGroupName(false);
+                                handleGroupNameSave();
                             }
                         }}
                         className="border rounded px-2 py-1 text-lg font-bold focus:ring-orange-500 focus:outline-none"
@@ -140,9 +144,20 @@ const DishOptionList = ({ group, groupIndex, onDeleteGroup }) => {
                 <div className="flex space-x-2">
                     <button
                         className="text-orange-500 hover:text-orange-700 text-xl"
-                        onClick={() => setIsEditingGroupName(true)}
+                        onClick={() => {
+                            if (isEditingGroupName) {
+                                // 點擊存檔按鈕時儲存
+                                handleGroupNameSave();
+                            } else {
+                                // 如果不在編輯，點擊則進入編輯模式
+                                setIsEditingGroupName(true);
+                            }
+                        }}
                     >
-                        <FontAwesomeIcon icon={faEdit} size="base" />
+                        <FontAwesomeIcon
+                            icon={isEditingGroupName ? faSave : faEdit}
+                            size="base"
+                        />
                     </button>
                     <button
                         className="text-red-500 hover:text-red-700 text-xl"
