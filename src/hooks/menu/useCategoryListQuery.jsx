@@ -13,6 +13,7 @@ export const useCategoryListQuery = (menuId, isEnable) => {
 
         enabled: !!menuId && isEnable,
         refetchOnWindowFocus: false,
+        staleTime: 1000 * 60 ** 10, //10 min
     });
 
     return menuCategoryList;
