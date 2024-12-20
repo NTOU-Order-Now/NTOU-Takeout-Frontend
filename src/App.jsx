@@ -3,7 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import DevToolBubble from "./devtool/DevToolBubble";
-import { SystemContextProvider } from "./context/SystemContext";
+import { SystemContextProvider } from "./context/SystemContextProvider.jsx";
 import NotFound from "./pages/NotFound";
 import CartSkeleton from "./skeleton/cart/CartSkeleton";
 import HomeSkeleton from "./skeleton/home/HomeSkeleton";

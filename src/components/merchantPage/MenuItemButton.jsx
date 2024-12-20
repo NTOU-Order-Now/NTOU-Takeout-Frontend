@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
-import { useSystemContext } from "../../context/SystemContext";
+import { useSystemContext } from "../../context/useSystemContext.jsx";
 const MenuItemButton = ({ dishId, onClick }) => {
     const { merchantId } = useParams();
     const { cartData } = useSystemContext();

@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
-import { useSystemContext } from "../../context/SystemContext";
+import { useSystemContext } from "../../context/useSystemContext.jsx";
 const CartIcon = () => {
     const { cartCount, refetchCart } = useSystemContext();
     if (cartCount === undefined) {

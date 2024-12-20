@@ -4,7 +4,7 @@ import CartPageHeader from "../components/cartPage/CartPageHeader";
 import CartTotalSpend from "../components/cartPage/CartTotalSpend";
 import CartItemCardList from "../components/cartPage/CartItemCardList";
 import { useCategoryQueries } from "../hooks/menu/useCategoryQueries";
-import { useSystemContext } from "../context/SystemContext";
+import { useSystemContext } from "../context/useSystemContext.jsx";
 import CartRemark from "../components/cartPage/CartRemark";
 import CartSkeleton from "../skeleton/cart/CartSkeleton.jsx";
 const Cart = () => {
