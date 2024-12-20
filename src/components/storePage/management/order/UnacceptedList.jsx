@@ -17,7 +17,7 @@ const UnacceptedList = () => {
         isError,
         error,
     } = useOrderQueries("PENDING");
-    // console.debug("Unaccepted list data:", fetchedData);
+    console.debug("Unaccepted list data:", fetchedData);
     // useEffect(() => {
     //     if (inView && !isFetchingNextPage && hasNextPage) {
     //         fetchNextPage();

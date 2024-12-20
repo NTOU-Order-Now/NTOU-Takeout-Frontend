@@ -40,7 +40,7 @@ const Order = () => {
                 onLeftClick={toggleSidebar}
                 rightComponents={[orderCountButton]}
             />
-            <div className="sticky top-[55px] z-20 px-10   h-[85px] bg-white content-center ">
+            <div className="sticky top-[55px] z-20 px-10   h-[85px] bg-white content-center rounded-2xl shadow-md ">
                 <ToggleNavBar options={options} InitActiveTab={"未接受"} />
             </div>
             <div className="relative top-20 mx-8">
