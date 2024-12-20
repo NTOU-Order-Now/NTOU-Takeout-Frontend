@@ -1,15 +1,24 @@
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import userInfoStore from "../stores/user/userInfoStore.js";
+import Cookies from "js-cookie";
+import { useUserInfoQuery } from "../hooks/user/useUserInfoQuery.jsx";
+import HeaderSkeleton from "../skeleton/common/HeaderSkeleton.jsx";
 
 const MerchantProtectedRoute = ({ children }) => {
     const navigate = useNavigate();
-    const user = userInfoStore((state) => state.user);
-    if (!user) {
-        console.debug("user not found");
+    const authToken = Cookies.get("authToken");
+    const { userInfo, isUserInfoLoading } = useUserInfoQuery(!!authToken);
+    if (isUserInfoLoading) {
+        return <HeaderSkeleton />;
+    }
+
+    if (!authToken || !userInfo) {
+        console.debug("user not found", userInfo);
         navigate("/auth/login");
         return;
-    } else if (user.role === "CUSTOMER") {
+    }
+
+    if (userInfo.role === "CUSTOMER") {
         navigate("/");
         return;
     }
