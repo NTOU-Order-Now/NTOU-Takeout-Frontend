@@ -1,11 +1,14 @@
 import OrderCard from "./OrderCard.jsx";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
-import { useOrderQueries } from "../../../../hooks/order/useOrderQueries.jsx";
+import { useOrderInfiniteQuery } from "../../../../hooks/order/useOrderInfiniteQuery.jsx";
+import { useQueryClient } from "@tanstack/react-query";
 const UnacceptedList = () => {
     const { ref, inView } = useInView({
         rootMargin: "100px",
     });
+    // const queryClient = useQueryClient();
+    // queryClient.invalidateQueries(["order"]);
     const {
         orders,
         fetchNextPage,
@@ -14,7 +17,7 @@ const UnacceptedList = () => {
         isLoading,
         isError,
         error,
-    } = useOrderQueries("PENDING");
+    } = useOrderInfiniteQuery("PENDING");
 
     useEffect(() => {
         if (inView && !isFetchingNextPage && hasNextPage) {

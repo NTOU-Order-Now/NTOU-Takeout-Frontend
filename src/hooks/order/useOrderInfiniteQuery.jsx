@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { searchOrder } from "../../api/order/searchOrder.js";
 
-export const useOrderQueries = (status) => {
+export const useOrderInfiniteQuery = (status) => {
     const PAGE_SIZE = 3;
     const {
         data: orders,
@@ -12,7 +12,7 @@ export const useOrderQueries = (status) => {
         isError,
         error,
     } = useInfiniteQuery({
-        queryKey: ["orders"],
+        queryKey: ["orders", status],
         queryFn: async ({ pageParam = 0 }) => {
             const response = await searchOrder({
                 page: pageParam,

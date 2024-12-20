@@ -1,26 +1,52 @@
 import OrderCard from "./OrderCard.jsx";
-import useOrderStore from "../../../../stores/orderStore.js";
 import PropTypes from "prop-types";
-
+import { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
+import { useOrderInfiniteQuery } from "../../../../hooks/order/useOrderInfiniteQuery.jsx";
 function AcceptedList() {
-    const orders = useOrderStore((state) => state.orders);
+    const { ref, inView } = useInView({
+        rootMargin: "100px",
+    });
 
-    const filteredOrders = orders.filter((order) => order.status !== "PENDING");
+    const {
+        orders,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        isLoading,
+        isError,
+        error,
+    } = useOrderInfiniteQuery("PROCESSING");
+
+    useEffect(() => {
+        if (inView && !isFetchingNextPage && hasNextPage) {
+            fetchNextPage();
+        }
+    }, [inView, isFetchingNextPage, hasNextPage, fetchNextPage]);
+    if (isLoading) {
+        return <div className="text-center pt-20">Loading...</div>;
+    }
+
+    if (isError) {
+        return <div className="text-center pt-20">Error: {error.message}</div>;
+    }
 
     return (
-        <div className="flex flex-col ">
-            {filteredOrders.length > 0 ? (
-                filteredOrders?.map((order) => (
-                    <OrderCard key={order.id} order={order} />
-                ))
-            ) : (
-                <p className="text-gray-500 pt-20 text-center">
-                    目前沒有已接單的訂單
-                </p>
+        <div className="flex flex-col text-center justify-between ">
+            {orders?.pages.map((page) =>
+                page.map((order, _) => {
+                    return <OrderCard key={_} order={order} />;
+                }),
             )}
+            <div ref={ref}>
+                {hasNextPage && isFetchingNextPage && (
+                    <div className="text-center py-4">Loading more...</div>
+                )}
+            </div>
         </div>
     );
 }
+
 AcceptedList.prototype = {
     orderData: PropTypes.object,
 };

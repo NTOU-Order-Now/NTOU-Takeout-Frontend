@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import useOrderStore from "../../../../stores/orderStore.js";
 import { useCallback } from "react";
+import { useOrderStatusMutation } from "../../../../hooks/order/useOrderStatusMutation.jsx";
 
 const getStatusColors = (status) => {
     switch (status) {
@@ -50,30 +51,37 @@ const getNextStatus = (currentStatus) => {
     }
 };
 
-const OrderCard = ({
-    order,
-    onAccept,
-    onReject,
-    onStatusChange,
-    showStatus = true,
-}) => {
+const OrderCard = ({ order, showStatus = true }) => {
     const { bgColor, textColor, statusText } = getStatusColors(order.status);
-    const updateOrderStatus = useOrderStore((state) => state.updateOrderStatus);
-    const acceptOrder = useOrderStore((state) => state.acceptOrder);
-    const denyOrder = useOrderStore((state) => state.denyOrder);
+    const { updateOrderStatusAsync, isLoading } = useOrderStatusMutation();
+
     const handleAccept = useCallback(
-        (orderId) => {
-            acceptOrder(orderId);
-            console.debug("Accept order: ", orderId);
+        async (orderId) => {
+            try {
+                await updateOrderStatusAsync({
+                    orderId,
+                    newStatus: "PROCESSING",
+                });
+                console.debug("Accept order: ", orderId);
+            } catch (error) {
+                console.error("Failed to accept order:", error);
+            }
         },
-        [acceptOrder],
+        [updateOrderStatusAsync],
     );
     const handleReject = useCallback(
-        (orderId) => {
-            denyOrder(orderId);
-            console.debug("Rejecting order: ", orderId);
+        async (orderId) => {
+            try {
+                await updateOrderStatusAsync({
+                    orderId,
+                    newStatus: "CANCELED",
+                });
+                console.debug("Reject order: ", orderId);
+            } catch (error) {
+                console.error("Failed to reject order:", error);
+            }
         },
-        [denyOrder],
+        [updateOrderStatusAsync],
     );
     const isOverdue = () => {
         const now = new Date();
@@ -81,13 +89,20 @@ const OrderCard = ({
         return order.status === "PROCESSING" && now > estimate;
     };
 
-    const handleStatusClick = () => {
+    const handleStatusClick = useCallback(async () => {
         const nextStatus = getNextStatus(order.status);
         if (nextStatus) {
-            updateOrderStatus(order.id, nextStatus);
+            try {
+                await updateOrderStatusAsync({
+                    orderId: order.id,
+                    newStatus: nextStatus,
+                });
+            } catch (error) {
+                console.error("Failed to update order status:", error);
+            }
         }
-    };
-    console.debug("order status", order.status);
+    }, [order.id, order.status, updateOrderStatusAsync]);
+
     return (
         <div className="relative flex justify-between rounded-lg p-4 shadow-lg mb-6 bg-gray-50">
             {/* Order Info */}
@@ -130,7 +145,7 @@ const OrderCard = ({
                     <div className="flex gap-2">
                         {
                             <button
-                                onClick={() => handleAccept(order.id)}
+                                onClick={() => handleReject(order.id)}
                                 className="bg-red-500 text-white px-3 py-1 text-sm font-bold rounded hover:bg-red-600"
                             >
                                 拒絕
@@ -138,7 +153,7 @@ const OrderCard = ({
                         }
                         {
                             <button
-                                onClick={() => handleReject(order.id)}
+                                onClick={() => handleAccept(order.id)}
                                 className="bg-green-500 text-white px-3 py-1 text-sm font-bold rounded hover:bg-green-600"
                             >
                                 接單
@@ -160,9 +175,9 @@ OrderCard.propTypes = {
     order: PropTypes.shape({
         id: PropTypes.string.isRequired,
         status: PropTypes.string.isRequired,
-        cost: PropTypes.string.isRequired,
+        cost: PropTypes.number.isRequired,
         orderTime: PropTypes.string.isRequired,
-        estimatedPrepTime: PropTypes.string.isRequired,
+        estimatedPrepTime: PropTypes.number.isRequired,
     }).isRequired,
     onAccept: PropTypes.func,
     onReject: PropTypes.func,
