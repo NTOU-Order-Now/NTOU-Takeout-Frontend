@@ -17,12 +17,16 @@ function MenuSection({
     setSelectedDish,
 }) {
     const [localCategoryData, setLocalCategoryData] = useState(categoryData);
+    const [editingCategoryIndex, setEditingCategoryIndex] = useState(null);
+    const [newCategoryName, setNewCategoryName] = useState("");
 
     const setDish = useEditDishStore((state) => state.setDish);
+
     const handleMenuItemClick = (item) => {
         setDish(item);
         setSelectedDish(item);
     };
+
     const handleCardDelete = (categoryIndex, dishIndex) => {
         setLocalCategoryData((prevCategories) =>
             prevCategories.map((category, index) => {
@@ -38,6 +42,7 @@ function MenuSection({
             }),
         );
     };
+
     const handleCardUp = (categoryIndex, dishIndex) => {
         if (dishIndex === 0) return;
         setLocalCategoryData((prevCategories) =>
@@ -54,6 +59,7 @@ function MenuSection({
             }),
         );
     };
+
     const handleCardDown = (categoryIndex, dishIndex) => {
         if (dishIndex === localCategoryData[categoryIndex].dishes.length - 1)
             return;
@@ -71,7 +77,20 @@ function MenuSection({
             }),
         );
     };
-    console.log(selectedDish);
+
+    const startEditingCategoryName = (categoryIndex, currentName) => {
+        setEditingCategoryIndex(categoryIndex);
+        setNewCategoryName(currentName);
+    };
+
+    const saveCategoryName = (categoryIndex, name) => {
+        setLocalCategoryData((prevCategories) =>
+            prevCategories.map((category, index) =>
+                index === categoryIndex ? { ...category, name } : category,
+            ),
+        );
+        setEditingCategoryIndex(null);
+    };
 
     return (
         <div className="font-notoTC relative min-h-screen flex flex-col justify-center container mx-auto p-4">
@@ -81,10 +100,47 @@ function MenuSection({
                     ref={(el) => (sectionRefs.current[categoryIndex] = el)}
                     className="w-full mb-8"
                 >
-                    <p className="text-2xl font-notoTC mt-3 mb-5 font-bold">
-                        {category.name}
-                        <FontAwesomeIcon className="ml-2" icon={faEdit} />
-                    </p>
+                    <div className="flex items-center mb-5">
+                        {editingCategoryIndex === categoryIndex ? (
+                            <input
+                                type="text"
+                                value={newCategoryName}
+                                onChange={(e) =>
+                                    setNewCategoryName(e.target.value)
+                                }
+                                onBlur={() =>
+                                    saveCategoryName(
+                                        categoryIndex,
+                                        newCategoryName,
+                                    )
+                                }
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        saveCategoryName(
+                                            categoryIndex,
+                                            newCategoryName,
+                                        );
+                                    }
+                                }}
+                                className="border-b-2 border-gray-400 focus:outline-none text-2xl font-notoTC font-bold"
+                                autoFocus
+                            />
+                        ) : (
+                            <p className="text-2xl font-notoTC mt-3 mb-3 font-bold">
+                                {category.name}
+                            </p>
+                        )}
+                        <FontAwesomeIcon
+                            className="ml-2 cursor-pointer"
+                            icon={faEdit}
+                            onClick={() =>
+                                startEditingCategoryName(
+                                    categoryIndex,
+                                    category.name,
+                                )
+                            }
+                        />
+                    </div>
                     <div className="grid gap-4">
                         {category.dishes.map((food, dishIndex) => (
                             <Suspense

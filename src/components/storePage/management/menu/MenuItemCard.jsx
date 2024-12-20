@@ -30,7 +30,7 @@ const MenuItemCard = ({ food, onClick, onDelete, onUp, onDown }) => {
                 <div className="flex flex-col justify-center absolute mb-10 left-0 h-full p-2">
                     <button
                         onClick={(e) => {
-                            e.stopPropagation(); // 阻止事件冒泡
+                            e.stopPropagation();
                             onUp();
                         }}
                         className="mb-16"
@@ -43,7 +43,7 @@ const MenuItemCard = ({ food, onClick, onDelete, onUp, onDown }) => {
                     </button>
                     <button
                         onClick={(e) => {
-                            e.stopPropagation(); // 阻止事件冒泡
+                            e.stopPropagation();
                             onDown();
                         }}
                         className="mt-16"
@@ -85,10 +85,10 @@ const MenuItemCard = ({ food, onClick, onDelete, onUp, onDown }) => {
                 <div className="absolute bottom-4 right-5 flex space-x-2">
                     <button
                         onClick={(e) => {
-                            e.stopPropagation(); // 阻止事件冒泡
+                            e.stopPropagation();
                             onDelete();
                         }}
-                        className="text-red-500 hover:text-red-600 mr-4 z-20"
+                        className="text-red-500 hover:text-red-600 mr-4"
                     >
                         <FontAwesomeIcon icon={faTrash} size="xl" />
                     </button>

@@ -23,8 +23,6 @@ const DishOptionList = ({ group, groupIndex, onDeleteGroup }) => {
     const updateGroupName = useEditDishStore(
         (state) => state.updateAttributeName,
     );
-    console.log(group);
-    console.log(dish);
 
     useEffect(() => {
         setGroup(groupIndex, {
@@ -54,7 +52,6 @@ const DishOptionList = ({ group, groupIndex, onDeleteGroup }) => {
 
     const handleOptionSave = (e, index) => {
         const newValue = e.target.value;
-        console.log(e.type, e.key);
         if (e.type === "keydown" && e.key !== "Enter") {
             return;
         }
@@ -77,7 +74,6 @@ const DishOptionList = ({ group, groupIndex, onDeleteGroup }) => {
 
     const extraCostSave = (e, index) => {
         const newValue = e.target.value;
-        console.log(e.type, e.key);
         if (e.type === "keydown" && e.key !== "Enter") {
             return;
         }
@@ -119,6 +115,7 @@ const DishOptionList = ({ group, groupIndex, onDeleteGroup }) => {
                         type="text"
                         value={groupName}
                         onChange={(e) => handleSetGroupName(e.target.value)}
+                        onBlur={() => setIsEditingGroupName(false)}
                         onKeyDown={(e) => {
                             if (e.key === "Enter") {
                                 setIsEditingGroupName(false);
