@@ -7,7 +7,6 @@ import useEditDishStore from "../../../../stores/EditDishStore";
 const CartItemCardSkeleton = lazy(
     () => import("../../../../skeleton/menu/CartItemCardSkeleton"),
 );
-
 const MenuItemCard = lazy(() => import("./MenuItemCard"));
 
 function MenuSection({
@@ -28,19 +27,25 @@ function MenuSection({
     };
 
     const handleCardDelete = (categoryIndex, dishIndex) => {
-        setLocalCategoryData((prevCategories) =>
-            prevCategories.map((category, index) => {
+        setLocalCategoryData((prevCategories) => {
+            const newCategories = prevCategories.map((category, index) => {
                 if (index === categoryIndex) {
+                    const newDishes = category.dishes.filter(
+                        (_, i) => i !== dishIndex,
+                    );
                     return {
                         ...category,
-                        dishes: category.dishes.filter(
-                            (_, i) => i !== dishIndex,
-                        ),
+                        dishes: newDishes,
                     };
                 }
                 return category;
-            }),
-        );
+            });
+            const filteredCategories = newCategories.filter(
+                (category) => category.dishes.length > 0,
+            );
+
+            return filteredCategories;
+        });
     };
 
     const handleCardUp = (categoryIndex, dishIndex) => {
