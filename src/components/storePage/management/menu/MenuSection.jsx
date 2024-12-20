@@ -44,38 +44,66 @@ function MenuSection({
     };
 
     const handleCardUp = (categoryIndex, dishIndex) => {
-        if (dishIndex === 0) return;
-        setLocalCategoryData((prevCategories) =>
-            prevCategories.map((category, index) => {
-                if (index === categoryIndex) {
-                    const newDishes = [...category.dishes];
-                    [newDishes[dishIndex], newDishes[dishIndex - 1]] = [
-                        newDishes[dishIndex - 1],
-                        newDishes[dishIndex],
-                    ];
-                    return { ...category, dishes: newDishes };
-                }
-                return category;
-            }),
-        );
+        if (dishIndex === 0) {
+            setLocalCategoryData((prevCategories) =>
+                prevCategories.map((category, index) => {
+                    if (index === categoryIndex) {
+                        const newDishes = [
+                            ...category.dishes.slice(1),
+                            category.dishes[0],
+                        ];
+                        return { ...category, dishes: newDishes };
+                    }
+                    return category;
+                }),
+            );
+        } else {
+            setLocalCategoryData((prevCategories) =>
+                prevCategories.map((category, index) => {
+                    if (index === categoryIndex) {
+                        const newDishes = [...category.dishes];
+                        [newDishes[dishIndex], newDishes[dishIndex - 1]] = [
+                            newDishes[dishIndex - 1],
+                            newDishes[dishIndex],
+                        ];
+                        return { ...category, dishes: newDishes };
+                    }
+                    return category;
+                }),
+            );
+        }
     };
 
     const handleCardDown = (categoryIndex, dishIndex) => {
-        if (dishIndex === localCategoryData[categoryIndex].dishes.length - 1)
-            return;
-        setLocalCategoryData((prevCategories) =>
-            prevCategories.map((category, index) => {
-                if (index === categoryIndex) {
-                    const newDishes = [...category.dishes];
-                    [newDishes[dishIndex], newDishes[dishIndex + 1]] = [
-                        newDishes[dishIndex + 1],
-                        newDishes[dishIndex],
-                    ];
-                    return { ...category, dishes: newDishes };
-                }
-                return category;
-            }),
-        );
+        if (dishIndex === localCategoryData[categoryIndex].dishes.length - 1) {
+            setLocalCategoryData((prevCategories) =>
+                prevCategories.map((category, index) => {
+                    if (index === categoryIndex) {
+                        const { dishes } = category;
+                        const newDishes = [
+                            dishes[dishes.length - 1],
+                            ...dishes.slice(0, dishes.length - 1),
+                        ];
+                        return { ...category, dishes: newDishes };
+                    }
+                    return category;
+                }),
+            );
+        } else {
+            setLocalCategoryData((prevCategories) =>
+                prevCategories.map((category, index) => {
+                    if (index === categoryIndex) {
+                        const newDishes = [...category.dishes];
+                        [newDishes[dishIndex], newDishes[dishIndex + 1]] = [
+                            newDishes[dishIndex + 1],
+                            newDishes[dishIndex],
+                        ];
+                        return { ...category, dishes: newDishes };
+                    }
+                    return category;
+                }),
+            );
+        }
     };
 
     const startEditingCategoryName = (categoryIndex, currentName) => {
