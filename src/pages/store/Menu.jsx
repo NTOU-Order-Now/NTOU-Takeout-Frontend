@@ -19,17 +19,21 @@ import getStoreClient from "../../api/store/getStoreClient";
 import useMenuStore from "../../stores/menuStore";
 import DishEdit from "../../components/storePage/management/menu/editPage/DishEdit";
 import MenuPageSkeleton from "../../skeleton/menu/MenuPageSkeleton.jsx";
+import { useSystemContext } from "../../context/useSystemContext.jsx";
 
 const Menu = () => {
     const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
     const title = useSidebarStore((state) => state.title);
-    const merchantId = "67178651994d5f6d435d6ef8";
-    const onAddClick = () => {
-        console.debug("add click");
-    };
+    const { userInfo, merchantData, menuCategoryList } = useSystemContext();
+    console.debug("merchantData", merchantData);
+    console.debug("menuCategoryList", menuCategoryList);
+    const merchantId = userInfo?.id;
+    console.debug("merchantId:", merchantId);
+
     const sectionRefs = useRef([]);
     const [isNavbarFixed, setIsNavbarFixed] = useState(false);
     const setNavbarItems = useNavStore((state) => state.setNavbarItems);
+
     // handle scroll to section
     const handleScrollToSection = (index) => {
         sectionRefs.current[index]?.scrollIntoView({
@@ -37,51 +41,24 @@ const Menu = () => {
             inline: "start",
         });
     };
-
-    const getMerchantById = useMerchantStore((state) => state.getMerchantById);
-    const [menuId, setMenuId] = useState(null);
-    const [merchant, setMerchant] = useState(null);
-
-    // get merchant data
-    useEffect(() => {
-        const merchantData = getMerchantById(merchantId);
-        if (merchantData) {
-            setMerchant(merchantData);
-            setMenuId(merchantData.menuId);
-        } else {
-            // if merchant data is not in store, fetch it
-            const fetchMerchantData = async () => {
-                try {
-                    return await getStoreClient.getMerchantsByIdList([
-                        merchantId,
-                    ]);
-                } catch (error) {
-                    console.error("Failed to fetch merchant data:", error);
-                }
-            };
-            fetchMerchantData().then((res) => {
-                console.debug("merchant not fetched, res:", res.data[0]);
-                setMerchant(res.data[0]);
-                setMenuId(res.data[0]?.menuId || null);
-            });
-        }
-    }, [merchantId, getMerchantById]);
+    const onAddClick = () => {
+        console.debug("add click");
+    };
 
     const categoryData = useMenuStore((state) => state.menu.categories);
-
-    const menuCategoryList = useCategoryListQuery(menuId);
-    // const { categoryData } = useCategoryQueries(menuCategoryList, menuId);
     const [selectedDish, setSelectedDish] = useState(null);
 
     // set navbar items
     useEffect(() => {
         if (menuCategoryList?.length) {
-            setNavbarItems(menuCategoryList.map((category) => category.first));
+            setNavbarItems(
+                menuCategoryList.map((category) => category.categoryName),
+            );
         }
     }, [menuCategoryList, setNavbarItems]);
 
     // if merchant data is not fetched yet, show loading spinner
-    if (merchantId && !merchant) {
+    if (merchantId && !merchantData) {
         return <MenuPageSkeleton />;
     }
 
