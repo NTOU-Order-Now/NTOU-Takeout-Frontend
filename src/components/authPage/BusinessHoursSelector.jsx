@@ -32,10 +32,10 @@ const BusinessHoursSelector = ({ businessHours, onUpdate }) => {
     };
 
     return (
-        <div className="w-full flex flex-col mx-auto p-6 bg-white rounded-lg font-notoTC">
-            <h2 className="text-2xl font-bold mb-6 text-gray-800">
+        <div className="w-full flex flex-col p-3 bg-white rounded-lg font-notoTC">
+            {/* <h2 className="text-2xl font-bold mb-6 text-gray-800">
                 營業時間設定
-            </h2>
+            </h2> */}
             <div className="space-y-4">
                 {daysOfWeek.map((day, dayIndex) => (
                     <div key={day} className="p-4 bg-gray-50 rounded-lg">
