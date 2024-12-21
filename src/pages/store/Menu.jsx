@@ -16,9 +16,9 @@ import { useCategoryListQuery } from "../../hooks/menu/useCategoryListQuery";
 import useMerchantStore from "../../stores/merchantStore";
 import useNavStore from "../../stores/merchantMenuNav";
 import getStoreClient from "../../api/store/getStoreClient";
-import MenuPageSkeleton from "../../hooks/menu/MenuPageSkeleton";
 import useMenuStore from "../../stores/menuStore";
 import DishEdit from "../../components/storePage/management/menu/editPage/DishEdit";
+import MenuPageSkeleton from "../../skeleton/menu/MenuPageSkeleton.jsx";
 
 const Menu = () => {
     const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
@@ -47,29 +47,34 @@ const Menu = () => {
         const merchantData = getMerchantById(merchantId);
         if (merchantData) {
             setMerchant(merchantData);
-            setMenuId(merchantData.menuId);
+            // setMenuId(merchantData.menuId);
+            setMenuId("676569c41ede4e7e9a87795a"); //for testing
         } else {
             // if merchant data is not in store, fetch it
             const fetchMerchantData = async () => {
                 try {
-                    const res = await getStoreClient.getMerchantsByIdList([
+                    return await getStoreClient.getMerchantsByIdList([
                         merchantId,
                     ]);
-                    setMerchant(res.data[0]);
-                    setMenuId(res.data[0]?.menuId || null);
                 } catch (error) {
                     console.error("Failed to fetch merchant data:", error);
                 }
             };
-            fetchMerchantData();
+            fetchMerchantData().then((res) => {
+                console.debug("merchant not fetched, res:", res.data[0]);
+                setMerchant(res.data[0]);
+                // setMenuId(res.data[0]?.menuId || null);//for testing
+                setMenuId("676569c41ede4e7e9a87795a"); //for testing
+            });
         }
     }, [merchantId, getMerchantById]);
 
     const categoryData = useMenuStore((state) => state.menu.categories);
 
     const menuCategoryList = useCategoryListQuery(menuId);
-    //const { categoryData } = useCategoryQueries(menuCategoryList, merchantId);
+    // const { categoryData } = useCategoryQueries(menuCategoryList, menuId);
     const [selectedDish, setSelectedDish] = useState(null);
+
     // set navbar items
     useEffect(() => {
         if (menuCategoryList?.length) {

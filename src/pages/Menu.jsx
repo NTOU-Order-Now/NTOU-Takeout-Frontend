@@ -5,18 +5,29 @@ import { useCategoryListQuery } from "../hooks/menu/useCategoryListQuery";
 import useMerchantStore from "../stores/merchantStore";
 import useNavStore from "../stores/merchantMenuNav";
 import getStoreClient from "../api/store/getStoreClient";
-import MenuPageSkeleton from "../hooks/menu/MenuPageSkeleton";
+import MenuPageSkeleton from "../skeleton/menu/MenuPageSkeleton.jsx";
 const NavbarSkeleton = lazy(() => import("../skeleton/menu/NavbarSkeleton"));
-const MenuHeaderSkeleton = lazy(() => import("../skeleton/menu/MenuHeaderSkeleton"));
-const ViewCartButtonSkeleton = lazy(() => import("../skeleton/menu/ViewCartButtonSkeleton"));
-const MenuSectionSkeleton = lazy(() => import("../skeleton/menu/MenuSectionSkeleton"));
+const MenuHeaderSkeleton = lazy(
+    () => import("../skeleton/menu/MenuHeaderSkeleton"),
+);
+const ViewCartButtonSkeleton = lazy(
+    () => import("../skeleton/menu/ViewCartButtonSkeleton"),
+);
+const MenuSectionSkeleton = lazy(
+    () => import("../skeleton/menu/MenuSectionSkeleton"),
+);
 const MenuHeader = lazy(() => import("../components/merchantPage/MenuHeader"));
 const MenuNavbar = lazy(() => import("../components/merchantPage/MenuNavbar"));
-const MenuSection = lazy(() => import("../components/merchantPage/MenuSection"));
-const ViewCartButton = lazy(() => import("../components/merchantPage/ViewCartButton"));
+const MenuSection = lazy(
+    () => import("../components/merchantPage/MenuSection"),
+);
+const ViewCartButton = lazy(
+    () => import("../components/merchantPage/ViewCartButton"),
+);
 
 function Menu() {
     const { merchantId } = useParams();
+    console.debug("merchantId", merchantId);
     const sectionRefs = useRef([]);
     const [isNavbarFixed, setIsNavbarFixed] = useState(false);
     const setNavbarItems = useNavStore((state) => state.setNavbarItems);
@@ -42,7 +53,7 @@ function Menu() {
     }, []);
 
     const getMerchantById = useMerchantStore((state) => state.getMerchantById);
-    const [menuId, setMenuId] = useState(null);
+    const [menuId, setMenuId] = useState(null); //for testing
     const [merchant, setMerchant] = useState(null);
 
     // get merchant data
@@ -50,38 +61,44 @@ function Menu() {
         const merchantData = getMerchantById(merchantId);
         if (merchantData) {
             setMerchant(merchantData);
-            setMenuId(merchantData.menuId);
-        } else { // if merchant data is not in store, fetch it
+            // setMenuId(merchantData?.menuId);//for testing
+            setMenuId("676569c41ede4e7e9a87795a"); //for testing
+        } else {
+            // if merchant data is not in store, fetch it
             const fetchMerchantData = async () => {
                 try {
-                    const res = await getStoreClient.getMerchantsByIdList([
+                    return await getStoreClient.getMerchantsByIdList([
                         merchantId,
                     ]);
-                    setMerchant(res.data[0]);
-                    setMenuId(res.data[0]?.menuId || null);
                 } catch (error) {
                     console.error("Failed to fetch merchant data:", error);
                 }
             };
-            fetchMerchantData();
+            fetchMerchantData().then((res) => {
+                console.debug("merchant not fetched, res:", res.data[0]);
+                setMerchant(res.data[0]);
+                // setMenuId(res.data[0]?.menuId || null);//for testing
+                setMenuId("676569c41ede4e7e9a87795a"); //for testing
+            });
         }
     }, [merchantId, getMerchantById]);
 
     const menuCategoryList = useCategoryListQuery(menuId);
-    const { categoryData } = useCategoryQueries(menuCategoryList, merchantId);
+    const { categoryData } = useCategoryQueries(menuCategoryList, menuId);
     const [selectedDish, setSelectedDish] = useState(null);
+
     // set navbar items
     useEffect(() => {
         if (menuCategoryList?.length) {
-            setNavbarItems(menuCategoryList.map((category) => category.first));
+            setNavbarItems(
+                menuCategoryList.map((category) => category.categoryName),
+            );
         }
     }, [menuCategoryList, setNavbarItems]);
 
     // if merchant data is not fetched yet, show loading spinner
     if (merchantId && !merchant) {
-        return (
-            <MenuPageSkeleton />
-        );
+        return <MenuPageSkeleton />;
     }
     return (
         <div className="flex flex-col ">
@@ -94,7 +111,6 @@ function Menu() {
                     isNavbarFixed={isNavbarFixed}
                 />
             </Suspense>
-
             <Suspense fallback={<MenuSectionSkeleton />}>
                 <MenuSection
                     selectedDish={selectedDish}
@@ -109,7 +125,7 @@ function Menu() {
                 </Suspense>
             )}
         </div>
-    )
+    );
 }
 
 export default Menu;
