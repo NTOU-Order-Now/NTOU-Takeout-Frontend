@@ -23,6 +23,7 @@ const StoreMenu = lazy(() => import("./pages/store/Menu"));
 const StoreOrder = lazy(() => import("./pages/store/Order"));
 const queryClient = new QueryClient();
 import OrderDetails from "./pages/store/OrderDetailPage";
+import AddReview from "./pages/AddReview.jsx";
 import MerchantProtectedRoute from "./route/MerchantProtectedRoute.jsx";
 import CustomerProtectedRoute from "./route/CustomerProtectedRoute.jsx";
 
@@ -136,6 +137,11 @@ const router = createBrowserRouter(
         {
             path: "/OrderDetails",
             element: <OrderDetails />,
+            // errorElement: <NotFound />,
+        },
+        {
+            path: "/AddReview",
+            element: <AddReview />,
             // errorElement: <NotFound />,
         },
     ],
