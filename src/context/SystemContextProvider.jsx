@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useCartQuery } from "../hooks/cart/useCartQuery";
 import { useMerchantDataQuery } from "../hooks/merchant/useMerchantDataQuery";
 import { useCategoryListQuery } from "../hooks/menu/useCategoryListQuery";
@@ -41,7 +41,8 @@ export const SystemContextProvider = ({ children }) => {
         );
 
     const menuCategoryList = useCategoryListQuery(
-        merchantData?.menuId ?? null,
+        // merchantData?.menuId ?? null,
+        "676569c41ede4e7e9a87795a", //for testing
         // don't need fetch when user is undefined or role is MERCHANT
         userInfo !== undefined && userInfo?.role === "CUSTOMER",
     );
