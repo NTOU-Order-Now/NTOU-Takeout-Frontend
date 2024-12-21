@@ -7,6 +7,7 @@ import { useCategoryQueries } from "../hooks/menu/useCategoryQueries";
 import { useSystemContext } from "../context/useSystemContext.jsx";
 import CartRemark from "../components/cartPage/CartRemark";
 import CartSkeleton from "../skeleton/cart/CartSkeleton.jsx";
+import userInfo from "../components/orderPage/UserInfo.jsx";
 const Cart = () => {
     const {
         cartData,
@@ -25,8 +26,8 @@ const Cart = () => {
     console.debug("Cart loaded merchantData:", merchantData);
     const { categoryData, isQueriesSuccess } = useCategoryQueries(
         menuCategoryList,
-        // cartData?.storeId,
-        "676569c41ede4e7e9a87795a", //for testing
+        userInfo?.role === "CUSTOMER" ? cartData?.menuId : userInfo?.storeId,
+        userInfo !== undefined,
     );
     const [remark, setRemark] = useState("");
     // Create a map of dishes for easy access

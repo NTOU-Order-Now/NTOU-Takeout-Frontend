@@ -3,199 +3,82 @@ import PropTypes from "prop-types";
 import { faEdit } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useEditDishStore from "../../../../stores/EditDishStore";
+import CategoryHeader from "./CategoryHeader.jsx";
+import { useUpdateDishOrderMutation } from "../../../../hooks/store/useUpdateDishOrderMutation.jsx";
+import { useUpdateDishMutation } from "../../../../hooks/store/useUpdateDishMutation.jsx";
+import { useDeleteDishMutation } from "../../../../hooks/store/useDeleteDishMutation.jsx";
 
 const CartItemCardSkeleton = lazy(
     () => import("../../../../skeleton/menu/CartItemCardSkeleton"),
 );
 const MenuItemCard = lazy(() => import("./MenuItemCard"));
 
-function MenuSection({
-    sectionRefs,
-    categoryData,
-    selectedDish,
-    setSelectedDish,
-}) {
-    console.log(categoryData);
-    const [localCategoryData, setLocalCategoryData] = useState(categoryData);
-    const [editingCategoryIndex, setEditingCategoryIndex] = useState(null);
-    const [newCategoryName, setNewCategoryName] = useState("");
+function MenuSection({ sectionRefs, categoryData, menuId }) {
+    const { updateDish } = useUpdateDishMutation(menuId);
+    const { updateDishOrder } = useUpdateDishOrderMutation(menuId);
+    const { deleteMenuDish } = useDeleteDishMutation(menuId);
 
-    const setDish = useEditDishStore((state) => state.setDish);
-
-    const handleMenuItemClick = (item) => {
-        setDish(item);
-        setSelectedDish(item);
-    };
-
-    const handleCardDelete = (categoryIndex, dishIndex) => {
-        setLocalCategoryData((prevCategories) => {
-            const newCategories = prevCategories.map((category, index) => {
-                if (index === categoryIndex) {
-                    const newDishes = category.dishes.filter(
-                        (_, i) => i !== dishIndex,
-                    );
-                    return {
-                        ...category,
-                        dishes: newDishes,
-                    };
-                }
-                return category;
-            });
-            const filteredCategories = newCategories.filter(
-                (category) => category.dishes.length > 0,
-            );
-
-            return filteredCategories;
-        });
-    };
-
-    const handleCardUp = (categoryIndex, dishIndex) => {
-        if (dishIndex === 0) {
-            setLocalCategoryData((prevCategories) =>
-                prevCategories.map((category, index) => {
-                    if (index === categoryIndex) {
-                        const newDishes = [
-                            ...category.dishes.slice(1),
-                            category.dishes[0],
-                        ];
-                        return { ...category, dishes: newDishes };
-                    }
-                    return category;
-                }),
-            );
-        } else {
-            setLocalCategoryData((prevCategories) =>
-                prevCategories.map((category, index) => {
-                    if (index === categoryIndex) {
-                        const newDishes = [...category.dishes];
-                        [newDishes[dishIndex], newDishes[dishIndex - 1]] = [
-                            newDishes[dishIndex - 1],
-                            newDishes[dishIndex],
-                        ];
-                        return { ...category, dishes: newDishes };
-                    }
-                    return category;
-                }),
-            );
-        }
-    };
-
-    const handleCardDown = (categoryIndex, dishIndex) => {
-        if (dishIndex === localCategoryData[categoryIndex].dishes.length - 1) {
-            setLocalCategoryData((prevCategories) =>
-                prevCategories.map((category, index) => {
-                    if (index === categoryIndex) {
-                        const { dishes } = category;
-                        const newDishes = [
-                            dishes[dishes.length - 1],
-                            ...dishes.slice(0, dishes.length - 1),
-                        ];
-                        return { ...category, dishes: newDishes };
-                    }
-                    return category;
-                }),
-            );
-        } else {
-            setLocalCategoryData((prevCategories) =>
-                prevCategories.map((category, index) => {
-                    if (index === categoryIndex) {
-                        const newDishes = [...category.dishes];
-                        [newDishes[dishIndex], newDishes[dishIndex + 1]] = [
-                            newDishes[dishIndex + 1],
-                            newDishes[dishIndex],
-                        ];
-                        return { ...category, dishes: newDishes };
-                    }
-                    return category;
-                }),
-            );
-        }
-    };
-
-    const startEditingCategoryName = (categoryIndex, currentName) => {
-        setEditingCategoryIndex(categoryIndex);
-        setNewCategoryName(currentName);
-    };
-
-    const saveCategoryName = (categoryIndex, name) => {
-        setLocalCategoryData((prevCategories) =>
-            prevCategories.map((category, index) =>
-                index === categoryIndex ? { ...category, name } : category,
-            ),
+    const handleDishMove = async (categoryName, dishId, direction) => {
+        const category = categoryData.find(
+            (c) => c.categoryName === categoryName,
         );
-        setEditingCategoryIndex(null);
-    };
+        const currentIndex = category.dishes.findIndex((d) => d.id === dishId);
+        // const newOrder = [...category.dishes].map((d) => d.id);
+        const newOrder = [...category.dishes];
 
+        if (direction === "up" && currentIndex > 0) {
+            [newOrder[currentIndex], newOrder[currentIndex - 1]] = [
+                newOrder[currentIndex - 1],
+                newOrder[currentIndex],
+            ];
+        } else if (direction === "down" && currentIndex < newOrder.length - 1) {
+            [newOrder[currentIndex], newOrder[currentIndex + 1]] = [
+                newOrder[currentIndex + 1],
+                newOrder[currentIndex],
+            ];
+        } else if (direction === "up" && currentIndex === 0) {
+            [newOrder[currentIndex], newOrder[newOrder.length - 1]] = [
+                newOrder[newOrder.length - 1],
+                newOrder[currentIndex],
+            ];
+        } else if (
+            direction === "down" &&
+            currentIndex === newOrder.length - 1
+        ) {
+            [newOrder[currentIndex], newOrder[0]] = [
+                newOrder[0],
+                newOrder[currentIndex],
+            ];
+        }
+        await updateDishOrder({ categoryName, newOrder });
+    };
     return (
         <div className="font-notoTC relative min-h-screen flex flex-col justify-center container mx-auto p-4">
-            {localCategoryData.map((category, categoryIndex) => (
+            {categoryData.map((category, _) => (
                 <div
-                    key={category?.categoryName || `section-${categoryIndex}`}
-                    ref={(el) => (sectionRefs.current[categoryIndex] = el)}
+                    key={_}
+                    ref={(el) => (sectionRefs.current[_] = el)}
                     className="w-full mb-8"
                 >
-                    <div className="flex items-center mb-5">
-                        {editingCategoryIndex === categoryIndex ? (
-                            <input
-                                type="text"
-                                value={newCategoryName}
-                                onChange={(e) =>
-                                    setNewCategoryName(e.target.value)
-                                }
-                                onBlur={() =>
-                                    saveCategoryName(
-                                        categoryIndex,
-                                        newCategoryName,
-                                    )
-                                }
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        saveCategoryName(
-                                            categoryIndex,
-                                            newCategoryName,
-                                        );
-                                    }
-                                }}
-                                className="border-b-2 border-gray-400 focus:outline-none text-2xl font-notoTC font-bold"
-                                autoFocus
-                            />
-                        ) : (
-                            <p className="text-2xl font-notoTC mt-3 mb-3 font-bold">
-                                {category.name}
-                            </p>
-                        )}
-                        <FontAwesomeIcon
-                            className="ml-2 cursor-pointer"
-                            icon={faEdit}
-                            onClick={() =>
-                                startEditingCategoryName(
-                                    categoryIndex,
-                                    category.name,
-                                )
-                            }
-                        />
-                    </div>
+                    <CategoryHeader
+                        categoryData={category}
+                        onUpdateName={updateDish}
+                        menuId={menuId}
+                    />
                     <div className="grid gap-4">
-                        {category.dishes.map((food, dishIndex) => (
+                        {category.dishes.map((dish, _) => (
                             <Suspense
+                                key={_}
                                 fallback={<CartItemCardSkeleton />}
-                                key={dishIndex}
                             >
                                 <MenuItemCard
-                                    food={food}
-                                    onDown={() =>
-                                        handleCardDown(categoryIndex, dishIndex)
-                                    }
-                                    onUp={() =>
-                                        handleCardUp(categoryIndex, dishIndex)
-                                    }
+                                    categoryName={category.categoryName}
+                                    food={dish}
                                     onDelete={() =>
-                                        handleCardDelete(
-                                            categoryIndex,
-                                            dishIndex,
-                                        )
+                                        deleteMenuDish(menuId, dish.id)
                                     }
-                                    onClick={handleMenuItemClick}
+                                    onMove={handleDishMove}
+                                    // onClick={()=>}
                                 />
                             </Suspense>
                         ))}
@@ -209,8 +92,7 @@ function MenuSection({
 MenuSection.propTypes = {
     sectionRefs: PropTypes.object.isRequired,
     categoryData: PropTypes.array.isRequired,
-    selectedDish: PropTypes.object,
-    setSelectedDish: PropTypes.func.isRequired,
+    menuId: PropTypes.string.isRequired,
 };
 
 export default MenuSection;

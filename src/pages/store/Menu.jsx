@@ -12,11 +12,7 @@ const MenuSection = lazy(
     () => import("../../components/storePage/management/menu/MenuSection"),
 );
 import { useCategoryQueries } from "../../hooks/menu/useCategoryQueries";
-import { useCategoryListQuery } from "../../hooks/menu/useCategoryListQuery";
-import useMerchantStore from "../../stores/merchantStore";
 import useNavStore from "../../stores/merchantMenuNav";
-import getStoreClient from "../../api/store/getStoreClient";
-import useMenuStore from "../../stores/menuStore";
 import DishEdit from "../../components/storePage/management/menu/editPage/DishEdit";
 import MenuPageSkeleton from "../../skeleton/menu/MenuPageSkeleton.jsx";
 import { useSystemContext } from "../../context/useSystemContext.jsx";
@@ -25,11 +21,17 @@ const Menu = () => {
     const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
     const title = useSidebarStore((state) => state.title);
     const { userInfo, merchantData, menuCategoryList } = useSystemContext();
-    console.debug("merchantData", merchantData);
-    console.debug("menuCategoryList", menuCategoryList);
+    // console.debug("merchantData", merchantData);
+    // console.debug("menuCategoryList", menuCategoryList);
     const merchantId = userInfo?.id;
-    console.debug("merchantId:", merchantId);
+    // console.debug("merchantId:", merchantId);
+    const { categoryData } = useCategoryQueries(
+        menuCategoryList,
+        merchantData?.menuId,
+        userInfo !== undefined,
+    );
 
+    // console.debug("categoryData", categoryData);
     const sectionRefs = useRef([]);
     const [isNavbarFixed, setIsNavbarFixed] = useState(false);
     const setNavbarItems = useNavStore((state) => state.setNavbarItems);
@@ -45,7 +47,7 @@ const Menu = () => {
         console.debug("add click");
     };
 
-    const categoryData = useMenuStore((state) => state.menu.categories);
+    // const categoryData = useMenuStore((state) => state.menu.categories);
     const [selectedDish, setSelectedDish] = useState(null);
 
     // set navbar items
@@ -117,8 +119,7 @@ const Menu = () => {
             <div className=" relative top-10">
                 <Suspense fallback={<MenuSectionSkeleton />}>
                     <MenuSection
-                        selectedDish={selectedDish}
-                        setSelectedDish={setSelectedDish}
+                        menuId={merchantData?.menuId}
                         sectionRefs={sectionRefs}
                         categoryData={categoryData}
                     />

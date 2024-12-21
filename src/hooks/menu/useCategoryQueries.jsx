@@ -1,7 +1,7 @@
 import { useQueries } from "@tanstack/react-query";
 import { getDishsByCategory } from "../../api/menu/getDishsByCategory.js";
 
-export const useCategoryQueries = (categories, menuId) => {
+export const useCategoryQueries = (categories, menuId, isEnable) => {
     return useQueries({
         queries: categories.map((category) => ({
             queryKey: ["categoryDishes", category.categoryName],
@@ -16,7 +16,11 @@ export const useCategoryQueries = (categories, menuId) => {
                     dishes: dishDetails,
                 };
             },
-            enabled: !!categories && !!menuId && category.dishIds.length > 0,
+            enabled:
+                !!categories &&
+                !!menuId &&
+                category.dishIds.length > 0 &&
+                isEnable,
             refetchOnWindowFocus: false,
             staleTime: Infinity,
         })),

@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import Cookies from "js-cookie";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,28 +9,27 @@ import {
     faPenToSquare,
 } from "@fortawesome/free-solid-svg-icons";
 
-const MenuItemCard = ({ food, onClick, onDelete, onUp, onDown }) => {
+const MenuItemCard = ({ categoryName, food, onDelete, onMove }) => {
     const { id, name, picture, price, description } = food;
-    const authToken = Cookies.get("authToken");
-
-    const handleButtonClick = (e) => {
+    const handleDeleteClick = (e) => {
         e.stopPropagation();
-        console.log("Add to cart clicked");
+        onDelete();
     };
 
+    const handleClickMove = async (e, dir) => {
+        e.stopPropagation();
+        await onMove(categoryName, id, dir);
+    };
     return (
         <div
             className="w-full h-[17rem] flex cursor-pointer relative rounded-lg  overflow-hidden bg-gray-50 shadow-lg "
-            onClick={() => onClick(food)}
+            // onClick={() => onClick(food)}
         >
             {/*move arrow button*/}
             <div className="flex flex-col justify-center absolute mb-10 left-0 h-full p-2  bg-white">
                 <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onUp();
-                    }}
-                    className="mb-16"
+                    onClick={(e) => handleClickMove(e, "up")}
+                    className="mb-16 py-2 cursor-pointer"
                 >
                     <FontAwesomeIcon
                         icon={faChevronUp}
@@ -40,11 +38,8 @@ const MenuItemCard = ({ food, onClick, onDelete, onUp, onDown }) => {
                     />
                 </button>
                 <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onDown();
-                    }}
-                    className="mt-16"
+                    onClick={(e) => handleClickMove(e, "down")}
+                    className="mt-16 py-2 cursor-pointer"
                 >
                     <FontAwesomeIcon
                         icon={faChevronDown}
@@ -66,7 +61,7 @@ const MenuItemCard = ({ food, onClick, onDelete, onUp, onDown }) => {
             </div>
 
             {/* Content */}
-            <div className="relative w-2/3 p-4">
+            <div className="relative w-full p-4">
                 {/* Title */}
                 <h2 className="text-2xl font-bold mb-2 text-black">{name}</h2>
 
@@ -99,10 +94,11 @@ const MenuItemCard = ({ food, onClick, onDelete, onUp, onDown }) => {
 };
 
 MenuItemCard.propTypes = {
-    onClick: PropTypes.func.isRequired,
+    // onClick: PropTypes.func.isRequired,
+    categoryName: PropTypes.string.isRequired,
     food: PropTypes.object.isRequired,
-    onUp: PropTypes.func,
-    onDown: PropTypes.func,
+    onMove: PropTypes.func,
+    onMoveDown: PropTypes.func,
     onDelete: PropTypes.func,
     onEdit: PropTypes.func,
 };

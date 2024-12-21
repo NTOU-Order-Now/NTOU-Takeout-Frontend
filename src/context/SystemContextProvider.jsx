@@ -14,7 +14,7 @@ export const SystemContextProvider = ({ children }) => {
     const { userInfo, isUserInfoLoading } = useUserInfoQuery(
         authToken !== undefined,
     );
-    console.debug("userInfo : ", userInfo);
+    // console.debug("userInfo : ", userInfo);
     const setUser = userInfoStore((state) => state.setUser);
     const setLoading = userInfoStore((state) => state.setLoading);
     useEffect(() => {
@@ -77,11 +77,11 @@ export const SystemContextProvider = ({ children }) => {
         }
     }, [cartData?.orderedDishes]);
     const cartCount = cartData?.orderedDishes?.length;
-    console.debug("cartCount:", cartCount);
-    console.debug("cartData:", cartData);
-    console.debug("merchantData:", merchantData);
-    console.debug("totalSpend:", totalSpend);
-    console.debug("totalQuantity:", totalQuantity);
+    // console.debug("cartCount:", cartCount);
+    // console.debug("cartData:", cartData);
+    // console.debug("merchantData:", merchantData);
+    // console.debug("totalSpend:", totalSpend);
+    // console.debug("totalQuantity:", totalQuantity);
     return (
         <SystemContext.Provider
             value={{
