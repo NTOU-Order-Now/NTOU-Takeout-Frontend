@@ -47,8 +47,7 @@ const Menu = () => {
         const merchantData = getMerchantById(merchantId);
         if (merchantData) {
             setMerchant(merchantData);
-            // setMenuId(merchantData.menuId);
-            setMenuId("676569c41ede4e7e9a87795a"); //for testing
+            setMenuId(merchantData.menuId);
         } else {
             // if merchant data is not in store, fetch it
             const fetchMerchantData = async () => {
@@ -63,8 +62,7 @@ const Menu = () => {
             fetchMerchantData().then((res) => {
                 console.debug("merchant not fetched, res:", res.data[0]);
                 setMerchant(res.data[0]);
-                // setMenuId(res.data[0]?.menuId || null);//for testing
-                setMenuId("676569c41ede4e7e9a87795a"); //for testing
+                setMenuId(res.data[0]?.menuId || null);
             });
         }
     }, [merchantId, getMerchantById]);
