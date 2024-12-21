@@ -8,7 +8,7 @@ import NotFound from "./pages/NotFound";
 import CartSkeleton from "./skeleton/cart/CartSkeleton";
 import HomeSkeleton from "./skeleton/home/HomeSkeleton";
 import ReviewSkeleton from "./skeleton/review/ReviewSkeleton";
-import MenuPageSkeleton from "./hooks/menu/MenuPageSkeleton";
+import MenuPageSkeleton from "./skeleton/menu/MenuPageSkeleton.jsx";
 import LoginRegisterSkeleton from "./skeleton/auth/LoginRegisterSkeleton";
 const Cart = lazy(() => import("./pages/Cart"));
 const Home = lazy(() => import("./pages/Home"));

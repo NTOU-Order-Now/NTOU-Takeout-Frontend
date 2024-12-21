@@ -19,12 +19,14 @@ const Cart = () => {
         refetchCart,
     } = useSystemContext();
     if (cartData === undefined) {
-        console.debug("Cart not found, refetchCart");
+        console.error("Cart not found, refetchCart");
         refetchCart();
     }
+    console.debug("Cart loaded merchantData:", merchantData);
     const { categoryData, isQueriesSuccess } = useCategoryQueries(
         menuCategoryList,
-        cartData?.storeId,
+        // cartData?.storeId,
+        "676569c41ede4e7e9a87795a", //for testing
     );
     const [remark, setRemark] = useState("");
     // Create a map of dishes for easy access

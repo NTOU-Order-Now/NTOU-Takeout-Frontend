@@ -1,33 +1,28 @@
 import { useQueries } from "@tanstack/react-query";
-import getMenuClient from "../../api/menu/getMenuClient";
-// Fetch dish details for each category separately
-export const useCategoryQueries = (menuCategoryList, merchantId) => {
-    let isQueriesSuccess = false;
-    const categoryQueries = useQueries({
-        queries: menuCategoryList.map((category) => ({
-            queryKey: ["categoryDishes", merchantId, category.first],
-            queryFn: async () => {
-                const dishDetails = await getMenuClient.getDishsByCategory(
-                    merchantId,
-                    category.first,
+import { getDishsByCategory } from "../../api/menu/getDishsByCategory.js";
+
+export const useCategoryQueries = (categories, menuId) => {
+    return useQueries({
+        queries: categories.map((category) => ({
+            queryKey: ["categoryDishes", category.categoryName],
+            queryFn: async ({ signal }) => {
+                const dishDetails = await getDishsByCategory(
+                    menuId,
+                    category.categoryName,
+                    signal,
                 );
                 return {
-                    categoryName: category.first,
+                    categoryName: category.categoryName,
                     dishes: dishDetails,
                 };
             },
-            enabled: !!category.second.length && menuCategoryList !== undefined,
+            enabled: !!categories && !!menuId && category.dishIds.length > 0,
             refetchOnWindowFocus: false,
             staleTime: Infinity,
         })),
+        combine: (results) => ({
+            categoryData: results.map((result) => result.data).filter(Boolean),
+            isQueriesSuccess: results.every((result) => result.isSuccess),
+        }),
     });
-
-    const categoryData = categoryQueries
-        ? categoryQueries.map((query) => query.data).filter(Boolean) // Filter out undefined results
-        : [];
-    isQueriesSuccess = true;
-    return {
-        categoryData,
-        isQueriesSuccess,
-    };
 };
