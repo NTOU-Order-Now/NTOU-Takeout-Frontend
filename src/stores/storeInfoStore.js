@@ -1,4 +1,3 @@
-// stores/storeInfoStore.js
 import { create } from 'zustand';
 
 const useStoreForm = create((set) => ({
