@@ -1,1 +1,0 @@
-import{t as c}from"./index-CFrlWo3n.js";const d=c((a,n)=>({merchants:{},addMerchants:e=>a(s=>({merchants:{...s.merchants,...e.reduce((r,t)=>(r[t.id]=t,r),{})}})),getMerchantById:e=>n().merchants[e]||null}));export{d as u};
