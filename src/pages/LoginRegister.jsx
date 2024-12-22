@@ -10,7 +10,7 @@ function LoginRegister() {
     useEffect(() => {
         setCurType(authType);
     }, [authType]);
-    console.debug("curType", curType);
+
     const handleStatusChange = (newCurType) => {
         navigate(`/auth/${newCurType}`, { replace: true }); // replace: true to prevent adding new history
         setCurType(newCurType);
@@ -30,13 +30,7 @@ function LoginRegister() {
                     options={options}
                     InitActiveTab={curType === "login" ? "登入" : "註冊"}
                 />
-                {
-                    curType === "register" ? (
-                        <RegisterForm/>
-                    ):(
-                        <LoginForm/>
-                    )
-                }
+                {curType === "register" ? <RegisterForm /> : <LoginForm />}
             </div>
         </div>
     );
