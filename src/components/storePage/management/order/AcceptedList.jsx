@@ -17,7 +17,9 @@ function AcceptedList() {
         isError,
         error,
     } = useOrderInfiniteQuery();
-    console.debug("orders ", orders, hasNextPage);
+    const filterOrders = orders?.pages.map((page) =>
+        page.content.filter((order) => order.status !== "PENDING"),
+    );
     useEffect(() => {
         if (inView && !isFetchingNextPage && hasNextPage) {
             fetchNextPage();
@@ -33,8 +35,8 @@ function AcceptedList() {
 
     return (
         <div className="flex flex-col text-center justify-between ">
-            {orders?.pages.map((page) =>
-                page.content.map((order, _) => {
+            {filterOrders.map((page) =>
+                page.map((order, _) => {
                     return <OrderCard key={_} order={order} />;
                 }),
             )}
