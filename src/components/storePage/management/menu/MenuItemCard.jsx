@@ -11,9 +11,9 @@ import {
 
 const MenuItemCard = ({ categoryName, food, onDelete, onMove }) => {
     const { id, name, picture, price, description } = food;
-    const handleDeleteClick = (e) => {
+    const handleDelete = (e) => {
         e.stopPropagation();
-        onDelete();
+        onDelete({ dishId: id, categoryName });
     };
 
     const handleClickMove = async (e, dir) => {
@@ -81,7 +81,11 @@ const MenuItemCard = ({ categoryName, food, onDelete, onMove }) => {
                             }}
                             className="text-red-500 hover:text-red-600 mr-4"
                         >
-                            <FontAwesomeIcon icon={faTrash} size="xl" />
+                            <FontAwesomeIcon
+                                icon={faTrash}
+                                size="xl"
+                                onClick={handleDelete}
+                            />
                         </button>
                         <button className="text-orange-500 hover:text-orange-600">
                             <FontAwesomeIcon icon={faPenToSquare} size="xl" />
@@ -97,10 +101,8 @@ MenuItemCard.propTypes = {
     // onClick: PropTypes.func.isRequired,
     categoryName: PropTypes.string.isRequired,
     food: PropTypes.object.isRequired,
-    onMove: PropTypes.func,
-    onMoveDown: PropTypes.func,
-    onDelete: PropTypes.func,
-    onEdit: PropTypes.func,
+    onMove: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
 };
 
 export default MenuItemCard;

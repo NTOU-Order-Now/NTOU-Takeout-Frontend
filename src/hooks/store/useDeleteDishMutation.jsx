@@ -34,9 +34,12 @@ export const useDeleteDishMutation = (menuId) => {
                 categoryName,
             ]);
 
-            queryClient.setQueryData(["categoryDishes", categoryName], (old) =>
-                old.filter((dish) => dish.id !== dishId),
-            );
+            queryClient.setQueryData(["categoryDishes", categoryName], {
+                previousDishes,
+                dishes: previousDishes.dishes.filter(
+                    (dish) => dish.id !== dishId,
+                ),
+            });
 
             return { previousDishes, categoryName };
         },
@@ -47,6 +50,7 @@ export const useDeleteDishMutation = (menuId) => {
                     context.previousDishes,
                 );
             }
+            alert("刪除失敗，請重整頁面後再試一次");
             console.error("Delete dish error:", err);
         },
         onSettled: (_, __, variables) => {

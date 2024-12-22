@@ -74,9 +74,7 @@ function MenuSection({ sectionRefs, categoryData, menuId }) {
                                 <MenuItemCard
                                     categoryName={category.categoryName}
                                     food={dish}
-                                    onDelete={() =>
-                                        deleteMenuDish(menuId, dish.id)
-                                    }
+                                    onDelete={deleteMenuDish}
                                     onMove={handleDishMove}
                                     // onClick={()=>}
                                 />
