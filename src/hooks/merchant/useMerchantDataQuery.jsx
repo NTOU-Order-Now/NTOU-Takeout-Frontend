@@ -8,7 +8,7 @@ export const useMerchantDataQuery = (merchantId, isEnable = true) => {
         error,
         refetch: refetchMerchantData,
     } = useQuery({
-        queryKey: ["menuCategoryList", merchantId],
+        queryKey: ["merchantData", merchantId],
         queryFn: async () => {
             const res = await getStoreClient.getMerchantsByIdList([merchantId]);
             return res.data[0];

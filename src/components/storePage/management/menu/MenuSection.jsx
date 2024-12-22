@@ -1,51 +1,90 @@
 import { lazy, Suspense } from "react";
 import PropTypes from "prop-types";
-const CartItemCardSkeleton = lazy(() => import("../../../../skeleton/menu/CartItemCardSkeleton"));
-const MenuDishDetail = lazy(() => import("../../../merchantPage/MenuDishDetail"));
-const MenuItemCard = lazy(() => import("./MenuItemCard"));
-function MenuSection({ sectionRefs, categoryData, selectedDish, setSelectedDish }) {
+import CategoryHeader from "./CategoryHeader.jsx";
+import { useUpdateDishOrderMutation } from "../../../../hooks/store/useUpdateDishOrderMutation.jsx";
+import { useDeleteDishMutation } from "../../../../hooks/store/useDeleteDishMutation.jsx";
+import { useCategoryNameMutation } from "../../../../hooks/store/useCategoryNameMutation.jsx";
 
-    const handleMenuItemClick = (item) => {
-        setSelectedDish(item);
+const CartItemCardSkeleton = lazy(
+    () => import("../../../../skeleton/menu/CartItemCardSkeleton"),
+);
+const MenuItemCard = lazy(() => import("./MenuItemCard"));
+
+function MenuSection({ sectionRefs, categoryData, menuId }) {
+    const { updateDishOrder, isPending: isUpdateDishOrderPending } =
+        useUpdateDishOrderMutation(menuId);
+    const { deleteMenuDish, isPending: isDeleteMenuDishPending } =
+        useDeleteDishMutation(menuId);
+    const { isPending: isChangeCategoryNamePending } =
+        useCategoryNameMutation(menuId);
+    if (
+        isChangeCategoryNamePending ||
+        // isUpdateDishOrderPending ||
+        isDeleteMenuDishPending
+    ) {
+        return <CartItemCardSkeleton />;
+    }
+    const handleDishMove = async (categoryName, dishId, direction) => {
+        const category = categoryData.find(
+            (c) => c.categoryName === categoryName,
+        );
+        const currentIndex = category.dishes.findIndex((d) => d.id === dishId);
+        // const newOrder = [...category.dishes].map((d) => d.id);
+        const newOrder = [...category.dishes];
+
+        if (direction === "up" && currentIndex > 0) {
+            [newOrder[currentIndex], newOrder[currentIndex - 1]] = [
+                newOrder[currentIndex - 1],
+                newOrder[currentIndex],
+            ];
+        } else if (direction === "down" && currentIndex < newOrder.length - 1) {
+            [newOrder[currentIndex], newOrder[currentIndex + 1]] = [
+                newOrder[currentIndex + 1],
+                newOrder[currentIndex],
+            ];
+        } else if (direction === "up" && currentIndex === 0) {
+            [newOrder[currentIndex], newOrder[newOrder.length - 1]] = [
+                newOrder[newOrder.length - 1],
+                newOrder[currentIndex],
+            ];
+        } else if (
+            direction === "down" &&
+            currentIndex === newOrder.length - 1
+        ) {
+            [newOrder[currentIndex], newOrder[0]] = [
+                newOrder[0],
+                newOrder[currentIndex],
+            ];
+        }
+        await updateDishOrder({ categoryName, newOrder });
     };
 
     return (
-        <div className="font-notoTC relative min-h-screen flex flex-col justify-center container mx-auto p-4 ">
-            {categoryData.map((category, index) => (
+        <div className="font-notoTC relative min-h-screen flex flex-col justify-center container mx-auto p-4">
+            {categoryData?.map((category, _) => (
                 <div
-                    key={category?.categoryName || `section-${index}`}
-                    ref={(el) => (sectionRefs.current[index] = el)}
+                    key={_}
+                    ref={(el) => (sectionRefs.current[_] = el)}
                     className="w-full mb-8"
                 >
-                    {
-                        <>
-                            <p className="text-2xl font-notoTC mt-3 mb-5 font-bold">
-                                {category.categoryName}
-                            </p>
-                            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                                {category.dishes.map((food, index) => (
-                                    <Suspense
-                                        fallback={<CartItemCardSkeleton />}
-                                        key={index}
-                                    >
-                                        <MenuItemCard
-                                            food={food}
-                                            onClick={handleMenuItemClick}
-                                        />
-                                    </Suspense>
-                                ))}
-                            </div>
-                        </>
-                    }
+                    <CategoryHeader categoryData={category} menuId={menuId} />
+                    <div className="grid gap-4">
+                        {category?.dishes.map((dish, _) => (
+                            <Suspense
+                                key={_}
+                                fallback={<CartItemCardSkeleton />}
+                            >
+                                <MenuItemCard
+                                    categoryName={category.categoryName}
+                                    food={dish}
+                                    onMove={handleDishMove}
+                                    onDelete={deleteMenuDish}
+                                />
+                            </Suspense>
+                        ))}
+                    </div>
                 </div>
             ))}
-
-            {selectedDish && (
-                <MenuDishDetail
-                    dishData={selectedDish}
-                    onClose={() => setSelectedDish(null)}
-                />
-            )}
         </div>
     );
 }
@@ -53,7 +92,7 @@ function MenuSection({ sectionRefs, categoryData, selectedDish, setSelectedDish 
 MenuSection.propTypes = {
     sectionRefs: PropTypes.object.isRequired,
     categoryData: PropTypes.array.isRequired,
-    selectedDish: PropTypes.object,
-    setSelectedDish: PropTypes.func.isRequired,
+    menuId: PropTypes.string,
 };
+
 export default MenuSection;
