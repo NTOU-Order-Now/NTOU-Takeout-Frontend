@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import { Edit2, Save } from "lucide-react";
 import PropTypes from "prop-types";
-import { useUpdateDishMutation } from "../../../../hooks/store/useUpdateDishMutation.jsx";
+import { useCategoryNameMutation } from "../../../../hooks/store/useCategoryNameMutation.jsx";
 const CategoryHeader = ({ categoryData, menuId }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState(
         categoryData?.categoryName || "未命名類別",
     );
-    const { updateDish } = useUpdateDishMutation(menuId);
-    // console.debug("categoryData", categoryData);
+    const { changeCategoryName } = useCategoryNameMutation(menuId);
     // 當 categoryData 改變時更新 newName
     useEffect(() => {
         setNewName(categoryData?.categoryName || "未命名類別");
@@ -17,29 +16,27 @@ const CategoryHeader = ({ categoryData, menuId }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         e.stopPropagation();
-
-        if (newName.trim() !== "") {
-            let dishes = categoryData.dishes;
-            dishes = dishes.map((dish) => ({
-                ...dish,
-                category: newName.trim(),
-            }));
-            const updatedData = dishes;
-            console.debug("dishes", dishes);
+        if (
+            newName.trim() !== "" &&
+            newName.trim() !== categoryData?.categoryName
+        ) {
             try {
-                await updateDish(dishes);
-                setIsEditing(false);
+                await changeCategoryName({
+                    oldCategoryName: categoryData?.categoryName,
+                    newCategoryName: newName.trim(),
+                });
             } catch (error) {
                 console.error("Failed to update category name:", error);
             }
-        } else {
+        } else if (newName.trim() === "") {
             alert("不可為空");
         }
+        setIsEditing(false);
     };
 
     const handleKeyDown = async (e) => {
         if (e.key === "Enter") {
-            await handleSubmit();
+            await handleSubmit(e);
         } else if (e.key === "Escape") {
             setNewName(categoryData?.categoryName || "未命名類別");
             setIsEditing(false);
@@ -55,7 +52,7 @@ const CategoryHeader = ({ categoryData, menuId }) => {
     };
 
     return (
-        <div className="flex items-center gap-2 py-3">
+        <div className="flex items-center gap-2 py-3 ">
             {isEditing ? (
                 <input
                     type="text"
@@ -74,7 +71,7 @@ const CategoryHeader = ({ categoryData, menuId }) => {
 
             <button
                 onClick={handleEditClick}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors right-3 relative"
                 title={isEditing ? "儲存" : "編輯"}
             >
                 {isEditing ? (

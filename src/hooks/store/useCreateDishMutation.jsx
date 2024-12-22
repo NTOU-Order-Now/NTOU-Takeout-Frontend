@@ -6,6 +6,7 @@ export const useCreateDishMutation = (menuId) => {
     const queryClient = useQueryClient();
     const abortControllerRef = useRef(null);
     const defaultCategory = "";
+
     const {
         mutateAsync: createDish,
         isError,
@@ -19,7 +20,6 @@ export const useCreateDishMutation = (menuId) => {
 
             const controller = new AbortController();
             abortControllerRef.current = controller;
-
             const res = await getNewDish(menuId, controller.signal);
 
             if (abortControllerRef.current === controller) {
@@ -34,7 +34,7 @@ export const useCreateDishMutation = (menuId) => {
                 defaultCategory,
             ]);
 
-            const previousDishes = queryClient.getQueryData([
+            const previousDishes = queryClient?.getQueryData([
                 "categoryDishes",
                 defaultCategory,
             ]);
@@ -53,25 +53,33 @@ export const useCreateDishMutation = (menuId) => {
                 ["categoryDishes", defaultCategory],
 
                 {
-                    previousDishes,
-                    dishes: [previousDishes.dishes, tempDish],
+                    categoryName: "",
+                    dishes: previousDishes
+                        ? [previousDishes.dishes, tempDish]
+                        : [tempDish],
                 },
             );
-
-            return { previousDishes, category: defaultCategory };
+            return { previousDishes };
         },
-        onError: (err, variables, context) => {
+        onError: (err, dishId, context) => {
             if (context?.previousDishes) {
                 queryClient.setQueryData(
-                    ["categoryDishes", context.category],
+                    ["categoryDishes", defaultCategory],
                     context.previousDishes,
+                );
+            } else {
+                queryClient.setQueryData(
+                    ["categoryDishes", defaultCategory],
+                    [],
                 );
             }
             alert("創建失敗，請重整頁面再試一次");
             console.error("Create new dish error:", err);
         },
         onSettled: () => {
+            console.debug("onSettled");
             queryClient.invalidateQueries(["menuCategoryList", menuId]);
+            queryClient.invalidateQueries(["categoryDishes"], defaultCategory);
         },
     });
     return {

@@ -7,6 +7,7 @@ import CategoryHeader from "./CategoryHeader.jsx";
 import { useUpdateDishOrderMutation } from "../../../../hooks/store/useUpdateDishOrderMutation.jsx";
 import { useUpdateDishMutation } from "../../../../hooks/store/useUpdateDishMutation.jsx";
 import { useDeleteDishMutation } from "../../../../hooks/store/useDeleteDishMutation.jsx";
+import { useCategoryNameMutation } from "../../../../hooks/store/useCategoryNameMutation.jsx";
 
 const CartItemCardSkeleton = lazy(
     () => import("../../../../skeleton/menu/CartItemCardSkeleton"),
@@ -14,9 +15,21 @@ const CartItemCardSkeleton = lazy(
 const MenuItemCard = lazy(() => import("./MenuItemCard"));
 
 function MenuSection({ sectionRefs, categoryData, menuId }) {
-    const { updateDishOrder } = useUpdateDishOrderMutation(menuId);
-    const { deleteMenuDish } = useDeleteDishMutation(menuId);
-
+    const { updateDishOrder, isPending: isUpdateDishOrderPending } =
+        useUpdateDishOrderMutation(menuId);
+    const { deleteMenuDish, isPending: isDeleteMenuDishPending } =
+        useDeleteDishMutation(menuId);
+    const { isPending: isChangeCategoryNamePending } =
+        useCategoryNameMutation(menuId);
+    const { isPending: isDeleteDishPending } = useDeleteDishMutation(menuId);
+    if (
+        isUpdateDishOrderPending ||
+        isChangeCategoryNamePending ||
+        isUpdateDishOrderPending ||
+        isDeleteDishPending
+    ) {
+        return <CartItemCardSkeleton />;
+    }
     const handleDishMove = async (categoryName, dishId, direction) => {
         const category = categoryData.find(
             (c) => c.categoryName === categoryName,
@@ -51,7 +64,7 @@ function MenuSection({ sectionRefs, categoryData, menuId }) {
         }
         await updateDishOrder({ categoryName, newOrder });
     };
-    console.debug("categoryData", categoryData);
+
     return (
         <div className="font-notoTC relative min-h-screen flex flex-col justify-center container mx-auto p-4">
             {categoryData?.map((category, _) => (
@@ -86,7 +99,7 @@ function MenuSection({ sectionRefs, categoryData, menuId }) {
 MenuSection.propTypes = {
     sectionRefs: PropTypes.object.isRequired,
     categoryData: PropTypes.array.isRequired,
-    menuId: PropTypes.string.isRequired,
+    menuId: PropTypes.string,
 };
 
 export default MenuSection;

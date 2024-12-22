@@ -20,7 +20,8 @@ function DishEdit({ onClose, categoryNames, menuId }) {
 
     const { updateDish, isPending } = useUpdateDishMutation(menuId);
     const handleSave = async () => {
-        const picture = "222";
+        const picture =
+            "https://images.pexels.com/photos/1199957/pexels-photo-1199957.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
         // 整理出要更新的資料
         const newDish = {
             id: dishData.id,

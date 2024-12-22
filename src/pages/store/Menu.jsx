@@ -52,7 +52,7 @@ const Menu = () => {
 
     const selectedDish = menuStore((state) => state.selectedDish);
     const setSelectedDish = menuStore((state) => state.setSelectedDish);
-    console.debug("menuCategoryList", menuCategoryList);
+
     // set navbar items
     useEffect(() => {
         if (menuCategoryList?.length) {
@@ -67,7 +67,7 @@ const Menu = () => {
         return <MenuPageSkeleton />;
     }
     const onAddClick = async () => {
-        await createDish();
+        await createDish(menuId);
     };
     const addButton = (
         <button
@@ -96,10 +96,6 @@ const Menu = () => {
             預覽
         </button>
     );
-    const handleUpdate = (newDish) => {
-        console.log(newDish, "!!!");
-        // setSelectedDish(null);
-    };
 
     // 取得 categoryNames
     const categoryNames = menuCategoryList.map(

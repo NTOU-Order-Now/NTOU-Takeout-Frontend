@@ -60,7 +60,7 @@ export const useUpdateDishMutation = (menuId) => {
                     context.previousDishes,
                 );
             }
-            alert("更新錯誤，請重整頁面後再試一次");
+            alert("更新錯誤，請確保所有欄位都不為空");
             console.error("Update dish error:", err);
         },
         onSettled: (category) => {
