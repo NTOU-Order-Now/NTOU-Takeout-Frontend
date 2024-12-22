@@ -2,7 +2,6 @@ import { StrictMode, useEffect, lazy, Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import DevToolBubble from "./devtool/DevToolBubble";
 import { SystemContextProvider } from "./context/SystemContextProvider.jsx";
 import NotFound from "./pages/NotFound";
 import CartSkeleton from "./skeleton/cart/CartSkeleton";
@@ -157,14 +156,6 @@ function App() {
             <QueryClientProvider client={queryClient}>
                 <SystemContextProvider>
                     <RouterProvider router={router}></RouterProvider>
-                    {/*<DevToolBubble*/}
-                    {/*    router={router}*/}
-                    {/*    endPointReplacements={{*/}
-                    {/*        merchantId: "67178651994d5f6d435d6ef8",*/}
-                    {/*        authType: "login",*/}
-                    {/*        storeId: "67178651994d5f6d435d6ef8",*/}
-                    {/*    }}*/}
-                    {/*/>*/}
                 </SystemContextProvider>
                 <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>

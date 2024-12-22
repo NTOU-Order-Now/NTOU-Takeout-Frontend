@@ -10,7 +10,7 @@ function Home() {
     return (
         <div>
             <Header
-                title="OrderNow 馬上點"
+                title="OrderNow"
                 onLeftClick={toggleSidebar}
                 className="fixed top-0"
             />

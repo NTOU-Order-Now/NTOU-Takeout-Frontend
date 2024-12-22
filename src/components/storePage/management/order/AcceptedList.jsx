@@ -16,7 +16,7 @@ function AcceptedList() {
         isLoading,
         isError,
         error,
-    } = useOrderInfiniteQuery("PROCESSING");
+    } = useOrderInfiniteQuery("");
 
     useEffect(() => {
         if (inView && !isFetchingNextPage && hasNextPage) {

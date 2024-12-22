@@ -112,13 +112,13 @@ const Menu = () => {
     }
 
     return (
-        <div>
+        <div className="flex flex-col h-screen">
             <Header
                 title={title}
                 onLeftClick={toggleSidebar}
                 rightComponents={[addButton, previewButton]}
             />
-            <div className="sticky top-[54px] z-20 shadow-sm">
+            <div className="sticky mt-[54px] z-20 shadow-sm">
                 <Suspense fallback={<NavbarSkeleton isNavbarFixed={false} />}>
                     <MenuNavbar
                         onNavClick={handleScrollToSection}
@@ -126,7 +126,7 @@ const Menu = () => {
                     />
                 </Suspense>
             </div>
-            <div className=" relative top-10">
+            <div className="overflow-auto h-[dvh-34px]  ">
                 <Suspense fallback={<MenuSectionSkeleton />}>
                     <MenuSection
                         menuId={menuId}
