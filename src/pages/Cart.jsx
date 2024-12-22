@@ -23,7 +23,7 @@ const Cart = () => {
         console.error("Cart not found, refetchCart");
         refetchCart();
     }
-    console.debug("Cart loaded merchantData:", merchantData);
+
     const { categoryData, isQueriesSuccess } = useCategoryQueries(
         menuCategoryList,
         userInfo?.role === "CUSTOMER" ? cartData?.menuId : userInfo?.storeId,
@@ -78,7 +78,7 @@ const Cart = () => {
             <div className="flex-1 overflow-auto pb-[120px] ">
                 <CartItemCardList cartData={cartData} dishesMap={dishesMap} />
                 <div className="px-4">
-                    <CartRemark onRemarkChange={setRemark} />
+                    <CartRemark onRemarkChange={setRemark} value={remark} />
                 </div>
             </div>
             <div className="flex-none">
@@ -86,9 +86,11 @@ const Cart = () => {
                     orderDetail={{
                         cartData: cartData,
                         totalSpend: totalSpend,
+                        remark,
                         estimateTime:
                             predictedTime - (totalQuantity > 2 ? 30 : 0),
                     }}
+                    handleChangeRemark={setRemark}
                 />
             </div>
         </div>

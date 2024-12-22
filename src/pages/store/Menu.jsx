@@ -33,11 +33,11 @@ const Menu = () => {
         merchantData?.menuId,
         userInfo !== undefined,
     );
-
     const navigate = useNavigate();
     const sectionRefs = useRef([]);
     const [isNavbarFixed, setIsNavbarFixed] = useState(false);
     const setNavbarItems = useNavStore((state) => state.setNavbarItems);
+    setNavbarItems([]);
     const { createDish, isPending: isCreatePenging } =
         useCreateDishMutation(menuId);
 
@@ -104,7 +104,10 @@ const Menu = () => {
     if (selectedDish) {
         return (
             <DishEdit
-                onClose={() => setSelectedDish(null)}
+                onClose={() => {
+                    // e.preventDefault();
+                    setSelectedDish(null);
+                }}
                 categoryNames={categoryNames}
                 menuId={menuId}
             />

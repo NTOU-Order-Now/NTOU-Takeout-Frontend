@@ -1,4 +1,11 @@
-import { useEffect, useState, useRef, lazy, Suspense } from "react";
+import {
+    useEffect,
+    useState,
+    useRef,
+    lazy,
+    Suspense,
+    useCallback,
+} from "react";
 import { useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
@@ -35,7 +42,7 @@ const DishDetail = ({ dishData, onClose }) => {
     const user = userInfoStore((state) => state.user);
     const optionCardRefs = useRef([]);
     const [remark, setRemark] = useState("");
-
+    const dishes = useDishDetailStore((state) => state.dishes);
     useEffect(() => {
         setAllDishAttributes(dishId, options);
         setDishDetail(dishId, {
@@ -44,7 +51,7 @@ const DishDetail = ({ dishData, onClose }) => {
             dishName: name,
             price: price,
             quantity: 1,
-            note: remark,
+            note: "",
             chosenAttributes: [],
         });
 
@@ -62,9 +69,19 @@ const DishDetail = ({ dishData, onClose }) => {
         setAllDishAttributes,
         name,
         price,
-        remark,
     ]);
-
+    const handleRemarkChange = useCallback(
+        (newRemark) => {
+            setRemark(newRemark);
+            if (dishes[dishId]) {
+                setDishDetail(dishId, {
+                    ...dishes[dishId],
+                    note: newRemark,
+                });
+            }
+        },
+        [dishId, dishes, setDishDetail],
+    );
     const handleClose = () => {
         setIsExiting(true);
         setTimeout(() => {
@@ -155,7 +172,10 @@ const DishDetail = ({ dishData, onClose }) => {
                             </div>
                         ))}
                         <div className="pb-12">
-                            <CartRemark onRemarkChange={setRemark} />
+                            <CartRemark
+                                onRemarkChange={handleRemarkChange}
+                                value={remark}
+                            />
                         </div>
                     </div>
                     <div className="py-5"></div>

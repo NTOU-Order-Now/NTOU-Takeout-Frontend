@@ -1,10 +1,16 @@
 import { lazy, Suspense } from "react";
 import PropTypes from "prop-types";
-const CartItemCardSkeleton = lazy(() => import("../../skeleton/menu/CartItemCardSkeleton"));
-const MenuDishDetail = lazy(() => import("./MenuDishDetail"));
+const CartItemCardSkeleton = lazy(
+    () => import("../../skeleton/menu/CartItemCardSkeleton"),
+);
+const MenuDishDetail = lazy(() => import("./DishDetail.jsx"));
 const MenuItemCard = lazy(() => import("./MenuItemCard"));
-function MenuSection({ sectionRefs, categoryData, selectedDish, setSelectedDish }) {
-
+function MenuSection({
+    sectionRefs,
+    categoryData,
+    selectedDish,
+    setSelectedDish,
+}) {
     const handleMenuItemClick = (item) => {
         setSelectedDish(item);
     };
