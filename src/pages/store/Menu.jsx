@@ -66,7 +66,7 @@ const Menu = () => {
         return <MenuPageSkeleton />;
     }
     const onAddClick = async () => {
-        createDish();
+        await createDish();
     };
     const addButton = (
         <button

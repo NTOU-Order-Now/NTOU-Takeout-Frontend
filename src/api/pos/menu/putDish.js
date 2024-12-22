@@ -3,22 +3,13 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 export const putDish = async (
-    {
-        menuId,
-        dishId,
-        name,
-        description,
-        picture,
-        price,
-        category,
-        dishAttributes,
-    },
+    { menuId, id, name, description, picture, price, category, dishAttributes },
     signal,
 ) => {
     try {
         const authToken = Cookies.get("authToken");
         const res = await API.put(
-            `/v2/menu/${menuId}/dish/${dishId}`,
+            `/v2/menu/${menuId}/dish/${id}`,
             {
                 name,
                 description,
@@ -42,7 +33,7 @@ export const putDish = async (
             return;
         }
         console.error(
-            `Failed to update dish (ID: ${dishId}) in menu (ID: ${menuId}):`,
+            `Failed to update dish (ID: ${id}) in menu (ID: ${menuId}):`,
             error,
         );
         throw error;

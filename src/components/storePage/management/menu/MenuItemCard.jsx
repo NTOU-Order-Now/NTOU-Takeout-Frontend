@@ -11,9 +11,9 @@ import {
 
 const MenuItemCard = ({ categoryName, food, onDelete, onMove }) => {
     const { id, name, picture, price, description } = food;
-    const handleDelete = (e) => {
+    const handleDelete = async (e) => {
         e.stopPropagation();
-        onDelete({ dishId: id, categoryName });
+        await onDelete({ dishId: id, categoryName });
     };
 
     const handleClickMove = async (e, dir) => {
@@ -71,7 +71,7 @@ const MenuItemCard = ({ categoryName, food, onDelete, onMove }) => {
                 </p>
                 <div className="absolute bottom-4  space-x-2 flex flex-row justify-between w-full">
                     <p className="text-xl text-gray-800 relative items-start font-bold">
-                        ${price}
+                        ${price ? price : "0"}
                     </p>
                     <div className="pr-8">
                         <button

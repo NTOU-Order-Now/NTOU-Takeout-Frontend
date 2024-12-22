@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense } from "react";
 import PropTypes from "prop-types";
 import { faEdit } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,7 +14,6 @@ const CartItemCardSkeleton = lazy(
 const MenuItemCard = lazy(() => import("./MenuItemCard"));
 
 function MenuSection({ sectionRefs, categoryData, menuId }) {
-    const { updateDish } = useUpdateDishMutation(menuId);
     const { updateDishOrder } = useUpdateDishOrderMutation(menuId);
     const { deleteMenuDish } = useDeleteDishMutation(menuId);
 
@@ -60,11 +59,7 @@ function MenuSection({ sectionRefs, categoryData, menuId }) {
                     ref={(el) => (sectionRefs.current[_] = el)}
                     className="w-full mb-8"
                 >
-                    <CategoryHeader
-                        categoryData={category}
-                        onUpdateName={updateDish}
-                        menuId={menuId}
-                    />
+                    <CategoryHeader categoryData={category} menuId={menuId} />
                     <div className="grid gap-4">
                         {category.dishes.map((dish, _) => (
                             <Suspense
