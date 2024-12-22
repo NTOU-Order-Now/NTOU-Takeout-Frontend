@@ -16,8 +16,8 @@ function AcceptedList() {
         isLoading,
         isError,
         error,
-    } = useOrderInfiniteQuery("");
-
+    } = useOrderInfiniteQuery();
+    console.debug("orders ", orders, hasNextPage);
     useEffect(() => {
         if (inView && !isFetchingNextPage && hasNextPage) {
             fetchNextPage();
@@ -34,7 +34,7 @@ function AcceptedList() {
     return (
         <div className="flex flex-col text-center justify-between ">
             {orders?.pages.map((page) =>
-                page.map((order, _) => {
+                page.content.map((order, _) => {
                     return <OrderCard key={_} order={order} />;
                 }),
             )}
