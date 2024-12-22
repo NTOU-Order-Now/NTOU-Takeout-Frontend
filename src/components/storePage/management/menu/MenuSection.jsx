@@ -51,9 +51,10 @@ function MenuSection({ sectionRefs, categoryData, menuId }) {
         }
         await updateDishOrder({ categoryName, newOrder });
     };
+    console.debug("categoryData", categoryData);
     return (
         <div className="font-notoTC relative min-h-screen flex flex-col justify-center container mx-auto p-4">
-            {categoryData.map((category, _) => (
+            {categoryData?.map((category, _) => (
                 <div
                     key={_}
                     ref={(el) => (sectionRefs.current[_] = el)}
@@ -61,7 +62,7 @@ function MenuSection({ sectionRefs, categoryData, menuId }) {
                 >
                     <CategoryHeader categoryData={category} menuId={menuId} />
                     <div className="grid gap-4">
-                        {category.dishes.map((dish, _) => (
+                        {category?.dishes.map((dish, _) => (
                             <Suspense
                                 key={_}
                                 fallback={<CartItemCardSkeleton />}

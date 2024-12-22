@@ -8,7 +8,7 @@ const CategoryHeader = ({ categoryData, menuId }) => {
         categoryData?.categoryName || "未命名類別",
     );
     const { updateDish } = useUpdateDishMutation(menuId);
-    console.debug("categoryData", categoryData);
+    // console.debug("categoryData", categoryData);
     // 當 categoryData 改變時更新 newName
     useEffect(() => {
         setNewName(categoryData?.categoryName || "未命名類別");

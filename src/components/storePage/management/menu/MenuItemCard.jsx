@@ -8,9 +8,11 @@ import {
     faTrash,
     faPenToSquare,
 } from "@fortawesome/free-solid-svg-icons";
+import menuStore from "../../../../stores/pos/menuStore.js";
 
 const MenuItemCard = ({ categoryName, food, onDelete, onMove }) => {
     const { id, name, picture, price, description } = food;
+    const setSelectedDish = menuStore((state) => state.setSelectedDish);
     const handleDelete = async (e) => {
         e.stopPropagation();
         await onDelete({ dishId: id, categoryName });
@@ -20,10 +22,14 @@ const MenuItemCard = ({ categoryName, food, onDelete, onMove }) => {
         e.stopPropagation();
         await onMove(categoryName, id, dir);
     };
+    const handleClick = (e) => {
+        e.stopPropagation();
+        setSelectedDish(food);
+    };
     return (
         <div
             className="w-full h-[17rem] flex cursor-pointer relative rounded-lg  overflow-hidden bg-gray-50 shadow-lg "
-            // onClick={() => onClick(food)}
+            onClick={(e) => handleClick(e)}
         >
             {/*move arrow button*/}
             <div className="flex flex-col justify-center absolute mb-10 left-0 h-full p-2  bg-white">

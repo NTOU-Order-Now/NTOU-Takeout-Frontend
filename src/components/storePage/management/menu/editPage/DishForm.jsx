@@ -1,39 +1,17 @@
 import PropTypes from "prop-types";
-import useEditDishStore from "../../../../../stores/EditDishStore";
 
 const DishForm = ({
     defaultName,
     defaultDescription,
     defaultPrice,
     defaultCategory,
-    onImageUpload,
     categoryNames = [],
+    onImageUpload,
+    onNameChange,
+    onDescriptionChange,
+    onPriceChange,
+    onCategoryChange,
 }) => {
-    const updateDishDescription = useEditDishStore(
-        (state) => state.updateDishDescription,
-    );
-    const updateDishName = useEditDishStore((state) => state.updateDishName);
-    const updateDishPrice = useEditDishStore((state) => state.updateDishPrice);
-    const updateDishCategory = useEditDishStore(
-        (state) => state.updateDishCategory,
-    );
-
-    const handleNameChange = (e) => {
-        updateDishName(e.target.value);
-    };
-
-    const handleDescriptionChange = (e) => {
-        updateDishDescription(e.target.value);
-    };
-
-    const handlePriceChange = (e) => {
-        updateDishPrice(Number(e.target.value));
-    };
-
-    const handleCategoryChange = (e) => {
-        updateDishCategory(e.target.value);
-    };
-
     return (
         <div className="mt-10 p-6 bg-white">
             <div className="mb-4">
@@ -43,7 +21,7 @@ const DishForm = ({
                     defaultValue={defaultName}
                     placeholder="請輸入名稱"
                     className="w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                    onChange={handleNameChange}
+                    onChange={(e) => onNameChange(e.target.value)}
                 />
             </div>
 
@@ -55,7 +33,7 @@ const DishForm = ({
                     defaultValue={defaultDescription}
                     placeholder="請輸入商品描述"
                     className="w-full h-24 px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                    onChange={handleDescriptionChange}
+                    onChange={(e) => onDescriptionChange(e.target.value)}
                 ></textarea>
             </div>
 
@@ -84,7 +62,7 @@ const DishForm = ({
                     defaultValue={defaultPrice}
                     placeholder="請輸入價格"
                     className="w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                    onChange={handlePriceChange}
+                    onChange={(e) => onPriceChange(Number(e.target.value))}
                 />
             </div>
 
@@ -96,7 +74,7 @@ const DishForm = ({
                     placeholder="請輸入類別"
                     list="category-options"
                     className="w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                    onChange={handleCategoryChange}
+                    onChange={(e) => onCategoryChange(e.target.value)}
                 />
                 <datalist id="category-options">
                     {categoryNames.map((cat, idx) => (
@@ -115,6 +93,10 @@ DishForm.propTypes = {
     defaultCategory: PropTypes.string,
     onImageUpload: PropTypes.func,
     categoryNames: PropTypes.arrayOf(PropTypes.string),
+    onNameChange: PropTypes.func.isRequired,
+    onDescriptionChange: PropTypes.func.isRequired,
+    onPriceChange: PropTypes.func.isRequired,
+    onCategoryChange: PropTypes.func.isRequired,
 };
 
 export default DishForm;

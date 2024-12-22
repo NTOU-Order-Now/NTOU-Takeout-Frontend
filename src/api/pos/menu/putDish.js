@@ -6,6 +6,15 @@ export const putDish = async (
     { menuId, id, name, description, picture, price, category, dishAttributes },
     signal,
 ) => {
+    console.debug(
+        "Updating dish",
+        menuId,
+        id,
+        name,
+        description,
+        picture,
+        price,
+    );
     try {
         const authToken = Cookies.get("authToken");
         const res = await API.put(

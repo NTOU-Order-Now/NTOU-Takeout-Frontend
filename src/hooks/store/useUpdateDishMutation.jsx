@@ -27,12 +27,12 @@ export const useUpdateDishMutation = (menuId) => {
                 abortControllerRef.current = null;
             }
 
-            return res;
+            return updateData.category;
         },
         onMutate: async (updateData) => {
-            console.debug;
-            const { category } = updateData;
-
+            console.debug("updateDish", updateData);
+            const { category, id } = updateData;
+            console.debug("category", category);
             // Cancel any outgoing refetches
             await queryClient.cancelQueries(["categoryDishes", category]);
 
@@ -44,8 +44,10 @@ export const useUpdateDishMutation = (menuId) => {
 
             // Optimistically update the dish
             queryClient.setQueryData(["categoryDishes", category], {
-                previousDishes,
-                dishes: updateData,
+                categoryName: category,
+                dishes: previousDishes.dishes.map((dish) =>
+                    dish.id === id ? updateDish : dish,
+                ),
             });
 
             return { previousDishes, category };
@@ -61,13 +63,10 @@ export const useUpdateDishMutation = (menuId) => {
             alert("更新錯誤，請重整頁面後再試一次");
             console.error("Update dish error:", err);
         },
-        onSettled: (variables) => {
-            console.debug("variables", variables);
-            queryClient.invalidateQueries([
-                "categoryDishes",
-                variables.category,
-            ]);
-            queryClient.invalidateQueries(["menuCategoryList", menuId]);
+        onSettled: (category) => {
+            console.debug("variables", category);
+            queryClient.invalidateQueries(["categoryDishes", category]);
+            // queryClient.invalidateQueries(["menuCategoryList", menuId]);
         },
     });
     return {

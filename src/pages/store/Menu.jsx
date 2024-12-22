@@ -18,6 +18,7 @@ import DishEdit from "../../components/storePage/management/menu/editPage/DishEd
 import MenuPageSkeleton from "../../skeleton/menu/MenuPageSkeleton.jsx";
 import { useSystemContext } from "../../context/useSystemContext.jsx";
 import { useCreateDishMutation } from "../../hooks/store/useCreateDishMutation.jsx";
+import menuStore from "../../stores/pos/menuStore.js";
 
 const Menu = () => {
     const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
@@ -49,14 +50,14 @@ const Menu = () => {
         });
     };
 
-    // const categoryData = useMenuStore((state) => state.menu.categories);
-    const [selectedDish, setSelectedDish] = useState(null);
-
+    const selectedDish = menuStore((state) => state.selectedDish);
+    const setSelectedDish = menuStore((state) => state.setSelectedDish);
+    console.debug("menuCategoryList", menuCategoryList);
     // set navbar items
     useEffect(() => {
         if (menuCategoryList?.length) {
             setNavbarItems(
-                menuCategoryList.map((category) => category.categoryName),
+                menuCategoryList?.map((category) => category.categoryName),
             );
         }
     }, [menuCategoryList, setNavbarItems]);
@@ -97,19 +98,20 @@ const Menu = () => {
     );
     const handleUpdate = (newDish) => {
         console.log(newDish, "!!!");
-        setSelectedDish(null);
+        // setSelectedDish(null);
     };
 
     // 取得 categoryNames
-    const categoryNames = categoryData.map((category) => category.name);
+    const categoryNames = menuCategoryList.map(
+        (category) => category.categoryName,
+    );
 
     if (selectedDish) {
         return (
             <DishEdit
-                dishData={selectedDish}
+                onClose={() => setSelectedDish(null)}
                 categoryNames={categoryNames}
-                selectCategory={selectedDish.category}
-                onClose={(dish) => handleUpdate(dish)}
+                menuId={menuId}
             />
         );
     }

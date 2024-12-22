@@ -2,7 +2,8 @@ import { create } from "zustand";
 
 const useMenuStore = create((set) => ({
     menu: null,
-
+    selectedDish: null,
+    setSelectedDish: (dishData) => set({ selectedDish: dishData }),
     // 更新菜單
     setMenu: (newMenu) => set({ menu: newMenu }),
 
