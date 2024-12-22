@@ -3,10 +3,6 @@ import EditHeader from "./EditHeader";
 import DishForm from "./DishForm";
 import DishOptionList from "./DishOptionList";
 import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import useEditDishStore from "../../../../../stores/EditDishStore";
-import useMenuStore from "../../../../../stores/pos/menuStore.js";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import menuStore from "../../../../../stores/pos/menuStore.js";
 import { useUpdateDishMutation } from "../../../../../hooks/store/useUpdateDishMutation.jsx";
 
@@ -20,9 +16,8 @@ function DishEdit({ onClose, categoryNames, menuId }) {
 
     const { updateDish, isPending } = useUpdateDishMutation(menuId);
     const handleSave = async () => {
-        const picture =
+        const picture = //temp picture
             "https://images.pexels.com/photos/1199957/pexels-photo-1199957.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
-        // 整理出要更新的資料
         const newDish = {
             id: dishData.id,
             name,
@@ -32,11 +27,8 @@ function DishEdit({ onClose, categoryNames, menuId }) {
             category: categoryName,
             dishAttributes: groups,
         };
-        console.debug("dish", newDish);
         try {
-            // 呼叫後端更新
             await updateDish(newDish);
-            // 更新成功後關閉編輯頁面
             onClose();
         } catch (error) {
             console.error("更新失敗：", error);

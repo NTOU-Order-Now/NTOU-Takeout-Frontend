@@ -10,7 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import menuStore from "../../../../stores/pos/menuStore.js";
 
-const MenuItemCard = ({ categoryName, food, onDelete, onMove }) => {
+const MenuItemCard = ({ categoryName, food, onMove, onDelete }) => {
     const { id, name, picture, price, description } = food;
     const setSelectedDish = menuStore((state) => state.setSelectedDish);
     const handleDelete = async (e) => {
@@ -81,17 +81,10 @@ const MenuItemCard = ({ categoryName, food, onDelete, onMove }) => {
                     </p>
                     <div className="pr-8">
                         <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onDelete();
-                            }}
+                            onClick={handleDelete}
                             className="text-red-500 hover:text-red-600 mr-4"
                         >
-                            <FontAwesomeIcon
-                                icon={faTrash}
-                                size="xl"
-                                onClick={handleDelete}
-                            />
+                            <FontAwesomeIcon icon={faTrash} size="xl" />
                         </button>
                         <button className="text-orange-500 hover:text-orange-600">
                             <FontAwesomeIcon icon={faPenToSquare} size="xl" />
@@ -104,9 +97,8 @@ const MenuItemCard = ({ categoryName, food, onDelete, onMove }) => {
 };
 
 MenuItemCard.propTypes = {
-    // onClick: PropTypes.func.isRequired,
     categoryName: PropTypes.string.isRequired,
-    food: PropTypes.object.isRequired,
+    food: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     onMove: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
 };

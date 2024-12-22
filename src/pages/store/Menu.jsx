@@ -19,23 +19,22 @@ import MenuPageSkeleton from "../../skeleton/menu/MenuPageSkeleton.jsx";
 import { useSystemContext } from "../../context/useSystemContext.jsx";
 import { useCreateDishMutation } from "../../hooks/store/useCreateDishMutation.jsx";
 import menuStore from "../../stores/pos/menuStore.js";
+import { useNavigate } from "react-router-dom";
 
 const Menu = () => {
     const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
     const title = useSidebarStore((state) => state.title);
     const { userInfo, merchantData, menuCategoryList } = useSystemContext();
-    // console.debug("merchantData", merchantData);
-    // console.debug("menuCategoryList", menuCategoryList);
     const merchantId = userInfo?.id;
+    const storeId = userInfo?.storeId;
     const menuId = merchantData?.menuId;
-    // console.debug("merchantId:", merchantId);
     const { categoryData } = useCategoryQueries(
         menuCategoryList,
         merchantData?.menuId,
         userInfo !== undefined,
     );
 
-    // console.debug("categoryData", categoryData);
+    const navigate = useNavigate();
     const sectionRefs = useRef([]);
     const [isNavbarFixed, setIsNavbarFixed] = useState(false);
     const setNavbarItems = useNavStore((state) => state.setNavbarItems);
@@ -89,7 +88,7 @@ const Menu = () => {
     const previewButton = (
         <button
             onClick={() => {
-                console.debug("preview click");
+                navigate(`/menu/${storeId}`);
             }}
             className=" bg-slate-400 text-white rounded-lg px-3 py-1 font-sm shadow-md"
         >
@@ -119,7 +118,7 @@ const Menu = () => {
                 onLeftClick={toggleSidebar}
                 rightComponents={[addButton, previewButton]}
             />
-            <div className="sticky top-[56px] z-20">
+            <div className="sticky top-[54px] z-20 shadow-sm">
                 <Suspense fallback={<NavbarSkeleton isNavbarFixed={false} />}>
                     <MenuNavbar
                         onNavClick={handleScrollToSection}

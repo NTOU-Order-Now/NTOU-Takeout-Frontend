@@ -40,12 +40,12 @@ const DishOptionItem = ({ option, onDelete, onUpdate }) => {
                         defaultValue={option.name}
                         onBlur={handleNameSave}
                         onKeyDown={handleNameSave}
-                        className="border rounded px-2 py-1 text-sm focus:ring-orange-400"
+                        className="border rounded px-2 py-1 text-lg focus:ring-orange-400"
                     />
                 ) : (
                     <span
                         onClick={() => setIsEditingName(true)}
-                        className="cursor-pointer hover:underline"
+                        className="cursor-pointer hover:underline text-xl"
                     >
                         {option.name}
                     </span>

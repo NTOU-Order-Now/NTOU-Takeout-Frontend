@@ -1,14 +1,6 @@
-import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
-import {
-    faTrash,
-    faEdit,
-    faSave,
-    faPlus,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import DishToggleNavBar from "../../../../common/DishToggleNavBar";
-import useEditDishStore from "../../../../../stores/EditDishStore";
 import DishOptionGroup from "./DishOptionGroup.jsx";
 
 const DishOptionList = ({ groups, onGroupsChange }) => {
@@ -23,10 +15,9 @@ const DishOptionList = ({ groups, onGroupsChange }) => {
         onGroupsChange(newGroups);
     };
 
-    // 新增 Group
     const handleAddGroup = () => {
         const newGroup = {
-            name: "新 options",
+            name: "新選項標題",
             description: "",
             type: "single",
             isRequired: false,
@@ -48,14 +39,14 @@ const DishOptionList = ({ groups, onGroupsChange }) => {
                     onDeleteGroup={() => handleDeleteGroup(index)}
                 />
             ))}
-            {/* Add Group 按鈕 */}
+            {/* Add Group button */}
             <div className="flex justify-center mt-6 z-50">
                 <button
                     className="text-orange-500 hover:text-orange-700 flex items-center"
                     onClick={handleAddGroup}
                 >
                     <FontAwesomeIcon icon={faPlus} size="lg" className="mr-2" />
-                    新增群組
+                    新增客製化選項
                 </button>
             </div>
         </div>

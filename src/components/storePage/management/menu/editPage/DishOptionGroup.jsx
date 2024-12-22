@@ -20,13 +20,11 @@ const DishOptionGroup = ({
     const [isSingleSelect, setIsSingleSelect] = useState(group.type);
     const [options, setOptions] = useState(group.attributeOptions || []);
 
-    // 點擊儲存 group name
     const handleGroupNameSave = () => {
         setIsEditingGroupName(false);
         handleUpdateGroup(); // 重新回傳到父層
     };
 
-    // 新增 option
     const handleAddOption = () => {
         const newOption = {
             name: "新選項",
@@ -38,14 +36,12 @@ const DishOptionGroup = ({
         handleUpdateGroup({ attributeOptions: updatedOptions });
     };
 
-    // 刪除 option
     const handleDeleteOption = (optionIndex) => {
         const updatedOptions = options.filter((_, i) => i !== optionIndex);
         setOptions(updatedOptions);
         handleUpdateGroup({ attributeOptions: updatedOptions });
     };
 
-    // 更新 option
     const handleUpdateOption = (optionIndex, newOptionData) => {
         const updatedOptions = options.map((opt, i) =>
             i === optionIndex ? { ...opt, ...newOptionData } : opt,
@@ -105,7 +101,7 @@ const DishOptionGroup = ({
                     />
                 ) : (
                     <div className="flex items-center space-x-2">
-                        <h3 className="font-bold text-lg">{groupName}</h3>
+                        <h3 className="font-bold text-xl">{groupName}</h3>
                         <span
                             className={`px-2 py-1 rounded-lg text-white text-sm cursor-pointer ${
                                 isNeedSelect ? "bg-red-500" : "bg-gray-500"
@@ -152,7 +148,10 @@ const DishOptionGroup = ({
             ))}
 
             {/* 新增 Option 按鈕 */}
-            <button className="text-orange-500 mt-2" onClick={handleAddOption}>
+            <button
+                className="text-orange-500 mt-2 text-lg"
+                onClick={handleAddOption}
+            >
                 新增選項...
             </button>
 

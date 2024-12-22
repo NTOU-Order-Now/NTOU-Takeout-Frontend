@@ -1,11 +1,7 @@
 import { lazy, Suspense } from "react";
 import PropTypes from "prop-types";
-import { faEdit } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import useEditDishStore from "../../../../stores/EditDishStore";
 import CategoryHeader from "./CategoryHeader.jsx";
 import { useUpdateDishOrderMutation } from "../../../../hooks/store/useUpdateDishOrderMutation.jsx";
-import { useUpdateDishMutation } from "../../../../hooks/store/useUpdateDishMutation.jsx";
 import { useDeleteDishMutation } from "../../../../hooks/store/useDeleteDishMutation.jsx";
 import { useCategoryNameMutation } from "../../../../hooks/store/useCategoryNameMutation.jsx";
 
@@ -21,12 +17,10 @@ function MenuSection({ sectionRefs, categoryData, menuId }) {
         useDeleteDishMutation(menuId);
     const { isPending: isChangeCategoryNamePending } =
         useCategoryNameMutation(menuId);
-    const { isPending: isDeleteDishPending } = useDeleteDishMutation(menuId);
     if (
-        isUpdateDishOrderPending ||
         isChangeCategoryNamePending ||
-        isUpdateDishOrderPending ||
-        isDeleteDishPending
+        // isUpdateDishOrderPending ||
+        isDeleteMenuDishPending
     ) {
         return <CartItemCardSkeleton />;
     }
@@ -83,9 +77,8 @@ function MenuSection({ sectionRefs, categoryData, menuId }) {
                                 <MenuItemCard
                                     categoryName={category.categoryName}
                                     food={dish}
-                                    onDelete={deleteMenuDish}
                                     onMove={handleDishMove}
-                                    // onClick={()=>}
+                                    onDelete={deleteMenuDish}
                                 />
                             </Suspense>
                         ))}

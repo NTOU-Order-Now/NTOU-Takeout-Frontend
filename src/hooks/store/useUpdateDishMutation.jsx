@@ -30,9 +30,7 @@ export const useUpdateDishMutation = (menuId) => {
             return updateData.category;
         },
         onMutate: async (updateData) => {
-            console.debug("updateDish", updateData);
             const { category, id } = updateData;
-            console.debug("category", category);
             // Cancel any outgoing refetches
             await queryClient.cancelQueries(["categoryDishes", category]);
 
@@ -64,7 +62,6 @@ export const useUpdateDishMutation = (menuId) => {
             console.error("Update dish error:", err);
         },
         onSettled: (category) => {
-            console.debug("variables", category);
             queryClient.invalidateQueries(["categoryDishes", category]);
             // queryClient.invalidateQueries(["menuCategoryList", menuId]);
         },
