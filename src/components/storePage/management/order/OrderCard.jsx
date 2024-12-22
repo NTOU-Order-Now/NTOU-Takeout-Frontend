@@ -1,7 +1,8 @@
 import PropTypes from "prop-types";
 import useOrderStore from "../../../../stores/orderStore.js";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useOrderStatusMutation } from "../../../../hooks/order/useOrderStatusMutation.jsx";
+import { useNavigate } from "react-router-dom";
 
 const getStatusColors = (status) => {
     switch (status) {
@@ -52,9 +53,11 @@ const getNextStatus = (currentStatus) => {
 };
 
 const OrderCard = ({ order, showStatus = true }) => {
+    console.debug("order", order);
     const { bgColor, textColor, statusText } = getStatusColors(order.status);
     const { updateOrderStatusAsync, isLoading } = useOrderStatusMutation();
-
+    const setOrderData = useOrderStore((state) => state.setOrderData);
+    const orderData = useOrderStore((state) => state.orderData);
     const handleAccept = useCallback(
         async (orderId) => {
             try {
@@ -102,7 +105,12 @@ const OrderCard = ({ order, showStatus = true }) => {
             }
         }
     }, [order.id, order.status, updateOrderStatusAsync]);
-
+    const navigate = useNavigate();
+    const handleSeeDetail = (e) => {
+        e.preventDefault();
+        setOrderData(order);
+        navigate(`/store/pos/management/order/${order.id.slice(-5)}`);
+    };
     return (
         <div className="relative flex justify-between rounded-lg p-4 shadow-lg mb-6 bg-gray-50">
             {/* Order Info */}
@@ -116,7 +124,10 @@ const OrderCard = ({ order, showStatus = true }) => {
                 <p className="text-sm font-medium">
                     下單時間: {order.orderTime}
                 </p>
-                <button className="bg-orange-500 mt-6 text-white px-3 py-1 text-sm font-bold rounded hover:bg-orange-600">
+                <button
+                    className="bg-orange-500 mt-6 text-white px-3 py-1 text-sm font-bold rounded hover:bg-orange-600"
+                    onClick={handleSeeDetail}
+                >
                     訂單內容
                 </button>
             </div>

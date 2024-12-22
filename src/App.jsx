@@ -20,8 +20,8 @@ const MerchantRegister = lazy(() => import("./pages/MerchantRegister"));
 const StoreHome = lazy(() => import("./pages/store/Home"));
 const StoreMenu = lazy(() => import("./pages/store/Menu"));
 const StoreOrder = lazy(() => import("./pages/store/Order"));
+const OrderDetail = lazy(() => import("./pages/store/OrderDetail"));
 const queryClient = new QueryClient();
-import OrderDetails from "./pages/store/OrderDetailPage";
 import MerchantProtectedRoute from "./route/MerchantProtectedRoute.jsx";
 import CustomerProtectedRoute from "./route/CustomerProtectedRoute.jsx";
 
@@ -130,12 +130,16 @@ const router = createBrowserRouter(
                     ),
                     errorElement: <NotFound />,
                 },
+                {
+                    path: "management/order/:orderNumber",
+                    element: (
+                        <Suspense fallback={<MenuPageSkeleton />}>
+                            <OrderDetail />
+                        </Suspense>
+                    ),
+                    errorElement: <NotFound />,
+                },
             ],
-        },
-        {
-            path: "/OrderDetails",
-            element: <OrderDetails />,
-            // errorElement: <NotFound />,
         },
     ],
     {
