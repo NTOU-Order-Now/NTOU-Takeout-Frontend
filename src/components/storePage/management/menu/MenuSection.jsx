@@ -18,9 +18,10 @@ function MenuSection({ sectionRefs, categoryData, menuId }) {
     const { isPending: isChangeCategoryNamePending } =
         useCategoryNameMutation(menuId);
     if (
-        isChangeCategoryNamePending ||
+        // isChangeCategoryNamePending ||
         // isUpdateDishOrderPending ||
-        isDeleteMenuDishPending
+        // isDeleteMenuDishPending
+        isUpdateDishOrderPending
     ) {
         return <CartItemCardSkeleton />;
     }
