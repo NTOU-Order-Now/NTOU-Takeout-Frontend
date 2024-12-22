@@ -1,6 +1,7 @@
 import { lazy, Suspense, useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import useSidebarStore from "../../stores/common/sidebarStore";
 import Header from "../../components/storePage/home/Header";
 import NavbarSkeleton from "../../skeleton/menu/NavbarSkeleton";
@@ -16,6 +17,7 @@ import useNavStore from "../../stores/merchantMenuNav";
 import DishEdit from "../../components/storePage/management/menu/editPage/DishEdit";
 import MenuPageSkeleton from "../../skeleton/menu/MenuPageSkeleton.jsx";
 import { useSystemContext } from "../../context/useSystemContext.jsx";
+import { useCreateDishMutation } from "../../hooks/store/useCreateDishMutation.jsx";
 
 const Menu = () => {
     const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
@@ -24,6 +26,7 @@ const Menu = () => {
     // console.debug("merchantData", merchantData);
     // console.debug("menuCategoryList", menuCategoryList);
     const merchantId = userInfo?.id;
+    const menuId = merchantData?.menuId;
     // console.debug("merchantId:", merchantId);
     const { categoryData } = useCategoryQueries(
         menuCategoryList,
@@ -35,6 +38,8 @@ const Menu = () => {
     const sectionRefs = useRef([]);
     const [isNavbarFixed, setIsNavbarFixed] = useState(false);
     const setNavbarItems = useNavStore((state) => state.setNavbarItems);
+    const { createDish, isPending: isCreatePenging } =
+        useCreateDishMutation(menuId);
 
     // handle scroll to section
     const handleScrollToSection = (index) => {
@@ -42,9 +47,6 @@ const Menu = () => {
             behavior: "smooth",
             inline: "start",
         });
-    };
-    const onAddClick = () => {
-        console.debug("add click");
     };
 
     // const categoryData = useMenuStore((state) => state.menu.categories);
@@ -63,13 +65,24 @@ const Menu = () => {
     if (merchantId && !merchantData) {
         return <MenuPageSkeleton />;
     }
-
+    const onAddClick = async () => {
+        createDish();
+    };
     const addButton = (
         <button
             onClick={onAddClick}
-            className="bg-orange-500 text-white rounded-lg p-2 flex  shadow-md"
+            className="bg-orange-500 text-white rounded-lg p-2 flex  shadow-md content-center w-full h-full"
         >
-            <FontAwesomeIcon icon={faPlus} />
+            {isCreatePenging ? (
+                <FontAwesomeIcon
+                    icon={faSpinner}
+                    spinPulse
+                    style={{ color: "#ffffff" }}
+                    size="xs"
+                />
+            ) : (
+                <FontAwesomeIcon icon={faPlus} />
+            )}
         </button>
     );
     const previewButton = (
@@ -119,7 +132,7 @@ const Menu = () => {
             <div className=" relative top-10">
                 <Suspense fallback={<MenuSectionSkeleton />}>
                     <MenuSection
-                        menuId={merchantData?.menuId}
+                        menuId={menuId}
                         sectionRefs={sectionRefs}
                         categoryData={categoryData}
                     />
