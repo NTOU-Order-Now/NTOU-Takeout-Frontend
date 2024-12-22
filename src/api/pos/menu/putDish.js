@@ -6,6 +6,14 @@ export const putDish = async (
     { menuId, id, name, description, picture, price, category, dishAttributes },
     signal,
 ) => {
+    if (
+        name === "" ||
+        price === null ||
+        category === "" ||
+        description === ""
+    ) {
+        throw new Error("content can't be empty");
+    }
     try {
         const authToken = Cookies.get("authToken");
         const res = await API.put(

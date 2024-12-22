@@ -19,13 +19,17 @@ export const useOrderInfiniteQuery = (status) => {
                 size: PAGE_SIZE,
                 status: status,
             });
-            console.debug("response", response.data);
+            console.log(response.data);
             return response.data;
         },
         getNextPageParam: (lastPage, allPages) => {
             // Assuming your API returns total pages info
-            const currentPage = allPages.length - 1;
-            return lastPage.length === PAGE_SIZE ? currentPage + 1 : undefined;
+            // console.debug("allPage", allPages[0]);
+            // console.debug(lastPage, allPages);
+            const currentPage = lastPage.currentPage;
+            return currentPage < lastPage.totalPages - 1
+                ? currentPage + 1
+                : undefined;
         },
         staleTime: 1000 * 60, // 1 minute
     });

@@ -18,13 +18,13 @@ const UnacceptedList = () => {
         isError,
         error,
     } = useOrderInfiniteQuery("PENDING");
-
+    console.debug("orders", orders, hasNextPage);
     useEffect(() => {
         if (inView && !isFetchingNextPage && hasNextPage) {
             fetchNextPage();
         }
     }, [inView, isFetchingNextPage, hasNextPage, fetchNextPage]);
-    if (isLoading) {
+    if (isLoading || orders === undefined) {
         return <div className="text-center pt-20">Loading...</div>;
     }
 
@@ -35,7 +35,7 @@ const UnacceptedList = () => {
     return (
         <div className="flex flex-col text-center justify-between ">
             {orders?.pages.map((page) =>
-                page.map((order, _) => {
+                page.content.map((order, _) => {
                     return <OrderCard key={_} order={order} />;
                 }),
             )}

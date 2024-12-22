@@ -1,7 +1,8 @@
 import { create } from "zustand";
 
 const useOrderStore = create((set) => ({
-    orders: [],
+    orderData: null,
+    setOrderData: (order) => set({ orderData: order }),
     updateOrderStatus: (orderId, newStatus) =>
         set((state) => ({
             orders: state.orders.map((order) =>

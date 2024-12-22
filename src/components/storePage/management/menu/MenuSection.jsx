@@ -60,7 +60,7 @@ function MenuSection({ sectionRefs, categoryData, menuId }) {
     };
 
     return (
-        <div className="font-notoTC relative min-h-screen flex flex-col justify-center container mx-auto p-4">
+        <div className="font-notoTC relative  flex flex-col justify-start container mx-auto p-4">
             {categoryData?.map((category, _) => (
                 <div
                     key={_}
