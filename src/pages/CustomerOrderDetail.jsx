@@ -1,17 +1,21 @@
 import PropTypes from "prop-types";
-import useOrderStore from "../../stores/orderStore";
-import UserInfo from "../../components/orderPage/UserInfo";
-import OrderNote from "../../components/orderPage/OrderNote";
+import useOrderStore from "../stores/orderStore";
+import UserInfo from "../components/orderPage/UserInfo";
+import OrderNote from "../components/orderPage/OrderNote";
 import { Navigate, useNavigate } from "react-router-dom";
-import Header from "../../components/storePage/home/Header";
+import Header from "../components/storePage/home/Header";
 import { faArrowLeft, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useSystemContext } from "../../context/useSystemContext.jsx";
-import { useCategoryQueries } from "../../hooks/menu/useCategoryQueries.jsx";
-import CartItemCard from "../../components/cartPage/CartItemCard.jsx";
-import EstimatedTime from "../../components/orderPage/EstimatedTime.jsx";
+import { useSystemContext } from "../context/useSystemContext.jsx";
+import { useCategoryQueries } from "../hooks/menu/useCategoryQueries.jsx";
+import CartItemCard from "../components/cartPage/CartItemCard.jsx";
+import EstimatedTime from "../components/orderPage/EstimatedTime.jsx";
+import { useStoreQuery } from "../hooks/store/useStoreQuery.jsx";
+import HeaderSkeleton from "../skeleton/common/HeaderSkeleton.jsx";
+import { useCategoryListQuery } from "../hooks/menu/useCategoryListQuery.jsx";
 const OrderDetails = () => {
     const orderData = useOrderStore((state) => state.orderData);
+
     const statusConfig = {
         PENDING: { text: "未接單", bgColor: "bg-red-500" },
         PROCESSING: { text: "製作中", bgColor: "bg-blue-500" },
@@ -33,13 +37,29 @@ const OrderDetails = () => {
             {currentStatus(orderData?.status).text}
         </button>
     );
+    console.debug("orderData", orderData);
 
-    const { userInfo, merchantData, menuCategoryList } = useSystemContext();
+    const { userInfo, merchantData } = useSystemContext();
+    const {
+        storeData,
+        isLoaing: isStoreDataLoading,
+        isError: isStoreDataError,
+    } = useStoreQuery([orderData.storeId]);
+    // console.debug("storeData.storeId", storeData[0]?.storeId);
+    // refetchMenuCategoryList(storeData[0]?.storeId);
+    const menuId = storeData ? storeData[0].menuId : null;
+    const { menuCategoryList } = useCategoryListQuery(menuId);
+
+    console.debug("menuId", menuId);
+    console.debug("merchantData", merchantData);
+    console.debug("menuCategoryList", menuCategoryList);
     const { categoryData } = useCategoryQueries(
         menuCategoryList,
-        merchantData?.menuId,
-        userInfo !== undefined,
+        // storeData[0]?.menuId,
+        menuId,
+        userInfo !== undefined && menuId !== undefined,
     );
+    console.debug("categoryData", categoryData);
     const navigate = useNavigate();
     const handleBackClick = () => {
         navigate(-1);
@@ -49,6 +69,9 @@ const OrderDetails = () => {
         const dish = allDishes.find((dish) => dish.id === targetId);
         return dish ? dish.picture : null;
     };
+    if (isStoreDataLoading) {
+        return <HeaderSkeleton />;
+    }
     if (orderData === null) {
         return <Navigate to="/store/pos/management/order" replace />;
     }

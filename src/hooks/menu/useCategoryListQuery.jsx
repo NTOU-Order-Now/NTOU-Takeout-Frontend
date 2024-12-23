@@ -4,7 +4,12 @@ import { getMenuById } from "../../api/menu/getMenuById.js";
 // Fetch dish details for each category separately
 export const useCategoryListQuery = (menuId, isEnable = true) => {
     // Fetch menu category list and dish details
-    const { data: menuCategoryList = [] } = useQuery({
+    const {
+        data: menuCategoryList = [],
+        refetch,
+        isLoading,
+        isError,
+    } = useQuery({
         queryKey: ["menuCategoryList", menuId],
         queryFn: async ({ signal }) => {
             const res = await getMenuById(signal, menuId);
@@ -16,5 +21,5 @@ export const useCategoryListQuery = (menuId, isEnable = true) => {
         staleTime: 1000 * 60 ** 10, //10 min
     });
 
-    return menuCategoryList;
+    return { menuCategoryList, refetch, isLoading, isError };
 };

@@ -82,7 +82,7 @@ const OrderCard = ({ order, showStatus = true }) => {
     const handleSeeDetail = (e) => {
         e.preventDefault();
         setOrderData(order);
-        navigate(`/store/pos/management/order/${order.id.slice(-5)}`);
+        navigate(`/history/order/${order.id.slice(-5)}`);
     };
     return (
         <div className="relative flex justify-between rounded-lg p-4 shadow-lg mb-6 bg-gray-50">
