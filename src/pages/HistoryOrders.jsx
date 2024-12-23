@@ -1,6 +1,4 @@
 import { useState } from "react";
-import Header from "../components/storePage/home/Header";
-import useSidebarStore from "../stores/common/sidebarStore";
 import UnacceptedList from "../components/storePage/management/order/UnacceptedList.jsx";
 import AcceptedList from "../components/storePage/management/order/AcceptedList.jsx";
 import ToggleNavBar from "../components/common/ToggleNavBar.jsx";
@@ -12,8 +10,7 @@ const HistoryOrders = () => {
     const queryClient = useQueryClient();
     const orderCount = queryClient.getQueryData(["order", "PENDING"]);
     const [navBarStatus, setNavBarStatus] = useState(0);
-    const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
-    const title = useSidebarStore((state) => state.title);
+
     const orderCountButton = (
         <button
             onClick={() => {

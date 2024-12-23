@@ -1,8 +1,10 @@
-import OrderCard from "./OrderCard.jsx";
 import PropTypes from "prop-types";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { useOrderInfiniteQuery } from "../../../../hooks/order/useOrderInfiniteQuery.jsx";
+import StoreOrderCard from "./OrderCard.jsx";
+import CustomerStoreOrderCard from "../../../history/OrderCard.jsx";
+import { useSystemContext } from "../../../../context/useSystemContext.jsx";
 function AcceptedList() {
     const { ref, inView } = useInView({
         rootMargin: "100px",
@@ -18,8 +20,16 @@ function AcceptedList() {
         error,
     } = useOrderInfiniteQuery("ALL");
 
+    const { userInfo } = useSystemContext();
+    const role = userInfo?.role;
     const filterOrders = orders?.pages.map((page) =>
-        page.content.filter((order) => order.status !== "PENDING"),
+        page.content.filter((order) =>
+            role === "MERCHANT"
+                ? order.status !== "PENDING"
+                : order.status !== "PENDING" &&
+                  order.status !== "PROCESSING" &&
+                  order.status !== "COMPLETED",
+        ),
     );
     useEffect(() => {
         if (inView && !isFetchingNextPage && hasNextPage) {
@@ -31,7 +41,7 @@ function AcceptedList() {
     }
 
     if (isError) {
-        return <div className="text-center pt-20">Error: {error.message}</div>;
+        return <div className="text-center pt-20">Error: {error}</div>;
     }
     // console.debug("filterOrders", filterOrders);
     // if (filterOrders.map) {
@@ -41,7 +51,11 @@ function AcceptedList() {
         <div className="flex flex-col text-center justify-between ">
             {filterOrders.map((page) =>
                 page.map((order, _) => {
-                    return <OrderCard key={_} order={order} />;
+                    return role === "MERCHANT" ? (
+                        <StoreOrderCard key={_} order={order} />
+                    ) : (
+                        <CustomerStoreOrderCard key={_} order={order} />
+                    );
                 }),
             )}
             <div ref={ref}>
