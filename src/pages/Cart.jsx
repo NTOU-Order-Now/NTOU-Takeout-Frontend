@@ -7,9 +7,10 @@ import { useCategoryQueries } from "../hooks/menu/useCategoryQueries";
 import { useSystemContext } from "../context/useSystemContext.jsx";
 import CartRemark from "../components/cartPage/CartRemark";
 import CartSkeleton from "../skeleton/cart/CartSkeleton.jsx";
-import userInfo from "../components/orderPage/UserInfo.jsx";
+
 const Cart = () => {
     const {
+        userInfo,
         cartData,
         isCartError: isError,
         merchantData,
@@ -26,15 +27,15 @@ const Cart = () => {
 
     const { categoryData, isQueriesSuccess } = useCategoryQueries(
         menuCategoryList,
-        userInfo?.role === "CUSTOMER" ? cartData?.menuId : userInfo?.storeId,
-        userInfo !== undefined,
+        merchantData?.menuId,
+        userInfo !== undefined && userInfo?.role === "CUSTOMER",
     );
+
     const [remark, setRemark] = useState("");
     // Create a map of dishes for easy access
     const dishesMap = useMemo(() => {
         if (!categoryData) return {};
-
-        return categoryData.reduce((acc, category) => {
+        return categoryData?.reduce((acc, category) => {
             category.dishes.forEach((dish) => {
                 acc[dish.id] = dish;
             });
@@ -46,7 +47,7 @@ const Cart = () => {
     // console.debug("isMerchantLoading:", isMerchantLoading);
     // console.debug("isQueriesSuccess:", isQueriesSuccess);
     // console.debug("dishesMap:", dishesMap);
-    if (cartData === undefined) {
+    if (cartData === undefined || !isQueriesSuccess) {
         return <CartSkeleton />;
     }
     let predictedTime = 10 * totalQuantity;
