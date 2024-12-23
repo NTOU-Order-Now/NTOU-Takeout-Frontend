@@ -4,12 +4,15 @@ import Header from "../../components/storePage/home/Header";
 import Sidebar from "../../components/storePage/home/Sidebar";
 import useSidebarStore from "../../stores/common/sidebarStore";
 import userInfoStore from "../../stores/user/userInfoStore.js";
+import { useSystemContext } from "../../context/useSystemContext.jsx";
 function Home() {
     const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
     const setTitle = useSidebarStore((state) => state.setTitle);
     const title = useSidebarStore((state) => state.title);
     const user = userInfoStore((state) => state.user);
-    const merchantName = "海洋大學店";
+    // const { userInfo, merchantData, menuCategoryList } = useSystemContext();
+    console.debug("user", user);
+    console.debug("storeId", user?.storeId);
     const location = useLocation();
     // set title based on location
     useEffect(() => {
@@ -20,6 +23,9 @@ function Home() {
             case location.pathname.includes("order"):
                 setTitle("訂單管理");
                 break;
+            case location.pathname.includes("setting"):
+                setTitle("設定");
+                break;
             default:
                 setTitle("首頁");
         }
@@ -29,15 +35,15 @@ function Home() {
         <div>
             <Header title={title} onLeftClick={toggleSidebar}></Header>
             <Sidebar merchantName={user.name}></Sidebar>
-            {/*<div className="relative top-20 flex flex-col items-center justify-center z-0">*/}
-            {/*    {user.name}*/}
+            <div className="relative top-20 flex flex-col items-center justify-center z-0">
+                {/*    {user.name}*/}
 
-            {/*    {user.id}*/}
+                {/*    {user.id}*/}
 
-            {/*    {user.email}*/}
+                {/*    {user.email}*/}
 
-            {/*    {user.storeId}*/}
-            {/*</div>*/}
+                {/*    {user.storeId}*/}
+            </div>
             <Outlet />
         </div>
     );

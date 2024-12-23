@@ -28,7 +28,7 @@ const MenuItemCard = ({ categoryName, food, onMove, onDelete }) => {
     };
     return (
         <div
-            className="w-full h-[17rem] flex cursor-pointer relative rounded-lg  overflow-hidden bg-gray-50 shadow-lg "
+            className="w-full  h-[17rem] flex cursor-pointer relative rounded-lg  overflow-hidden bg-gray-50 shadow-lg "
             onClick={(e) => handleClick(e)}
         >
             {/*move arrow button*/}
@@ -56,7 +56,7 @@ const MenuItemCard = ({ categoryName, food, onMove, onDelete }) => {
             </div>
 
             {/* Lazy loaded Image */}
-            <div className="w-64 overflow-hidden aspect-auto ml-9 relative">
+            <div className="w-40 flex-shrink-0 overflow-hidden aspect-auto ml-9 relative">
                 <LazyLoadImage
                     src={picture}
                     alt={name}
@@ -67,15 +67,17 @@ const MenuItemCard = ({ categoryName, food, onMove, onDelete }) => {
             </div>
 
             {/* Content */}
-            <div className="relative w-full p-4">
+            <div className="flex-1 min-w-0 relative w-full p-4">
                 {/* Title */}
-                <h2 className="text-2xl font-bold mb-2 text-black">{name}</h2>
+                <h2 className="text-2xl font-bold mb-2 text-black truncate">
+                    {name}
+                </h2>
 
                 {/* Description */}
-                <p className="text-sm text-gray-600 mt-4 line-clamp-3 text-ellipsis">
+                <p className="text-sm text-gray-600 mt-4 line-clamp-3 overflow-hidden break-words">
                     {description}
                 </p>
-                <div className="absolute bottom-4  space-x-2 flex flex-row justify-between w-full">
+                <div className="absolute bottom-4  left-4 right-4 space-x-2 flex flex-row justify-between w-full">
                     <p className="text-xl text-gray-800 relative items-start font-bold">
                         ${price ? price : "0"}
                     </p>

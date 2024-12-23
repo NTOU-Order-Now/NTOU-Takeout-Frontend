@@ -19,7 +19,7 @@ const useOrderStore = create((set) => ({
                           acceptTime: new Date()
                               .toISOString()
                               .replace("T", " ")
-                              .slice(0, 19), // 更新接受時間
+                              .slice(0, 19), // Update accepted time
                       }
                     : order,
             ),

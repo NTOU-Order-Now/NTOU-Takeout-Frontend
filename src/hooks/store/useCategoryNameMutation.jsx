@@ -12,11 +12,6 @@ export const useCategoryNameMutation = (menuId) => {
         isPending,
     } = useMutation({
         mutationFn: async ({ oldCategoryName, newCategoryName }) => {
-            console.debug(
-                "changeCategoryName",
-                oldCategoryName,
-                newCategoryName,
-            );
             if (abortControllerRef.current) {
                 abortControllerRef.current.abort();
             }
