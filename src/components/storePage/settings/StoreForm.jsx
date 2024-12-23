@@ -2,57 +2,45 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import BusinessHoursSelector from "../../authPage/BusinessHoursSelector";
 import { useStoreInfoQuery } from "../../../hooks/setting/useStoreInfoQuery.jsx";
-import { useStoreInfoMutation } from "../../../hooks/setting/useStoreInfoMutation";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import PropTypes from "prop-types";
+import HeaderSkeleton from "../../../skeleton/common/HeaderSkeleton.jsx";
 
-function StoreForm({ storeId }) {
-    const [formData, setFormData] = useState({
-        name: "",
-        description: "",
-        file: null,
-        filePath: "",
-        address: "",
-        phoneNumber: "",
-        businessHours: Array(7).fill(
-            Array(2).fill({
-                start: "09:00",
-                end: "18:00",
-            }),
-        ),
-    });
-
-    // 獲取商店資訊
+function StoreForm({
+    storeId,
+    formData,
+    setFormData,
+    isUpdating,
+    isMutationError,
+}) {
     const {
         storeInfo,
         isLoading: isLoadingStore,
         isError: isQueryError,
     } = useStoreInfoQuery(storeId);
-    console.debug("storeInfo", storeInfo);
-    // 更新商店資訊的 mutation
-    const {
-        updateStore,
-        isPending: isUpdating,
-        isError: isMutationError,
-    } = useStoreInfoMutation(storeId);
 
-    // 當獲取到商店資訊後，更新表單資料
+    //set formData = storeInfo
     useEffect(() => {
         if (storeInfo) {
-            setFormData({
+            setFormData((prev) => ({
                 name: storeInfo.name || "",
                 description: storeInfo.description || "",
                 file: null,
                 filePath: storeInfo.picture || "",
                 address: storeInfo.address || "",
                 phoneNumber: storeInfo.phoneNumber || "",
-                businessHours:
-                    storeInfo.businessHours || formData.businessHours,
-            });
+                businessHours: storeInfo.businessHours
+                    ? storeInfo.businessHours.map((day) =>
+                          day.map((period) => ({
+                              first: period.first || "09:00",
+                              second: period.second || "18:00",
+                          })),
+                      )
+                    : prev.businessHours,
+            }));
         }
-    }, [storeInfo]);
+    }, [storeInfo, setFormData]);
 
-    // 表單欄位更新處理函數
     const handleInputChange = (field, value) => {
         setFormData((prev) => ({
             ...prev,
@@ -60,7 +48,6 @@ function StoreForm({ storeId }) {
         }));
     };
 
-    // 檔案上傳處理
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -73,37 +60,21 @@ function StoreForm({ storeId }) {
         }
     };
 
-    // 表單提交處理
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            await updateStore({
-                name: formData.name,
-                picture: formData.file ? formData.file : formData.filePath, // 如果有新文件就用新文件，否則保持原來的URL
-                address: formData.address,
-                description: formData.description,
-                businessHours: formData.businessHours,
-            });
-            alert("更新成功！");
-        } catch (error) {
-            console.error("提交表單時發生錯誤:", error);
-        }
-    };
-
     if (isLoadingStore) {
-        return <div className="p-4">載入中...</div>;
+        return <HeaderSkeleton />; //temp
     }
 
     if (isQueryError || isMutationError) {
-        return <div className="p-4">載入發生錯誤</div>;
+        return (
+            <div className="flex flex-col justify-center items-center">
+                載入發生錯誤
+            </div>
+        ); //temp
     }
 
     return (
         <div className="p-4 max-w-screen">
-            <form
-                onSubmit={handleSubmit}
-                className="p-4 space-y-4 font-semibold font-notoTC"
-            >
+            <form className="p-4 space-y-4 font-semibold font-notoTC">
                 {/* Store name */}
                 <div>
                     <label className="block text-gray-700 mb-1">
@@ -214,21 +185,6 @@ function StoreForm({ storeId }) {
                         }
                     />
                 </div>
-
-                {/* Submit button */}
-                <div className="flex justify-end pt-4">
-                    <button
-                        type="submit"
-                        disabled={isUpdating}
-                        className={`px-6 py-2 bg-orange-500 text-white rounded-lg ${
-                            isUpdating
-                                ? "opacity-50 cursor-not-allowed"
-                                : "hover:bg-orange-600"
-                        }`}
-                    >
-                        {isUpdating ? "更新中..." : "儲存變更"}
-                    </button>
-                </div>
             </form>
         </div>
     );
@@ -236,5 +192,9 @@ function StoreForm({ storeId }) {
 
 StoreForm.propTypes = {
     storeId: PropTypes.string.isRequired,
+    formData: PropTypes.object.isRequired,
+    setFormData: PropTypes.func.isRequired,
+    isUpdating: PropTypes.bool,
+    isMutationError: PropTypes.bool.isRequired,
 };
 export default StoreForm;

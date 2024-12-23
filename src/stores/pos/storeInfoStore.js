@@ -1,28 +1,32 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 const useStoreForm = create((set) => ({
-    storeName: '',
+    name: "",
     setStoreName: (name) => set({ storeName: name }),
-    
-    storeDescription: '',
-    setStoreDescription: (description) => set({ storeDescription: description }),
-    
+
+    description: "",
+    setDescription: (description) => set({ storeDescription: description }),
+
     file: null,
-    filePath: '',
-    setFile: (file, filePath) => set({ file, filePath: filePath}),
-    
-    storeAddress: '',
-    setStoreAddress: (address) => set({ storeAddress: address }),
-    
-    storePhone: '',
-    setStorePhone: (phone) => set({ storePhone: phone }),
-    
-    businessHours: Array(7).fill(
-        Array(2).fill({
-        start: '09:00',
-        end: '18:00',
-        })
-    ),
+    filePath: "",
+    setFile: (file, filePath) => set({ file, filePath: filePath }),
+
+    address: "",
+    setAddress: (address) => set({ storeAddress: address }),
+
+    phoneNumber: "",
+    setPhoneNumber: (phone) => set({ storePhone: phone }),
+
+    businessHours: Array(7)
+        .fill()
+        .map(() =>
+            Array(2)
+                .fill()
+                .map(() => ({
+                    first: "09:00",
+                    second: "18:00",
+                })),
+        ),
     setBusinessHours: (hours) => set({ businessHours: hours }),
 }));
 

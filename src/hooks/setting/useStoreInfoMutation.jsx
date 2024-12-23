@@ -71,7 +71,7 @@ export const useStoreInfoMutation = (storeId) => {
         },
         onError: (error, variables, context) => {
             console.debug("variables", variables, context);
-            // 發生錯誤時復原資料
+            //rollback
             if (context?.previousStoreData) {
                 queryClient.setQueryData(
                     ["storeInformation", storeId],

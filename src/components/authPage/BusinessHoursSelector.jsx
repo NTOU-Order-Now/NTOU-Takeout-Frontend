@@ -18,24 +18,23 @@ const BusinessHoursSelector = ({ businessHours, onUpdate }) => {
             if (i === dayIndex) {
                 return day.map((period, j) => {
                     if (j === periodIndex) {
+                        // 將 start/end 映射到 first/second
+                        const key = startOrEnd === "start" ? "first" : "second";
                         return {
-                            ...period,
-                            [startOrEnd]: value,
+                            first: key === "first" ? value : period.first,
+                            second: key === "second" ? value : period.second,
                         };
                     }
-                    return period;
+                    return { ...period };
                 });
             }
-            return day;
+            return day.map((period) => ({ ...period }));
         });
         onUpdate(newHours);
     };
 
     return (
         <div className="w-full flex flex-col p-3 bg-white rounded-lg font-notoTC">
-            {/* <h2 className="text-2xl font-bold mb-6 text-gray-800">
-                營業時間設定
-            </h2> */}
             <div className="space-y-4">
                 {daysOfWeek.map((day, dayIndex) => (
                     <div key={day} className="p-4 bg-gray-50 rounded-lg">
