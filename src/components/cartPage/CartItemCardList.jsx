@@ -9,7 +9,6 @@ const CartItemCardList = ({ cartData, dishesMap }) => {
             </div>
         );
     }
-
     return (
         <div>
             {cartData.orderedDishes.map((dish, _) => (

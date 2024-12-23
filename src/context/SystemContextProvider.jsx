@@ -14,7 +14,7 @@ export const SystemContextProvider = ({ children }) => {
     const { userInfo, isUserInfoLoading } = useUserInfoQuery(
         authToken !== undefined,
     );
-    console.debug("userInfo : ", userInfo);
+    // console.debug("userInfo : ", userInfo);
     const setUser = userInfoStore((state) => state.setUser);
     const setLoading = userInfoStore((state) => state.setLoading);
     useEffect(() => {
@@ -35,16 +35,17 @@ export const SystemContextProvider = ({ children }) => {
 
     const { merchantData, isMerchantLoading, refetchMerchantData } =
         useMerchantDataQuery(
-            cartData?.storeId ?? null,
+            userInfo?.role === "CUSTOMER"
+                ? cartData?.storeId
+                : userInfo?.storeId,
             // don't need fetch when user is undefined or role is MERCHANT
-            userInfo !== undefined && userInfo?.role === "CUSTOMER",
+            userInfo !== undefined,
         );
 
     const menuCategoryList = useCategoryListQuery(
-        // merchantData?.menuId ?? null,
-        "676569c41ede4e7e9a87795a", //for testing
+        merchantData?.menuId ?? null,
         // don't need fetch when user is undefined or role is MERCHANT
-        userInfo !== undefined && userInfo?.role === "CUSTOMER",
+        userInfo !== undefined,
     );
 
     // // Calculate total spend
@@ -76,11 +77,11 @@ export const SystemContextProvider = ({ children }) => {
         }
     }, [cartData?.orderedDishes]);
     const cartCount = cartData?.orderedDishes?.length;
-    console.debug("cartCount:", cartCount);
-    console.debug("cartData:", cartData);
-    console.debug("merchantData:", merchantData);
-    console.debug("totalSpend:", totalSpend);
-    console.debug("totalQuantity:", totalQuantity);
+    // console.debug("cartCount:", cartCount);
+    // console.debug("cartData:", cartData);
+    // console.debug("merchantData:", merchantData);
+    // console.debug("totalSpend:", totalSpend);
+    // console.debug("totalQuantity:", totalQuantity);
     return (
         <SystemContext.Provider
             value={{

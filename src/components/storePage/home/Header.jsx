@@ -4,7 +4,7 @@ import { faList } from "@fortawesome/free-solid-svg-icons";
 
 const Header = ({
     title,
-    leftIcon = faList,
+    LeftIcon = <FontAwesomeIcon icon={faList} />,
     onLeftClick,
     rightComponents = [],
 }) => {
@@ -15,7 +15,7 @@ const Header = ({
                 className="absolute left-4 text-xl cursor-pointer"
                 onClick={onLeftClick}
             >
-                <FontAwesomeIcon icon={leftIcon} />
+                <>{LeftIcon}</>
             </div>
             <h1 className="font-bold text-xl ml-12">
                 <a href={currentUrl}>{title}</a>
@@ -35,7 +35,7 @@ const Header = ({
 
 Header.propTypes = {
     title: PropTypes.string.isRequired,
-    leftIcon: PropTypes.object,
+    LeftIcon: PropTypes.element,
     onLeftClick: PropTypes.func.isRequired,
     rightComponents: PropTypes.arrayOf(PropTypes.node),
 };

@@ -13,10 +13,15 @@ const OptionCard = ({
     isRequired,
     onSelectNext,
 }) => {
-
-    const addChosenAttribute = useDishDetailStore((state) => state.addChosenAttribute);
-    const removeChosenAttributeOption = useDishDetailStore((state) => state.removeChosenAttributeOption);
-    const sortChosenAttributes = useDishDetailStore((state) => state.sortChosenAttributes);
+    const addChosenAttribute = useDishDetailStore(
+        (state) => state.addChosenAttribute,
+    );
+    const removeChosenAttributeOption = useDishDetailStore(
+        (state) => state.removeChosenAttributeOption,
+    );
+    const sortChosenAttributes = useDishDetailStore(
+        (state) => state.sortChosenAttributes,
+    );
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [isError, setIsError] = useState(false);
 
@@ -29,14 +34,14 @@ const OptionCard = ({
         }
     }, [selectedOptions, isRequired, setIsError]);
 
-    const handleCheckboxChange = (option) => {
+    const handleCheckboxChange = (option, index) => {
         let updatedOptions = [...selectedOptions];
-
+        const optionId = `${option.name}-${index}`;
         if (type === "single") {
-            updatedOptions = [option.name];
+            updatedOptions = [optionId];
             //remove all other options from store
-            options.forEach((o) => {
-                if (o.name !== option.name) {
+            options.forEach((o, i) => {
+                if (i !== index) {
                     removeChosenAttributeOption(dishId, title, o.name);
                 }
             });
@@ -48,12 +53,12 @@ const OptionCard = ({
             });
             onSelectNext();
         } else {
-            if (updatedOptions.includes(option.name)) {
-                updatedOptions = updatedOptions.filter(o => o !== option.name);
+            if (updatedOptions.includes(optionId)) {
+                updatedOptions = updatedOptions.filter((id) => id !== optionId);
                 //remove option from store
-                removeChosenAttributeOption(dishId, title, option.name);
+                removeChosenAttributeOption(dishId, title, optionId);
             } else {
-                updatedOptions.push(option.name);
+                updatedOptions.push(optionId);
                 //update store with selected option
                 addChosenAttribute(dishId, {
                     attributeName: title,
@@ -65,34 +70,44 @@ const OptionCard = ({
 
         sortChosenAttributes(dishId);
         setSelectedOptions(updatedOptions);
-
     };
 
     return (
         <div className="border rounded-lg p-4 max-w-sm mx-auto mb-8 mt-8 font-notoTC">
             <h3 className="text-lg font-semibold "> {title}</h3>
             {isRequired && (
-                <p className={`text-xs font-bold ${isError ? "text-red-500" : "text-gray-500"}`}>
+                <p
+                    className={`text-xs font-bold ${isError ? "text-red-500" : "text-gray-500"}`}
+                >
                     {"必選"}
                 </p>
             )}
             <p className="text-sm text-gray-500">{description}</p>
 
             <div className="mt-4 space-y-2">
-                {options.map((option) => (
-                    <label key={option.name} className="block cursor-pointer">
+                {options.map((option, index) => (
+                    <label
+                        key={`${option.name}-${index}`}
+                        className="block cursor-pointer"
+                    >
                         <input
                             type="checkbox"
                             className="hidden"
-                            checked={selectedOptions.includes(option.name)} // render checkbox based on selection
-                            onChange={() => handleCheckboxChange(option)} // handle checkbox change
+                            checked={selectedOptions.includes(
+                                `${option.name}-${index}`,
+                            )} // render checkbox based on selection
+                            onChange={() => handleCheckboxChange(option, index)} // handle checkbox change
                         />
                         <span className="flex items-center justify-between">
                             <span className="flex items-center">
                                 <FontAwesomeIcon
-                                    icon={selectedOptions.includes(option.name)
-                                        ? faCheckSquare
-                                        : faSquare}
+                                    icon={
+                                        selectedOptions.includes(
+                                            `${option.name}-${index}`,
+                                        )
+                                            ? faCheckSquare
+                                            : faSquare
+                                    }
                                     className="text-gray-500 mr-2"
                                 />
                                 {option.name}

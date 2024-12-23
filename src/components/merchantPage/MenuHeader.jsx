@@ -1,6 +1,6 @@
 import { useState, lazy } from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faArrowLeft,
@@ -15,7 +15,7 @@ const MenuHeader = ({ merchantData }) => {
     const {
         name,
         distance = 10,
-        avarageSpend,
+        averageSpend,
         rating,
         reviewIdList,
         picture,
@@ -23,7 +23,7 @@ const MenuHeader = ({ merchantData }) => {
     } = merchantData;
     const merchantId = id;
     const [showMenuInfo, setShowMenuInfo] = useState(false);
-
+    const navigate = useNavigate();
     return (
         <div>
             <div className="relative h-56 z-0">
@@ -35,14 +35,15 @@ const MenuHeader = ({ merchantData }) => {
                     wrapperClassName="absolute inset-0 z"
                 />
                 {/* Return button */}
-                <Link to={`/`}>
-                    <div className="pt-1 pb-1 pl-2 pr-2 return-btn absolute top-10 left-4 transform -translate-y-1/2 bg-white/60 rounded-full">
-                        <FontAwesomeIcon
-                            icon={faArrowLeft}
-                            className="text-slate-800"
-                        />
-                    </div>
-                </Link>
+                <button
+                    className="pt-1 pb-1 pl-2 pr-2 return-btn absolute top-10 left-4 transform -translate-y-1/2 bg-white/60 rounded-full"
+                    onClick={() => navigate(-1)}
+                >
+                    <FontAwesomeIcon
+                        icon={faArrowLeft}
+                        className="text-slate-800"
+                    />
+                </button>
                 {/* Share button */}
                 <div className="pt-1 pb-1 pl-2 pr-2 share-btn absolute top-10 right-4 transform -translate-y-1/2 bg-white/60 rounded-full">
                     <FontAwesomeIcon
@@ -62,7 +63,7 @@ const MenuHeader = ({ merchantData }) => {
                             公里
                         </p>
                         <p className="text-green-600 text-sm mt-1">
-                            平均花費約{avarageSpend}元
+                            平均花費約{averageSpend}元
                         </p>
                     </div>
                     <div className="flex flex-col items-end">

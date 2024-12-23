@@ -9,15 +9,19 @@ const EstimatedTime = ({ value, onChange }) => {
     };
 
     return (
-        <footer className="rounded-t-md bg-orange-500 p-4 text-center text-white flex justify-center items-center">
+        <footer className="  bg-orange-500 p-4 text-center text-white flex justify-center items-center">
             <span className="text-xl font-bold mr-2">預估完成時間</span>
-            <input
-                type="number"
-                value={value}
-                onChange={handleChange}
-                className="text-center text-black w-16 px-2 py-1 rounded-md text-2xl font-bold"
-                min="0"
-            />
+            {/*<input*/}
+            {/*    type="number"*/}
+            {/*    value={value}*/}
+            {/*    onChange={handleChange}*/}
+            {/*    className="text-center text-black w-16 px-2 py-1 rounded-md text-2xl font-bold"*/}
+            {/*    min="0"*/}
+            {/*/>*/}
+            <span className="bg-orange-300 rounded-xl w-14 h-8 content-center text-black font-extrabold">
+                {value}
+            </span>
+
             <span className="text-xl ml-2">分鐘</span>
         </footer>
     );
@@ -25,7 +29,7 @@ const EstimatedTime = ({ value, onChange }) => {
 
 EstimatedTime.propTypes = {
     value: PropTypes.number.isRequired,
-    onChange: PropTypes.func.isRequired,
+    onChange: PropTypes.func,
 };
 
 export default EstimatedTime;

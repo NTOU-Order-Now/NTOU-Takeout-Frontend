@@ -1,15 +1,15 @@
-import { useEffect } from 'react';
-import { useActiveTabStore } from '../../stores/common/useActiveTabStore';
-import PropTypes from 'prop-types';
+import { useEffect } from "react";
+import { useActiveTabStore } from "../../stores/common/useActiveTabStore";
+import PropTypes from "prop-types";
 
 
 const ToggleNavBar = ({ options, width = 'w-full', height = '50px', InitActiveTab }) => {
     const { activeTab, setActiveTab } = useActiveTabStore();
-    useEffect(()=>{
-        if(InitActiveTab){
+    useEffect(() => {
+        if (InitActiveTab) {
             setActiveTab(InitActiveTab);
         }
-    },[InitActiveTab,setActiveTab]);
+    }, [InitActiveTab, setActiveTab]);
     const keys = Object.keys(options);
 
     // Set the first tab as activeTab
@@ -34,7 +34,7 @@ const ToggleNavBar = ({ options, width = 'w-full', height = '50px', InitActiveTa
                     className="absolute h-full bg-orange-500 transition-transform duration-300 ease-in-out rounded-xl"
                     style={{
                         width: `${itemWidthPercent}%`,
-                        transform: `translateX(${activeIndex * 100}%)`
+                        transform: `translateX(${activeIndex * 100}%)`,
                     }}
                 ></div>
 
@@ -50,7 +50,7 @@ const ToggleNavBar = ({ options, width = 'w-full', height = '50px', InitActiveTa
                             className={`
                                 relative flex-1 text-center text-lg font-bold 
                                 transition-colors duration-300 ease-in-out z-10
-                                ${isActive ? 'text-white' : 'text-black'}
+                                ${isActive ? "text-white" : "text-black"}
                             `}
                         >
                             {key}

@@ -2,13 +2,12 @@ import OrderCard from "./OrderCard.jsx";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { useOrderInfiniteQuery } from "../../../../hooks/order/useOrderInfiniteQuery.jsx";
-import { useQueryClient } from "@tanstack/react-query";
+
 const UnacceptedList = () => {
     const { ref, inView } = useInView({
         rootMargin: "100px",
     });
-    // const queryClient = useQueryClient();
-    // queryClient.invalidateQueries(["order"]);
+
     const {
         orders,
         fetchNextPage,
@@ -18,24 +17,25 @@ const UnacceptedList = () => {
         isError,
         error,
     } = useOrderInfiniteQuery("PENDING");
-
     useEffect(() => {
         if (inView && !isFetchingNextPage && hasNextPage) {
             fetchNextPage();
         }
     }, [inView, isFetchingNextPage, hasNextPage, fetchNextPage]);
-    if (isLoading) {
+    if (isLoading || orders === undefined) {
         return <div className="text-center pt-20">Loading...</div>;
     }
 
     if (isError) {
         return <div className="text-center pt-20">Error: {error.message}</div>;
     }
-
+    if (orders?.pages.length === 0) {
+        return <div className="text-center pt-20">目前沒有未接訂單</div>;
+    }
     return (
         <div className="flex flex-col text-center justify-between ">
             {orders?.pages.map((page) =>
-                page.map((order, _) => {
+                page.content.map((order, _) => {
                     return <OrderCard key={_} order={order} />;
                 }),
             )}

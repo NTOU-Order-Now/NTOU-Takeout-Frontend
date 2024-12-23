@@ -6,10 +6,10 @@ import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 const CartItemCard = ({ dishData, imageUrl }) => {
-    const { id, dishName, price, quantity, chosenAttributes, note } = dishData;
+    const { dishId, id, dishName, price, quantity, chosenAttributes, note } =
+        dishData;
     const [nowQuantity, setNowQuantity] = useState(quantity);
     const { patchCartAsync } = useCartUpdateMutation();
-
     const handleQuantityChange = async (change) => {
         const newQ = nowQuantity + change;
         if (newQ < 0 || newQ > 25) return;
