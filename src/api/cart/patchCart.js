@@ -13,7 +13,7 @@ export const patchCart = async (orderedDishId, payload, signal) => {
                     Authorization: `Bearer ${authToken}`,
                 },
                 signal,
-            }
+            },
         );
         return res.data;
     } catch (error) {
@@ -24,6 +24,5 @@ export const patchCart = async (orderedDishId, payload, signal) => {
             console.error("PATCH cart error; ", error);
             throw error;
         }
-
     }
 };
