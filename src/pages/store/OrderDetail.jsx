@@ -74,6 +74,7 @@ const OrderDetails = () => {
                                 key={_}
                                 dishData={item}
                                 imageUrl={findDishPicture(item.dishId)}
+                                showAdjustBtn={false}
                             />
                         );
                     })}
