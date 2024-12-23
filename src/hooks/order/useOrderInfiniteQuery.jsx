@@ -32,7 +32,7 @@ export const useOrderInfiniteQuery = (status) => {
                 ? currentPage + 1
                 : undefined;
         },
-        staleTime: 1000 * 60, // 1 minute
+        // staleTime: 1000 * 60, // 1 minute
     });
 
     return {

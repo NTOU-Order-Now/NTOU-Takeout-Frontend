@@ -60,7 +60,6 @@ const OrderCard = ({ order, showStatus = true }) => {
     const setOrderData = useOrderStore((state) => state.setOrderData);
     const handleStatusClick = useCallback(async () => {
         const nextStatus = getNextStatus(order.status);
-        console.debug("nextStatus", nextStatus);
         if (nextStatus) {
             try {
                 await updateOrderStatusAsync({
@@ -74,13 +73,11 @@ const OrderCard = ({ order, showStatus = true }) => {
     }, [order.id, order.status, updateOrderStatusAsync]);
     const handleAccept = useCallback(
         async (orderId) => {
-            console.debug("===================", orderId);
             try {
                 await updateOrderStatusAsync({
                     orderId,
                     newStatus: "PROCESSING",
                 });
-                console.debug("Accept order: ", orderId);
             } catch (error) {
                 console.error("Failed to accept order:", error);
             }
