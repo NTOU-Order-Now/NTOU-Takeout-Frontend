@@ -3,13 +3,11 @@ import loginClient from "../../api/auth/loginClient";
 import CryptoJS from "crypto-js";
 import { useNavigate } from "react-router-dom";
 import userInfoStore from "../../stores/user/userInfoStore.js";
-import { useSystemContext } from "../../context/useSystemContext.jsx";
 
 export const useLoginMutation = (isEnabled = true) => {
     const setUser = userInfoStore((state) => state.setUser);
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const { merchantData, userInfo } = useSystemContext();
     const {
         mutateAsync: loginMutation,
         isSuccess: isLoginSuccess,

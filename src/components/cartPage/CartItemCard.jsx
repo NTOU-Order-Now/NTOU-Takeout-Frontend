@@ -6,7 +6,8 @@ import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 const CartItemCard = ({ dishData, imageUrl }) => {
-    const { id, dishName, price, quantity, chosenAttributes, note } = dishData;
+    const { dishId, dishName, price, quantity, chosenAttributes, note } =
+        dishData;
     const [nowQuantity, setNowQuantity] = useState(quantity);
     const { patchCartAsync } = useCartUpdateMutation();
 
@@ -20,7 +21,7 @@ const CartItemCard = ({ dishData, imageUrl }) => {
         }
         // update cart
         try {
-            await patchCartAsync({ orderedDishId: id, newQuantity: newQ });
+            await patchCartAsync({ orderedDishId: dishId, newQuantity: newQ });
         } catch (error) {
             console.debug("patchCartAsync error:", error);
             setNowQuantity(quantity);
@@ -91,7 +92,6 @@ const CartItemCard = ({ dishData, imageUrl }) => {
 
 CartItemCard.propTypes = {
     dishData: PropTypes.shape({
-        id: PropTypes.string.isRequired,
         dishId: PropTypes.string.isRequired,
         dishName: PropTypes.string.isRequired,
         price: PropTypes.number.isRequired,

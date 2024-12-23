@@ -85,11 +85,9 @@ function Menu() {
 
     // set navbar items
     useEffect(() => {
-        if (menuCategoryList?.length) {
-            setNavbarItems(
-                menuCategoryList.map((category) => category.categoryName),
-            );
-        }
+        setNavbarItems(
+            menuCategoryList.map((category) => category.categoryName),
+        );
     }, [menuCategoryList, setNavbarItems]);
 
     // if merchant data is not fetched yet, show loading spinner

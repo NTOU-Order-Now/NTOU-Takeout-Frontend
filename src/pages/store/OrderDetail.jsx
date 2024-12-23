@@ -1,17 +1,20 @@
 import PropTypes from "prop-types";
 import useOrderStore from "../../stores/orderStore";
-// import Header from "../../components/orderPage/Header";
 import UserInfo from "../../components/orderPage/UserInfo";
 import OrderNote from "../../components/orderPage/OrderNote";
-import OrderItem from "../../components/orderPage/OrderItem";
-import Footer from "../../components/orderPage/Footer";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import Header from "../../components/storePage/home/Header";
 import { faArrowLeft, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useSystemContext } from "../../context/useSystemContext.jsx";
+import { useCategoryQueries } from "../../hooks/menu/useCategoryQueries.jsx";
+import CartItemCard from "../../components/cartPage/CartItemCard.jsx";
+import EstimatedTime from "../../components/orderPage/EstimatedTime.jsx";
 const OrderDetails = () => {
+    const orderData = useOrderStore((state) => state.orderData);
+    console.debug("orderData:", orderData);
     const statusConfig = {
-        PENDING: { text: "未接單", bgColor: "bg-blue-500" },
+        PENDING: { text: "未接單", bgColor: "bg-red-500" },
         PROCESSING: { text: "製作中", bgColor: "bg-blue-500" },
         COMPLETED: { text: "未取餐", bgColor: "bg-yellow-500" },
         PICKED_UP: { text: "已取餐", bgColor: "bg-green-500" },
@@ -26,22 +29,33 @@ const OrderDetails = () => {
 
     const statusBadge = (
         <button
-            className={`${currentStatus.bgColor} text-sm px-3 py-1 rounded-md text-white font-bold`}
+            className={`${currentStatus(orderData?.status).bgColor} text-sm px-3 py-1 rounded-md text-white font-bold`}
         >
-            {currentStatus.text}
+            {currentStatus(orderData?.status).text}
         </button>
     );
 
-    const orderData = useOrderStore((state) => state.orderData);
+    const { userInfo, merchantData, menuCategoryList } = useSystemContext();
+    const { categoryData } = useCategoryQueries(
+        menuCategoryList,
+        merchantData?.menuId,
+        userInfo !== undefined,
+    );
     const navigate = useNavigate();
-    console.debug("orderData", orderData);
     const handleBackClick = () => {
         navigate(-1);
     };
-
+    const findDishPicture = (targetId) => {
+        const allDishes = categoryData.flatMap((category) => category.dishes);
+        const dish = allDishes.find((dish) => dish.id === targetId);
+        return dish ? dish.picture : null;
+    };
+    if (orderData === null) {
+        return <Navigate to="/store/pos/management/order" replace />;
+    }
     return (
         <div className="flex flex-col h-screen">
-            <div className="sticky mt-[54px] z-20 shadow-sm">
+            <div className="sticky mt-[54px] z-50 shadow-sm">
                 <Header
                     LeftIcon={<FontAwesomeIcon icon={faArrowLeft} />}
                     title={"單號 " + orderData.id.slice(-5)}
@@ -49,21 +63,26 @@ const OrderDetails = () => {
                     rightComponents={[statusBadge]}
                 />
             </div>
-            {/* orderData items */}
-            <div className="overflow-auto h-[dvh-34px]  ">
+            <div className="flex-1 overflow-auto pb-[48px]">
+                {/* orderData items */}
+
                 <div className="bg-white text-black flex-1 p-4 overflow-auto">
                     <UserInfo user={orderData} />
                     <OrderNote note={orderData.note} />
-                    {orderData.orderedDishes.map((item) => (
-                        <OrderItem key={item.id} item={item} />
-                    ))}
+                    {orderData.orderedDishes.map((item, _) => {
+                        return (
+                            <CartItemCard
+                                key={_}
+                                dishData={item}
+                                imageUrl={findDishPicture(item.dishId)}
+                            />
+                        );
+                    })}
                 </div>
-
                 {/* Footer */}
-                <Footer
-                    estimatedTime={orderData.estimatedTime}
-                    // onTimeChange={(value) => setEstimatedTime(value)}
-                />
+                <div className="fixed bottom-0 left-0 right-0 w-full">
+                    <EstimatedTime value={orderData.estimatedPrepTime} />
+                </div>
             </div>
         </div>
     );
