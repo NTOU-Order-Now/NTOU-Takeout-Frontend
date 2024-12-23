@@ -2,8 +2,13 @@ import { useEffect } from "react";
 import { useActiveTabStore } from "../../stores/common/useActiveTabStore";
 import PropTypes from "prop-types";
 
-
-const ToggleNavBar = ({ options, width = 'w-full', height = '50px', InitActiveTab }) => {
+const ToggleNavBar = ({
+    options,
+    width = "w-full",
+    height = "50px",
+    InitActiveTab,
+    borderGap = "1",
+}) => {
     const { activeTab, setActiveTab } = useActiveTabStore();
     useEffect(() => {
         if (InitActiveTab) {
@@ -25,7 +30,7 @@ const ToggleNavBar = ({ options, width = 'w-full', height = '50px', InitActiveTa
 
     return (
         <div
-            className={`relative border border-gray-300 rounded-2xl p-1 ${width}`}
+            className={`relative border border-gray-300 rounded-2xl p-${borderGap} ${width}`}
             style={{ height }}
         >
             <div className="relative w-full h-full flex overflow-hidden rounded-xl">
@@ -67,6 +72,7 @@ ToggleNavBar.propTypes = {
     height: PropTypes.string,
     options: PropTypes.object.isRequired,
     InitActiveTab: PropTypes.string,
+    borderGap: PropTypes.string,
 };
 
 export default ToggleNavBar;
