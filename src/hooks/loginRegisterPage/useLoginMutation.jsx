@@ -3,13 +3,11 @@ import loginClient from "../../api/auth/loginClient";
 import CryptoJS from "crypto-js";
 import { useNavigate } from "react-router-dom";
 import userInfoStore from "../../stores/user/userInfoStore.js";
-import { useSystemContext } from "../../context/useSystemContext.jsx";
 
 export const useLoginMutation = (isEnabled = true) => {
     const setUser = userInfoStore((state) => state.setUser);
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const { merchantData } = useSystemContext();
     const {
         mutateAsync: loginMutation,
         isSuccess: isLoginSuccess,
@@ -28,11 +26,7 @@ export const useLoginMutation = (isEnabled = true) => {
             if (data.role === "CUSTOMER") {
                 navigate("/", { replace: true });
             } else if (data.role === "MERCHANT") {
-                queryClient.invalidateQueries(
-                    ["menuCategoryList"],
-                    merchantData?.menuId,
-                );
-                navigate(`/store/pos`, { replace: true }); //there should use data here
+                navigate(`/store/pos`, { replace: true });
             }
         },
         onError: (error) => {

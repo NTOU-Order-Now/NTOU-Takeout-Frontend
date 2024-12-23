@@ -45,6 +45,8 @@ const getNextStatus = (currentStatus) => {
             return "COMPLETED";
         case "COMPLETED":
             return "PICKED_UP";
+        case "PICKED_UP":
+            return "CANCELED";
         case "PENDING":
             return "PROCESSING";
         default:
@@ -53,11 +55,22 @@ const getNextStatus = (currentStatus) => {
 };
 
 const OrderCard = ({ order, showStatus = true }) => {
-    console.debug("order", order);
     const { bgColor, textColor, statusText } = getStatusColors(order.status);
     const { updateOrderStatusAsync, isLoading } = useOrderStatusMutation();
     const setOrderData = useOrderStore((state) => state.setOrderData);
-    const orderData = useOrderStore((state) => state.orderData);
+    const handleStatusClick = useCallback(async () => {
+        const nextStatus = getNextStatus(order.status);
+        if (nextStatus) {
+            try {
+                await updateOrderStatusAsync({
+                    orderId: order.id,
+                    newStatus: nextStatus,
+                });
+            } catch (error) {
+                console.error("Failed to update order status:", error);
+            }
+        }
+    }, [order.id, order.status, updateOrderStatusAsync]);
     const handleAccept = useCallback(
         async (orderId) => {
             try {
@@ -65,7 +78,6 @@ const OrderCard = ({ order, showStatus = true }) => {
                     orderId,
                     newStatus: "PROCESSING",
                 });
-                console.debug("Accept order: ", orderId);
             } catch (error) {
                 console.error("Failed to accept order:", error);
             }
@@ -86,25 +98,26 @@ const OrderCard = ({ order, showStatus = true }) => {
         },
         [updateOrderStatusAsync],
     );
-    const isOverdue = () => {
-        const now = new Date();
-        const estimate = new Date(order.estimatedPrepTime);
-        return order.status === "PROCESSING" && now > estimate;
+    const isOverdue = (orderTime, estimatedPrepTime) => {
+        const today = new Date();
+        const [hours, minutes, seconds] = orderTime.split(":");
+        const [secs, millisecs] = seconds.split(".");
+
+        const orderDate = new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate(),
+            parseInt(hours),
+            parseInt(minutes),
+            parseInt(secs),
+            parseInt(millisecs),
+        );
+        const expectedFinishTime = new Date(
+            orderDate.getTime() + estimatedPrepTime * 60 * 1000,
+        );
+        return new Date() > expectedFinishTime;
     };
 
-    const handleStatusClick = useCallback(async () => {
-        const nextStatus = getNextStatus(order.status);
-        if (nextStatus) {
-            try {
-                await updateOrderStatusAsync({
-                    orderId: order.id,
-                    newStatus: nextStatus,
-                });
-            } catch (error) {
-                console.error("Failed to update order status:", error);
-            }
-        }
-    }, [order.id, order.status, updateOrderStatusAsync]);
     const navigate = useNavigate();
     const handleSeeDetail = (e) => {
         e.preventDefault();
@@ -137,11 +150,12 @@ const OrderCard = ({ order, showStatus = true }) => {
                 {/* Badge */}
                 {showStatus && order.status !== "PENDING" && (
                     <div className="flex items-center mb-2">
-                        {isOverdue() && (
-                            <span className="text-red-500 text-sm ml-2 font-bold pr-2">
-                                超時
-                            </span>
-                        )}
+                        {isOverdue(order.orderTime, order.estimatedPrepTime) &&
+                            order.status === "PROCESSING" && (
+                                <span className="text-red-500 text-sm ml-2 font-bold pr-2">
+                                    超時
+                                </span>
+                            )}
                         <button
                             onClick={handleStatusClick}
                             disabled={!getNextStatus(order.status)}

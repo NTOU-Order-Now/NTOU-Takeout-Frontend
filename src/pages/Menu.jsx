@@ -61,7 +61,6 @@ function Menu() {
         if (merchantData) {
             setMerchant(merchantData);
             setMenuId(merchantData?.menuId);
-            console.debug("merchantData?.menuId", merchantData?.menuId);
         } else {
             // if merchant data is not in store, fetch it
             const fetchMerchantData = async () => {
@@ -74,10 +73,8 @@ function Menu() {
                 }
             };
             fetchMerchantData().then((res) => {
-                console.debug("merchant not fetched, res:", res.data[0]);
                 setMerchant(res.data[0]);
                 setMenuId(res.data[0]?.menuId);
-                console.debug("res.data[0]?.menuId", res.data[0]?.menuId);
             });
         }
     }, [merchantId, getMerchantById]);
@@ -88,11 +85,9 @@ function Menu() {
 
     // set navbar items
     useEffect(() => {
-        if (menuCategoryList?.length) {
-            setNavbarItems(
-                menuCategoryList.map((category) => category.categoryName),
-            );
-        }
+        setNavbarItems(
+            menuCategoryList.map((category) => category.categoryName),
+        );
     }, [menuCategoryList, setNavbarItems]);
 
     // if merchant data is not fetched yet, show loading spinner

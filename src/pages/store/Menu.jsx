@@ -33,7 +33,6 @@ const Menu = () => {
         merchantData?.menuId,
         userInfo !== undefined,
     );
-
     const navigate = useNavigate();
     const sectionRefs = useRef([]);
     const [isNavbarFixed, setIsNavbarFixed] = useState(false);
@@ -54,11 +53,9 @@ const Menu = () => {
 
     // set navbar items
     useEffect(() => {
-        if (menuCategoryList?.length) {
-            setNavbarItems(
-                menuCategoryList?.map((category) => category.categoryName),
-            );
-        }
+        setNavbarItems(
+            menuCategoryList?.map((category) => category.categoryName),
+        );
     }, [menuCategoryList, setNavbarItems]);
 
     // if merchant data is not fetched yet, show loading spinner
@@ -104,7 +101,10 @@ const Menu = () => {
     if (selectedDish) {
         return (
             <DishEdit
-                onClose={() => setSelectedDish(null)}
+                onClose={() => {
+                    // e.preventDefault();
+                    setSelectedDish(null);
+                }}
                 categoryNames={categoryNames}
                 menuId={menuId}
             />
@@ -118,22 +118,26 @@ const Menu = () => {
                 onLeftClick={toggleSidebar}
                 rightComponents={[addButton, previewButton]}
             />
-            <div className="sticky mt-[54px] z-20 shadow-sm">
-                <Suspense fallback={<NavbarSkeleton isNavbarFixed={false} />}>
-                    <MenuNavbar
-                        onNavClick={handleScrollToSection}
-                        isNavbarFixed={isNavbarFixed}
-                    />
-                </Suspense>
-            </div>
-            <div className="overflow-auto h-[dvh-34px]  ">
-                <Suspense fallback={<MenuSectionSkeleton />}>
-                    <MenuSection
-                        menuId={menuId}
-                        sectionRefs={sectionRefs}
-                        categoryData={categoryData}
-                    />
-                </Suspense>
+            <div className="flex-1">
+                <div className="sticky top-[54px] mt-[54px] z-20 shadow-sm">
+                    <Suspense
+                        fallback={<NavbarSkeleton isNavbarFixed={false} />}
+                    >
+                        <MenuNavbar
+                            onNavClick={handleScrollToSection}
+                            isNavbarFixed={isNavbarFixed}
+                        />
+                    </Suspense>
+                </div>
+                <div className="overflow-auto h-[dvh-34px]  ">
+                    <Suspense fallback={<MenuSectionSkeleton />}>
+                        <MenuSection
+                            menuId={menuId}
+                            sectionRefs={sectionRefs}
+                            categoryData={categoryData}
+                        />
+                    </Suspense>
+                </div>
             </div>
         </div>
     );

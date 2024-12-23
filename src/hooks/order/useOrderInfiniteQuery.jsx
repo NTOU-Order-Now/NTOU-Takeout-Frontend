@@ -3,6 +3,7 @@ import { searchOrder } from "../../api/order/searchOrder.js";
 
 export const useOrderInfiniteQuery = (status) => {
     const PAGE_SIZE = 3;
+
     const {
         data: orders,
         fetchNextPage,
@@ -17,9 +18,9 @@ export const useOrderInfiniteQuery = (status) => {
             const response = await searchOrder({
                 page: pageParam,
                 size: PAGE_SIZE,
-                status: status,
+                status: status === "ALL" ? null : status,
             });
-            console.log(response.data);
+
             return response.data;
         },
         getNextPageParam: (lastPage, allPages) => {
@@ -31,7 +32,7 @@ export const useOrderInfiniteQuery = (status) => {
                 ? currentPage + 1
                 : undefined;
         },
-        staleTime: 1000 * 60, // 1 minute
+        // staleTime: 1000 * 60, // 1 minute
     });
 
     return {
