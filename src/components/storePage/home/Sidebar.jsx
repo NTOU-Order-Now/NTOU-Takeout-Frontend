@@ -100,6 +100,7 @@ const Sidebar = ({ merchantName }) => {
                         iconSize="lg"
                         iconColor={"#606162"}
                         style={"px-4 py-4"}
+                        path={"/store/pos/setting"}
                     />
                 </div>
                 <div className="px-4 absolute bottom-0 left-0 right-2 flex justify-between">
