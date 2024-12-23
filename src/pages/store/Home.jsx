@@ -11,8 +11,6 @@ function Home() {
     const title = useSidebarStore((state) => state.title);
     const user = userInfoStore((state) => state.user);
     // const { userInfo, merchantData, menuCategoryList } = useSystemContext();
-    console.debug("user", user);
-    console.debug("storeId", user?.storeId);
     const location = useLocation();
     // set title based on location
     useEffect(() => {

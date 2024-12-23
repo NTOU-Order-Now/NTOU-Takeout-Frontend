@@ -14,7 +14,9 @@ import {
     faCircleQuestion,
     faMoon,
     faSun,
+    faCartShopping,
 } from "@fortawesome/free-solid-svg-icons";
+import CartIcon from "./CartIcon";
 import userInfoStore from "../../stores/user/userInfoStore.js";
 const Sidebar = () => {
     const isOpen = useSidebarStore((state) => state.isOpen);
@@ -64,50 +66,59 @@ const Sidebar = () => {
                         style={"py-8"}
                         path="/auth/login"
                     />
+                    {/*<SidebarButton*/}
+                    {/*    text="商家瀏覽紀錄"*/}
+                    {/*    icon={faStore}*/}
+                    {/*    iconSize="lg"*/}
+                    {/*    iconColor={"#053766"}*/}
+                    {/*    style={"px-4 py-4"}*/}
+                    {/*/>*/}
                     <SidebarButton
-                        text="商家瀏覽紀錄"
-                        icon={faStore}
-                        iconSize="lg"
-                        iconColor={"#053766"}
-                        style={"px-4 py-4"}
-                    />
-                    <SidebarButton
-                        text="歷史訂單紀錄"
+                        text="歷史訂單"
                         icon={faHistory}
                         iconSize="lg"
                         iconColor={"#053766"}
                         style={"px-4 py-4"}
+                        path="/history/order"
                     />
                     <SidebarButton
-                        text="收藏店家"
-                        icon={faHeart}
+                        text="購物車"
+                        icon={faCartShopping}
                         iconSize="lg"
                         iconColor={"#053766"}
                         style={"px-4 py-4"}
+                        path="/cart"
                     />
+                    {/*<SidebarButton*/}
+                    {/*    text="收藏店家"*/}
+                    {/*    icon={faHeart}*/}
+                    {/*    iconSize="lg"*/}
+                    {/*    iconColor={"#053766"}*/}
+                    {/*    style={"px-4 py-4"}*/}
+                    {/*/>*/}
                     <SidebarButton
                         text="問題回報"
                         icon={faCircleQuestion}
                         iconSize="lg"
-                        iconColor={"#606162"}
-                        style={"pt-8 pb-4 px-4"}
-                    />
-                    <SidebarButton
-                        text="語言"
-                        icon={faLanguage}
-                        iconSize="lg"
-                        iconColor={"#606162"}
+                        iconColor={"#053766"}
                         style={"px-4 py-4"}
                     />
-                    <SidebarButton
-                        text="設定"
-                        icon={faCog}
-                        iconSize="lg"
-                        iconColor={"#606162"}
-                        style={"px-4 py-4"}
-                    />
+                    {/*<SidebarButton*/}
+                    {/*    text="語言"*/}
+                    {/*    icon={faLanguage}*/}
+                    {/*    iconSize="lg"*/}
+                    {/*    iconColor={"#606162"}*/}
+                    {/*    style={"px-4 py-4"}*/}
+                    {/*/>*/}
+                    {/*<SidebarButton*/}
+                    {/*    text="設定"*/}
+                    {/*    icon={faCog}*/}
+                    {/*    iconSize="lg"*/}
+                    {/*    iconColor={"#606162"}*/}
+                    {/*    style={"px-4 py-4"}*/}
+                    {/*/>*/}
                 </div>
-                <div className="px-4 absolute bottom-0 left-0 right-2 flex justify-between">
+                <div className="px-4 absolute bottom-8 left-0 right-2 flex justify-between">
                     {authToken && (
                         <SidebarButton
                             text="登出"
@@ -117,14 +128,14 @@ const Sidebar = () => {
                             onClick={handleLogout}
                         />
                     )}
-                    <SidebarButton
-                        icon={theme === "light" ? faMoon : faSun}
-                        text="切換主題"
-                        textStyle={"w-0  invisible"}
-                        iconSize="lg"
-                        iconColor={theme === "light" ? "#606162" : "#FFD43B"}
-                        onClick={toggleTheme}
-                    />
+                    {/*<SidebarButton*/}
+                    {/*    icon={theme === "light" ? faMoon : faSun}*/}
+                    {/*    text="切換主題"*/}
+                    {/*    textStyle={"w-0  invisible"}*/}
+                    {/*    iconSize="lg"*/}
+                    {/*    iconColor={theme === "light" ? "#606162" : "#FFD43B"}*/}
+                    {/*    onClick={toggleTheme}*/}
+                    {/*/>*/}
                 </div>
             </div>
         </>

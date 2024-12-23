@@ -157,7 +157,7 @@ const DishOptionGroup = ({
 
             {/* Toggle Single/Multi Select */}
             <div className="flex justify-end space-x-4 mt-4">
-                <div className="flex border-black border-[2px] rounded-2xl overflow-hidden">
+                <div className="flex w-[120px] h-10 overflow-hidden">
                     <DishToggleNavBar
                         options={selectOptions}
                         selectedOption={currentSelectedKey}

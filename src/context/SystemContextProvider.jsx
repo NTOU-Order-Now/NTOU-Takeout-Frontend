@@ -42,7 +42,12 @@ export const SystemContextProvider = ({ children }) => {
             userInfo !== undefined,
         );
 
-    const menuCategoryList = useCategoryListQuery(
+    const {
+        menuCategoryList,
+        refetch: refetchMenuCategoryList,
+        isError: isMenuCategoryListError,
+        isLoading: isMenuCategoryListLoading,
+    } = useCategoryListQuery(
         merchantData?.menuId ?? null,
         // don't need fetch when user is undefined or role is MERCHANT
         userInfo !== undefined,
@@ -93,6 +98,9 @@ export const SystemContextProvider = ({ children }) => {
                 isCartError,
                 merchantData,
                 menuCategoryList,
+                refetchMenuCategoryList,
+                isMenuCategoryListError,
+                isMenuCategoryListLoading,
                 isMerchantLoading,
                 totalSpend,
                 totalQuantity,

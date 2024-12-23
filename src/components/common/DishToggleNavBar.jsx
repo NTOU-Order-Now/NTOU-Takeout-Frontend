@@ -6,11 +6,8 @@ function DishToggleNavBar({ options, selectedOption, onChange }) {
     const itemWidthPercent = 100 / keys.length;
 
     return (
-        <div
-            className="relative border border-gray-300 rounded-2xl p-1 w-full"
-            style={{ height: "50px" }}
-        >
-            <div className="relative w-full h-full flex overflow-hidden rounded-xl">
+        <div className="relative  h-full  w-full">
+            <div className="relative border-gray-200 border-2 h-full flex overflow-hidden rounded-xl">
                 <div
                     className="absolute h-full bg-orange-500 transition-transform duration-300 ease-in-out rounded-xl"
                     style={{
@@ -25,7 +22,7 @@ function DishToggleNavBar({ options, selectedOption, onChange }) {
                             key={key}
                             onClick={() => onChange(key)}
                             className={`
-                                relative flex-1 text-center text-lg font-bold 
+                                relative flex-1 text-center text-sm font-bold 
                                 transition-colors duration-300 ease-in-out z-10
                                 ${isActive ? "text-white" : "text-black"}
                             `}

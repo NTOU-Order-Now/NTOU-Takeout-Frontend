@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
-// import useUserInfoStore from "../../stores/userInfoStore";
 import userInfoStore from "../../stores/user/userInfoStore.js";
 import CartIcon from "./CartIcon";
 import Cookies from "js-cookie";

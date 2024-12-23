@@ -23,6 +23,8 @@ const StoreOrder = lazy(() => import("./pages/store/Order"));
 const OrderDetail = lazy(() => import("./pages/store/OrderDetail"));
 const Settings = lazy(() => import("./pages/store/Settings"));
 const Statistic = lazy(() => import("./pages/store/Statistic"));
+const HistoryOrders = lazy(() => import("./pages/HistoryOrders"));
+const CustomerOrderDetail = lazy(() => import("./pages/CustomerOrderDetail"));
 const queryClient = new QueryClient();
 import MerchantProtectedRoute from "./route/MerchantProtectedRoute.jsx";
 import CustomerProtectedRoute from "./route/CustomerProtectedRoute.jsx";
@@ -34,6 +36,28 @@ const router = createBrowserRouter(
             element: (
                 <Suspense fallback={<HomeSkeleton />}>
                     <Home />
+                </Suspense>
+            ),
+            errorElement: <NotFound />,
+        },
+        {
+            path: "/history/order",
+            element: (
+                <Suspense fallback={<CartSkeleton />}>
+                    <CustomerProtectedRoute>
+                        <HistoryOrders />
+                    </CustomerProtectedRoute>
+                </Suspense>
+            ),
+            errorElement: <NotFound />,
+        },
+        {
+            path: "/history/order/:orderNumber",
+            element: (
+                <Suspense fallback={<CartSkeleton />}>
+                    <CustomerProtectedRoute>
+                        <CustomerOrderDetail />
+                    </CustomerProtectedRoute>
                 </Suspense>
             ),
             errorElement: <NotFound />,

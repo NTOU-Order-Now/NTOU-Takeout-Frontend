@@ -1,12 +1,13 @@
 import { useMemo, useState } from "react";
 import CartOrderSection from "../components/cartPage/CartOrderSection";
-import CartPageHeader from "../components/cartPage/CartPageHeader";
+import NormalHeader from "../components/common/NormalHeader.jsx";
 import CartTotalSpend from "../components/cartPage/CartTotalSpend";
 import CartItemCardList from "../components/cartPage/CartItemCardList";
 import { useCategoryQueries } from "../hooks/menu/useCategoryQueries";
 import { useSystemContext } from "../context/useSystemContext.jsx";
 import CartRemark from "../components/cartPage/CartRemark";
 import CartSkeleton from "../skeleton/cart/CartSkeleton.jsx";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const Cart = () => {
     const {
@@ -59,7 +60,7 @@ const Cart = () => {
     if (isError) {
         return (
             <div className="flex justify-center items-center mt-28 fa-2x">
-                <CartPageHeader />
+                <NormalHeader />
                 購物車資料讀取失敗:(
             </div>
         );
@@ -67,7 +68,7 @@ const Cart = () => {
     return (
         <div className="mt-3">
             <div className="flex-none">
-                <CartPageHeader />
+                <NormalHeader leftIcon={faTimes} title={"購物車"} />
                 <CartTotalSpend
                     orderDetail={{
                         cartData: cartData,
