@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import useOrderStore from "../stores/orderStore";
 import UserInfo from "../components/orderPage/UserInfo";
 import OrderNote from "../components/orderPage/OrderNote";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Header from "../components/storePage/home/Header";
 import { faArrowLeft, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,6 +23,7 @@ const OrderDetails = () => {
         PICKED_UP: { text: "已取餐", bgColor: "bg-green-500" },
         CANCELED: { text: "取消", bgColor: "bg-gray-300" },
     };
+    const navigate = useNavigate();
 
     const currentStatus = (status) =>
         statusConfig[status] || {
@@ -40,19 +41,21 @@ const OrderDetails = () => {
     console.debug("orderData", orderData);
 
     const { userInfo, merchantData } = useSystemContext();
+    if (orderData === null) {
+        navigate("/history/order");
+        return;
+    }
     const {
         storeData,
         isLoaing: isStoreDataLoading,
         isError: isStoreDataError,
+        // eslint-disable-next-line react-hooks/rules-of-hooks
     } = useStoreQuery([orderData.storeId]);
-    // console.debug("storeData.storeId", storeData[0]?.storeId);
-    // refetchMenuCategoryList(storeData[0]?.storeId);
-    const menuId = storeData ? storeData[0].menuId : null;
-    const { menuCategoryList } = useCategoryListQuery(menuId);
 
-    console.debug("menuId", menuId);
-    console.debug("merchantData", merchantData);
-    console.debug("menuCategoryList", menuCategoryList);
+    const menuId = storeData ? storeData[0].menuId : null;
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { menuCategoryList } = useCategoryListQuery(menuId);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const { categoryData } = useCategoryQueries(
         menuCategoryList,
         // storeData[0]?.menuId,
@@ -60,7 +63,6 @@ const OrderDetails = () => {
         userInfo !== undefined && menuId !== undefined,
     );
     console.debug("categoryData", categoryData);
-    const navigate = useNavigate();
     const handleBackClick = () => {
         navigate(-1);
     };
@@ -69,11 +71,9 @@ const OrderDetails = () => {
         const dish = allDishes.find((dish) => dish.id === targetId);
         return dish ? dish.picture : null;
     };
+
     if (isStoreDataLoading) {
         return <HeaderSkeleton />;
-    }
-    if (orderData === null) {
-        return <Navigate to="/store/pos/management/order" replace />;
     }
     return (
         <div className="flex flex-col h-screen">
@@ -97,6 +97,7 @@ const OrderDetails = () => {
                                 key={_}
                                 dishData={item}
                                 imageUrl={findDishPicture(item.dishId)}
+                                showAdjustBtn={false}
                             />
                         );
                     })}

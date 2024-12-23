@@ -44,14 +44,15 @@ const OrderDetails = () => {
     const handleBackClick = () => {
         navigate(-1);
     };
+    if (orderData === null) {
+        navigate("/store/pos/management/order");
+        return;
+    }
     const findDishPicture = (targetId) => {
         const allDishes = categoryData.flatMap((category) => category.dishes);
         const dish = allDishes.find((dish) => dish.id === targetId);
         return dish ? dish.picture : null;
     };
-    if (orderData === null) {
-        return <Navigate to="/store/pos/management/order" replace />;
-    }
     return (
         <div className="flex flex-col h-screen">
             <div className="sticky mt-[54px] z-50 shadow-sm">
