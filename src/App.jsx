@@ -2,7 +2,6 @@ import { StrictMode, useEffect, lazy, Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import DevToolBubble from "./devtool/DevToolBubble";
 import { SystemContextProvider } from "./context/SystemContextProvider.jsx";
 import NotFound from "./pages/NotFound";
 import CartSkeleton from "./skeleton/cart/CartSkeleton";
@@ -21,9 +20,12 @@ const MerchantRegister = lazy(() => import("./pages/MerchantRegister"));
 const StoreHome = lazy(() => import("./pages/store/Home"));
 const StoreMenu = lazy(() => import("./pages/store/Menu"));
 const StoreOrder = lazy(() => import("./pages/store/Order"));
+const OrderDetail = lazy(() => import("./pages/store/OrderDetail"));
+const Settings = lazy(() => import("./pages/store/Settings"));
 const queryClient = new QueryClient();
-import OrderDetails from "./pages/store/OrderDetailPage";
+
 import Statistic from "./pages/store/Statistic.jsx";
+
 import MerchantProtectedRoute from "./route/MerchantProtectedRoute.jsx";
 import CustomerProtectedRoute from "./route/CustomerProtectedRoute.jsx";
 
@@ -132,17 +134,25 @@ const router = createBrowserRouter(
                     ),
                     errorElement: <NotFound />,
                 },
+                {
+                    path: "management/order/:orderNumber",
+                    element: (
+                        <Suspense fallback={<MenuPageSkeleton />}>
+                            <OrderDetail />
+                        </Suspense>
+                    ),
+                    errorElement: <NotFound />,
+                },
+                {
+                    path: "setting",
+                    element: (
+                        <Suspense fallback={<MenuPageSkeleton />}>
+                            <Settings />
+                        </Suspense>
+                    ),
+                    errorElement: <NotFound />,
+                },
             ],
-        },
-        {
-            path: "/OrderDetails",
-            element: <OrderDetails />,
-            // errorElement: <NotFound />,
-        },
-        {
-            path: "/Statistic",
-            element: <Statistic />,
-            // errorElement: <NotFound />,
         },
     ],
     {
@@ -163,14 +173,6 @@ function App() {
             <QueryClientProvider client={queryClient}>
                 <SystemContextProvider>
                     <RouterProvider router={router}></RouterProvider>
-                    {/*<DevToolBubble*/}
-                    {/*    router={router}*/}
-                    {/*    endPointReplacements={{*/}
-                    {/*        merchantId: "67178651994d5f6d435d6ef8",*/}
-                    {/*        authType: "login",*/}
-                    {/*        storeId: "67178651994d5f6d435d6ef8",*/}
-                    {/*    }}*/}
-                    {/*/>*/}
                 </SystemContextProvider>
                 <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>

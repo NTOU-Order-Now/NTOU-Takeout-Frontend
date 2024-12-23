@@ -10,10 +10,7 @@ const Merchant = (props) => {
     const randomDistance = Math.floor(Math.random() * 30) + 1;
     return (
         <Link key={id} to={`/menu/${id}`}>
-            <div
-                className="font-notoTC relative w-[90vw] h-[241px] m-2 bg-white
-                        rounded-2xl overflow-hidden shadow-lg"
-            >
+            <div className="font-notoTC relative w-full h-60 bg-white rounded-2xl overflow-hidden shadow-lg transition-transform hover:scale-105">
                 <div className="object-cover w-full h-full">
                     <LazyLoadImage
                         src={picture}

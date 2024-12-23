@@ -16,8 +16,11 @@ function AcceptedList() {
         isLoading,
         isError,
         error,
-    } = useOrderInfiniteQuery("PROCESSING");
+    } = useOrderInfiniteQuery("ALL");
 
+    const filterOrders = orders?.pages.map((page) =>
+        page.content.filter((order) => order.status !== "PENDING"),
+    );
     useEffect(() => {
         if (inView && !isFetchingNextPage && hasNextPage) {
             fetchNextPage();
@@ -30,10 +33,13 @@ function AcceptedList() {
     if (isError) {
         return <div className="text-center pt-20">Error: {error.message}</div>;
     }
-
+    // console.debug("filterOrders", filterOrders);
+    // if (filterOrders.map) {
+    //     return <div className="text-center pt-20">目前沒有已接訂單</div>;
+    // }
     return (
         <div className="flex flex-col text-center justify-between ">
-            {orders?.pages.map((page) =>
+            {filterOrders.map((page) =>
                 page.map((order, _) => {
                     return <OrderCard key={_} order={order} />;
                 }),

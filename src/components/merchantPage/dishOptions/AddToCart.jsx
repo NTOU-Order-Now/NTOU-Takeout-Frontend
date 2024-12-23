@@ -27,12 +27,13 @@ const AddToCart = ({ dishId, onRequiredMissing, onClose }) => {
         setIsModalOpen(false);
     };
 
-    const handleAddToCart = async () => {
+    const handleAddToCart = async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         const dishDetail = dishes[dishId];
         if (!dishDetail) {
             return;
         }
-
         const choosenAttributes = dishDetail.chosenAttributes || [];
         const requiredAttributes = allDishAttributes[dishId] || [];
 
@@ -53,7 +54,15 @@ const AddToCart = ({ dishId, onRequiredMissing, onClose }) => {
             setIsModalOpen(true);
             return;
         }
-        await postCartAsync(dishDetail);
+        const payload = {
+            dishId: dishDetail.dishId,
+            storeId: dishDetail.storeId,
+            quantity: dishDetail.quantity,
+            note: dishDetail.note,
+            choosenAttributes: dishDetail.chosenAttributes,
+        };
+
+        await postCartAsync(payload);
         onClose();
     };
 

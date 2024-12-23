@@ -27,7 +27,6 @@ const ViewCartButton = lazy(
 
 function Menu() {
     const { merchantId } = useParams();
-    console.debug("merchantId", merchantId);
     const sectionRefs = useRef([]);
     const [isNavbarFixed, setIsNavbarFixed] = useState(false);
     const setNavbarItems = useNavStore((state) => state.setNavbarItems);
@@ -53,7 +52,7 @@ function Menu() {
     }, []);
 
     const getMerchantById = useMerchantStore((state) => state.getMerchantById);
-    const [menuId, setMenuId] = useState(null); //for testing
+    const [menuId, setMenuId] = useState(null);
     const [merchant, setMerchant] = useState(null);
 
     // get merchant data
@@ -61,8 +60,7 @@ function Menu() {
         const merchantData = getMerchantById(merchantId);
         if (merchantData) {
             setMerchant(merchantData);
-            // setMenuId(merchantData?.menuId);//for testing
-            setMenuId("676569c41ede4e7e9a87795a"); //for testing
+            setMenuId(merchantData?.menuId);
         } else {
             // if merchant data is not in store, fetch it
             const fetchMerchantData = async () => {
@@ -75,10 +73,8 @@ function Menu() {
                 }
             };
             fetchMerchantData().then((res) => {
-                console.debug("merchant not fetched, res:", res.data[0]);
                 setMerchant(res.data[0]);
-                // setMenuId(res.data[0]?.menuId || null);//for testing
-                setMenuId("676569c41ede4e7e9a87795a"); //for testing
+                setMenuId(res.data[0]?.menuId);
             });
         }
     }, [merchantId, getMerchantById]);
@@ -89,11 +85,9 @@ function Menu() {
 
     // set navbar items
     useEffect(() => {
-        if (menuCategoryList?.length) {
-            setNavbarItems(
-                menuCategoryList.map((category) => category.categoryName),
-            );
-        }
+        setNavbarItems(
+            menuCategoryList.map((category) => category.categoryName),
+        );
     }, [menuCategoryList, setNavbarItems]);
 
     // if merchant data is not fetched yet, show loading spinner
