@@ -3,8 +3,12 @@ import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 import { useState, useEffect } from "react";
 
 const StatisticChart = ({ data }) => {
-    const [chartWidth, setChartWidth] = useState(Math.min(350, window.innerWidth - 40));
-    const [chartRadius, setChartRadius] = useState(Math.max(50, chartWidth / 3));
+    const [chartWidth, setChartWidth] = useState(
+        Math.min(350, window.innerWidth - 40),
+    );
+    const [chartRadius, setChartRadius] = useState(
+        Math.max(50, chartWidth / 3),
+    );
 
     useEffect(() => {
         const handleResize = () => {
@@ -27,13 +31,13 @@ const StatisticChart = ({ data }) => {
     };
 
     const COLORS = generateColors(data.length);
-    const normalizedData = data.map(item => ({
+    const normalizedData = data.map((item) => ({
         ...item,
         value: parseFloat(item.value),
     }));
 
     return (
-        <div className="flex justify-center font-notoTC font-semibold text-sm break-words overflow-hidden">
+        <div className="flex justify-center font-notoTC font-semibold text-sm break-words overflow-hidden ">
             <PieChart width={chartWidth} height={chartWidth}>
                 <Pie
                     data={normalizedData}
@@ -60,8 +64,9 @@ StatisticChart.propTypes = {
     data: PropTypes.arrayOf(
         PropTypes.shape({
             name: PropTypes.string.isRequired,
-            value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired, // 銷售百分比或數量
-        })
+            value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+                .isRequired, // 銷售百分比或數量
+        }),
     ).isRequired,
 };
 

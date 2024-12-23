@@ -26,6 +26,9 @@ function Home() {
             case location.pathname.includes("setting"):
                 setTitle("設定");
                 break;
+            case location.pathname.includes("statistic"):
+                setTitle("營業分析");
+                break;
             default:
                 setTitle("首頁");
         }

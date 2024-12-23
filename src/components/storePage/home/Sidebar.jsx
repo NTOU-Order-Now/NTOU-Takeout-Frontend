@@ -93,6 +93,7 @@ const Sidebar = ({ merchantName }) => {
                         iconSize="lg"
                         iconColor={"#606162"}
                         style={"px-4 py-4"}
+                        path={"/store/pos/statistic"}
                     />
                     <SidebarButton
                         text="設定"

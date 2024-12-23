@@ -22,10 +22,8 @@ const StoreMenu = lazy(() => import("./pages/store/Menu"));
 const StoreOrder = lazy(() => import("./pages/store/Order"));
 const OrderDetail = lazy(() => import("./pages/store/OrderDetail"));
 const Settings = lazy(() => import("./pages/store/Settings"));
+const Statistic = lazy(() => import("./pages/store/Statistic"));
 const queryClient = new QueryClient();
-
-import Statistic from "./pages/store/Statistic.jsx";
-
 import MerchantProtectedRoute from "./route/MerchantProtectedRoute.jsx";
 import CustomerProtectedRoute from "./route/CustomerProtectedRoute.jsx";
 
@@ -148,6 +146,15 @@ const router = createBrowserRouter(
                     element: (
                         <Suspense fallback={<MenuPageSkeleton />}>
                             <Settings />
+                        </Suspense>
+                    ),
+                    errorElement: <NotFound />,
+                },
+                {
+                    path: "statistic",
+                    element: (
+                        <Suspense fallback={<MenuPageSkeleton />}>
+                            <Statistic />
                         </Suspense>
                     ),
                     errorElement: <NotFound />,
