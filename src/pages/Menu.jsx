@@ -79,7 +79,7 @@ function Menu() {
         }
     }, [merchantId, getMerchantById]);
 
-    const menuCategoryList = useCategoryListQuery(menuId);
+    const { menuCategoryList } = useCategoryListQuery(menuId);
     const { categoryData } = useCategoryQueries(menuCategoryList, menuId);
     const [selectedDish, setSelectedDish] = useState(null);
 
