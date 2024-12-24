@@ -23,6 +23,7 @@ export const SystemContextProvider = ({ children }) => {
             setUser(userInfo);
         }
     }, [userInfo, setUser, isUserInfoLoading, setLoading]);
+    console.debug("userInfo", userInfo);
     const {
         cartData,
         isLoading: isCartLoading,
@@ -30,7 +31,7 @@ export const SystemContextProvider = ({ children }) => {
         refetchCart,
     } = useCartQuery(
         // don't need fetch when user is undefined or role is MERCHANT
-        userInfo !== undefined && userInfo?.role === "CUSTOMER",
+        !!userInfo && userInfo?.role === "CUSTOMER",
     );
 
     const { merchantData, isMerchantLoading, refetchMerchantData } =
