@@ -5,7 +5,6 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import userInfoStore from "../../stores/user/userInfoStore.js";
 import CartIcon from "./CartIcon";
 import Cookies from "js-cookie";
-
 // Header Component
 const Header = ({ title, onLeftClick = () => {} }) => {
     const navigate = useNavigate();
