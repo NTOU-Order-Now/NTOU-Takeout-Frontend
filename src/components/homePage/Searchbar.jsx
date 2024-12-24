@@ -33,11 +33,11 @@ const Searchbar = () => {
         const storedSortBy = localStorage.getItem("selectedSortBy");
         const storedSortDir = localStorage.getItem("selectedSortDir");
         const storedKeyword = localStorage.getItem("selectedKeyword");
-        if (storedSortBy == "null")
+        if (storedSortBy === "null")
             localStorage.setItem("selectedSortBy", "rating");
-        if (storedSortDir == "null")
+        if (storedSortDir === "null")
             localStorage.setItem("selectedSortDir", "desc");
-        if (storedKeyword == "null")
+        if (storedKeyword === "null")
             localStorage.setItem("selectedKeyword", "");
         if (storedSortBy) setSelectedSortBy(storedSortBy);
         else setSelectedSortBy("rating");
