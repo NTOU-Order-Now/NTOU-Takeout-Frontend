@@ -17,14 +17,14 @@ function MenuSection({ sectionRefs, categoryData, menuId }) {
         useDeleteDishMutation(menuId);
     const { isPending: isChangeCategoryNamePending } =
         useCategoryNameMutation(menuId);
-    if (
-        // isChangeCategoryNamePending ||
-        // isUpdateDishOrderPending ||
-        // isDeleteMenuDishPending
-        isUpdateDishOrderPending
-    ) {
-        return <CartItemCardSkeleton />;
-    }
+    // if (
+    //     // isChangeCategoryNamePending ||
+    //     // isUpdateDishOrderPending ||
+    //     // isDeleteMenuDishPending
+    //     // isUpdateDishOrderPending
+    // ) {
+    //     return <CartItemCardSkeleton />;
+    // }
     const handleDishMove = async (categoryName, dishId, direction) => {
         const category = categoryData.find(
             (c) => c.categoryName === categoryName,
