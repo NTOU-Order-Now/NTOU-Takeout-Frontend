@@ -67,7 +67,7 @@ const OrderDetails = () => {
                 {/* orderData items */}
 
                 <div className="bg-white text-black flex-1 p-4 overflow-auto">
-                    <UserInfo user={orderData} />
+                    <UserInfo user={orderData} role={userInfo.role} />
                     <OrderNote note={orderData.note} />
                     {orderData.orderedDishes.map((item, _) => {
                         return (
