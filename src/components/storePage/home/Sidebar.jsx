@@ -23,6 +23,7 @@ const Sidebar = ({ merchantName }) => {
     const toggleTheme = useThemeStore((state) => state.toggleTheme);
     const closeSidebar = useSidebarStore((state) => state.closeSidebar);
     const setUser = userInfoStore((state) => state.setUser);
+    const user = userInfoStore((state) => state.user);
     const navigate = useNavigate();
     const handleLogout = () => {
         Cookies.remove("authToken");
@@ -86,6 +87,7 @@ const Sidebar = ({ merchantName }) => {
                         iconSize="lg"
                         iconColor={"#606162"}
                         style={"pt-8 pb-4 px-4"}
+                        path={`/menu/${user?.storeId}/review`}
                     />
                     <SidebarButton
                         text="營業分析"
