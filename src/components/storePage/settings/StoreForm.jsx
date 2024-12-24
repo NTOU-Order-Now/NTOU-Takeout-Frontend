@@ -5,6 +5,7 @@ import { useStoreInfoQuery } from "../../../hooks/setting/useStoreInfoQuery.jsx"
 import { useEffect } from "react";
 import PropTypes from "prop-types";
 import HeaderSkeleton from "../../../skeleton/common/HeaderSkeleton.jsx";
+import { useImageUploadMutation } from "../../../hooks/image/useImageUploadMutation.jsx";
 
 function StoreForm({
     storeId,
@@ -40,7 +41,11 @@ function StoreForm({
             }));
         }
     }, [storeInfo, setFormData]);
-
+    const {
+        uploadImage,
+        isPending: isImageUploaing,
+        isError: isImageUploadError,
+    } = useImageUploadMutation();
     const handleInputChange = (field, value) => {
         setFormData((prev) => ({
             ...prev,
@@ -48,15 +53,35 @@ function StoreForm({
         }));
     };
 
-    const handleFileChange = (event) => {
+    const handleFileChange = async (event) => {
         const file = event.target.files[0];
         if (file) {
-            const localPath = event.target.value;
-            setFormData((prev) => ({
-                ...prev,
-                file: file,
-                filePath: localPath,
-            }));
+            try {
+                // 先更新 file 欄位以顯示正在處理
+                setFormData((prev) => ({
+                    ...prev,
+                    file: file,
+                    filePath: "上傳中...",
+                }));
+
+                // 上傳圖片
+                const imageUrl = await uploadImage(file);
+
+                // 更新 formData 中的圖片路徑
+                setFormData((prev) => ({
+                    ...prev,
+                    file: null, // 清除 file，因為已經上傳完成
+                    filePath: imageUrl,
+                }));
+            } catch (error) {
+                console.error("上傳圖片失敗:", error);
+                // 重置表單數據
+                setFormData((prev) => ({
+                    ...prev,
+                    file: null,
+                    filePath: prev.filePath, // 恢復原來的路徑
+                }));
+            }
         }
     };
 
@@ -139,6 +164,13 @@ function StoreForm({
                             onChange={handleFileChange}
                         />
                     </div>
+                    {formData.filePath && !isImageUploaing && (
+                        <img
+                            src={formData.filePath}
+                            alt="預覽圖片"
+                            className="right-2 top-1 mt-2 object-cover rounded"
+                        />
+                    )}
                 </div>
 
                 {/* Store address */}

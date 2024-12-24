@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useStoreInfoMutation } from "../../hooks/setting/useStoreInfoMutation.jsx";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons/faEllipsis";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useImageUploadMutation } from "../../hooks/image/useImageUploadMutation.jsx";
 const Settings = () => {
     const title = useSidebarStore((state) => state.title);
     const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
@@ -34,12 +35,17 @@ const Settings = () => {
         isPending: isUpdating,
         isError: isMutationError,
     } = useStoreInfoMutation(userInfo?.storeId);
+    const {
+        uploadImage,
+        isPending: isImageUploaing,
+        isError: isImageUploadError,
+    } = useImageUploadMutation();
     const handleSaveInfoData = async (e) => {
         e.preventDefault();
         try {
             await updateStore({
                 name: formData.name,
-                picture: formData.file ? formData.file : formData.filePath, // 如果有新文件就用新文件，否則保持原來的URL
+                picture: formData.filePath,
                 address: formData.address,
                 description: formData.description,
                 businessHours: formData.businessHours,
@@ -53,7 +59,7 @@ const Settings = () => {
             onClick={handleSaveInfoData}
             className=" bg-orange-500 text-white rounded-lg px-3 py-1 font-sm shadow-md relative right-4  w-[60px]"
         >
-            {isUpdating ? (
+            {isUpdating || isImageUploaing ? (
                 <FontAwesomeIcon icon={faEllipsis} beatFade size="lg" />
             ) : (
                 "儲存"

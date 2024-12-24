@@ -13,11 +13,16 @@ function DishEdit({ onClose, categoryNames, menuId }) {
     const [price, setPrice] = useState(dishData.price);
     const [categoryName, setCategoryName] = useState(dishData.category);
     const [groups, setGroups] = useState(dishData.dishAttributes);
+    const [dishImage, setDishImage] = useState("");
 
+    const handleImageChange = ({ url }) => {
+        if (url) {
+            setDishImage(url);
+        }
+    };
     const { updateDish, isPending } = useUpdateDishMutation(menuId);
     const handleSave = async () => {
-        const picture = //temp picture
-            "https://images.pexels.com/photos/1199957/pexels-photo-1199957.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
+        const picture = dishImage;
         const newDish = {
             id: dishData.id,
             name,
@@ -39,10 +44,6 @@ function DishEdit({ onClose, categoryNames, menuId }) {
         onClose();
     };
 
-    const handleImageUpload = () => {
-        console.log("Image upload");
-    };
-
     const handleGroupsChange = (updatedGroups) => {
         setGroups(updatedGroups);
     };
@@ -59,13 +60,14 @@ function DishEdit({ onClose, categoryNames, menuId }) {
                 defaultName={name}
                 defaultDescription={description}
                 defaultPrice={price}
+                defaultImage={dishImage}
                 defaultCategory={categoryName}
                 categoryNames={categoryNames}
-                onImageUpload={handleImageUpload}
                 onNameChange={setName}
                 onDescriptionChange={setDescription}
                 onPriceChange={setPrice}
                 onCategoryChange={setCategoryName}
+                onImageChange={handleImageChange}
             />
             <DishOptionList
                 groups={groups}
