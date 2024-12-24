@@ -14,6 +14,9 @@ const getStoreClient = {
         return await response.json();
     },
     getMerchantsByIdList: async (idList) => {
+        if (!idList || !idList[0]) {
+            return;
+        }
         const response = await fetch(
             `${import.meta.env.VITE_BASE_URL}/api/v2/stores/query`,
             {
