@@ -36,7 +36,7 @@ function AcceptedList() {
             fetchNextPage();
         }
     }, [inView, isFetchingNextPage, hasNextPage, fetchNextPage]);
-    if (isLoading) {
+    if (isLoading || filterOrders === undefined || orders === undefined) {
         return <div className="text-center pt-20">Loading...</div>;
     }
 

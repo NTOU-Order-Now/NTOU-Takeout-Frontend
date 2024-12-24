@@ -2,10 +2,8 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 
 const UserInfo = ({ user, storeData, role }) => {
-    console.debug("UserInfo", user);
-    console.debug("Store Data", storeData);
     const navigate = useNavigate();
-    return role === "Merchant" ? (
+    return role === "MERCHANT" ? (
         <div className="mb-6 flex flex-col items-start gap-2">
             <p className="font-bold text-lg bg-gray-200 p-2 rounded-md">
                 用戶ID: {user.id}

@@ -60,7 +60,7 @@ const CategoryHeader = ({ categoryData, menuId }) => {
                     onChange={(e) => setNewName(e.target.value)}
                     onBlur={handleSubmit}
                     onKeyDown={handleKeyDown}
-                    className="border-b-2 border-gray-400 focus:border-blue-500 focus:outline-none text-2xl font-bold px-1 bg-transparent h-10"
+                    className="border-b-2 border-gray-400 focus:border-blue-500 focus:outline-none text-2xl font-bold px-1 bg-transparent h-10 w-full"
                     autoFocus
                 />
             ) : (

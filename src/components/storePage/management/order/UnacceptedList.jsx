@@ -34,7 +34,7 @@ const UnacceptedList = () => {
                 : order.status !== "PICKED_UP" && order.status !== "CANCELED",
         ),
     );
-    if (isLoading || orders === undefined) {
+    if (isLoading || orders === undefined || filterOrders === undefined) {
         return <div className="text-center pt-20">Loading...</div>;
     }
 
