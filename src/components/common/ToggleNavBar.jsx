@@ -30,7 +30,7 @@ const ToggleNavBar = ({
 
     return (
         <div
-            className={`relative border border-gray-300 rounded-2xl p-${borderGap} ${width}`}
+            className={`relative border border-gray-300 rounded-2xl p-1 ${width}`}
             style={{ height }}
         >
             <div className="relative w-full h-full flex overflow-hidden rounded-xl">
