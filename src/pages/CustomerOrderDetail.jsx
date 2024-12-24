@@ -17,7 +17,7 @@ const OrderDetails = () => {
     const orderData = useOrderStore((state) => state.orderData);
 
     const statusConfig = {
-        PENDING: { text: "未接單", bgColor: "bg-red-500" },
+        PENDING: { text: "未接單", bgColor: "bg-stone-600" },
         PROCESSING: { text: "製作中", bgColor: "bg-blue-500" },
         COMPLETED: { text: "未取餐", bgColor: "bg-yellow-500" },
         PICKED_UP: { text: "已取餐", bgColor: "bg-green-500" },

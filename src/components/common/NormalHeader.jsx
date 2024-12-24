@@ -3,9 +3,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PropTypes from "prop-types";
 
 // Header Component
-const NormalHeader = ({ leftIcon, title }) => {
+const NormalHeader = ({ leftIcon, title, handleClick = () => {} }) => {
     const navigate = useNavigate();
     const handleClose = () => {
+        console.debug("handleClose");
+        if (handleClose) {
+            handleClick();
+            return;
+        }
         navigate(-1);
     };
     return (
@@ -13,7 +18,8 @@ const NormalHeader = ({ leftIcon, title }) => {
             <div className="flex ml-3 items-center text-xl ">
                 <FontAwesomeIcon
                     icon={leftIcon}
-                    className="mr-4 cursor-pointer text-2xl mt-1"
+                    size="sm"
+                    className="mr-4 -ml-1 cursor-pointer "
                     onClick={handleClose}
                 />
                 <h1 className="font-noto font-bold text-xl">{title}</h1>
@@ -25,5 +31,6 @@ const NormalHeader = ({ leftIcon, title }) => {
 NormalHeader.propTypes = {
     leftIcon: PropTypes.object,
     title: PropTypes.string,
+    handleClick: PropTypes.func,
 };
 export default NormalHeader;
