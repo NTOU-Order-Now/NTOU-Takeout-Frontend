@@ -5,6 +5,7 @@ import Sidebar from "../../components/storePage/home/Sidebar";
 import useSidebarStore from "../../stores/common/sidebarStore";
 import userInfoStore from "../../stores/user/userInfoStore.js";
 import { useSystemContext } from "../../context/useSystemContext.jsx";
+import Dashboard from "./Dashboard.jsx";
 function Home() {
     const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
     const setTitle = useSidebarStore((state) => state.setTitle);
@@ -33,18 +34,16 @@ function Home() {
     }, [setTitle, location.pathname]);
 
     return (
-        <div>
+        <div className="flex flex-col h-screen">
             <Header title={title} onLeftClick={toggleSidebar}></Header>
             <Sidebar merchantName={user.name}></Sidebar>
-            <div className="relative top-20 flex flex-col items-center justify-center z-0">
-                {/*    {user.name}*/}
-
-                {/*    {user.id}*/}
-
-                {/*    {user.email}*/}
-
-                {/*    {user.storeId}*/}
-            </div>
+            {title === "首頁" ? (
+                <div className="sticky top-[54px] mt-[54px] overflow-auto mt-18 z-0 h-[dvh-34px]">
+                    <Dashboard merchantName={user.name} />
+                </div>
+            ) : (
+                <></>
+            )}
             <Outlet />
         </div>
     );

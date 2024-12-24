@@ -91,6 +91,26 @@ const LoginForm = () => {
                         "登入"
                     )}
                 </button>
+                <button
+                    ref={loginButtonRef}
+                    type="submit"
+                    className="fixed bottom-[6rem] left-[15%] w-[70%] bg-white border-orange-500 border-2 text-orange-500 py-2 rounded-lg hover:bg-gray-200 transition"
+                    disabled={isPending}
+                    onClick={() => {
+                        navigate("/");
+                    }}
+                >
+                    {isPending ? (
+                        <FontAwesomeIcon
+                            icon={faEllipsis}
+                            beatFade
+                            size="lg"
+                            className="mr-2"
+                        />
+                    ) : (
+                        "返回首頁"
+                    )}
+                </button>
                 {/* <button
                     type="submit"
                     className="fixed bottom-[2rem] left-[15%] w-[70%] text-black py-2 rounded-lg border border-gray-600 transition"

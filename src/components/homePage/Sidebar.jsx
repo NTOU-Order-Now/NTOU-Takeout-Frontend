@@ -37,7 +37,7 @@ const Sidebar = () => {
     const handleLogout = () => {
         Cookies.remove("authToken");
         setUser(undefined);
-        navigate("/");
+        navigate("/auth/login");
         closeSidebar();
     };
 
