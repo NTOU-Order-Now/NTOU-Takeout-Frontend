@@ -44,7 +44,7 @@ function MerchantList() {
             setIsSubmitted(false);
             return merchants.data;
         },
-        enabled: isSubmitted,
+        enabled: isSubmitted && !!sortBy && !!sortDir,
         staleTime: 1000 * 60 * 10, //10 minutes
     });
 
