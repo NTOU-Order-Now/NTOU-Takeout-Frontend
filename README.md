@@ -1,3 +1,3 @@
-# NTOU-Takeout-Frontend
+# Order Now Frontend
 
-Vite + React + TailwindCSS
+product link here -> https://ntou-order-now.github.io/Order-Now-Frontend/
