@@ -28,6 +28,7 @@ const CustomerOrderDetail = lazy(() => import("./pages/CustomerOrderDetail"));
 const queryClient = new QueryClient();
 import MerchantProtectedRoute from "./route/MerchantProtectedRoute.jsx";
 import CustomerProtectedRoute from "./route/CustomerProtectedRoute.jsx";
+import ScrollToTop from "./route/ScrollTotop.jsx";
 
 const router = createBrowserRouter(
     [
@@ -203,7 +204,9 @@ function App() {
         <StrictMode>
             <QueryClientProvider client={queryClient}>
                 <SystemContextProvider>
-                    <RouterProvider router={router}></RouterProvider>
+                    <RouterProvider router={router}>
+                        <ScrollToTop />
+                    </RouterProvider>
                 </SystemContextProvider>
                 <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>

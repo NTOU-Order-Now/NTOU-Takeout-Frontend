@@ -62,6 +62,8 @@ const Searchbar = () => {
 
     const handleSubmit = () => {
         const keyword = document.getElementById("inputKeyword").value;
+        // console.log("trigger");
+
         setInputValue(keyword);
         setSelectedKeyword(keyword);
         setIsSubmitted(true);

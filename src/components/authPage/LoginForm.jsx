@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +10,9 @@ const LoginForm = () => {
     const [error, setError] = useState("");
     const navigate = useNavigate();
     const { loginMutation, isPending, isLoginSuccess } = useLoginMutation();
+
+    const loginButtonRef = useRef(null);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -32,10 +35,15 @@ const LoginForm = () => {
             setError(err.message || "登入失敗，請稍後再試");
         }
     };
+    useEffect(() => {
+        if (loginButtonRef.current) {
+            loginButtonRef.current.focus();
+        }
+    }, []);
 
     return (
         <div className="mt-8 w-[70vw]">
-            <form>
+            <form onSubmit={handleSubmit}>
                 <input
                     type="email"
                     placeholder="電子信箱"
@@ -56,16 +64,17 @@ const LoginForm = () => {
                 {error && (
                     <p className="text-red-500 text-xs pl-2 mb-1">{error}</p>
                 )}
-                <button
+                <p
                     className="text-sm ml-2 text-gray-600 underline"
                     onClick={() => {
                         navigate("/auth/reset/password");
                     }}
                 >
                     忘記密碼
-                </button>
+                </p>
 
                 <button
+                    ref={loginButtonRef}
                     type="submit"
                     className="fixed bottom-[2rem] left-[15%] w-[70%] bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition"
                     disabled={isPending}
