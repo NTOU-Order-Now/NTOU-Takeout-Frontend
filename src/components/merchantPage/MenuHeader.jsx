@@ -63,7 +63,7 @@ const MenuHeader = ({ merchantData }) => {
                             公里
                         </p>
                         <p className="text-green-600 text-sm mt-1">
-                            平均花費約{averageSpend}元
+                            平均花費約{Math.floor(averageSpend)}元
                         </p>
                     </div>
                     <div className="flex flex-col items-end">
@@ -82,7 +82,7 @@ const MenuHeader = ({ merchantData }) => {
                                     className="text-yellow-400 ml-2 mt-1"
                                 />
                                 <span className="text-xl font-semibold">
-                                    &nbsp;{rating}
+                                    &nbsp;{rating.toFixed(1)}
                                 </span>
                                 <span className="text-gray-400 ml-1 mt-0.5">
                                     (
