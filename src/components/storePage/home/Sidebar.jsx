@@ -32,7 +32,7 @@ const Sidebar = ({ merchantName }) => {
         queryClient.invalidateQueries(["orders", "ALL"]);
         queryClient.invalidateQueries(["orders", "PENDING"]);
         setUser(undefined);
-        navigate("/");
+        navigate("/auth/login");
         closeSidebar();
     };
     return (

@@ -15,7 +15,7 @@ function MerchantList() {
     const isSubmitted = useSelectionStore((state) => state.isSubmitted);
     const setIsSubmitted = useSelectionStore((state) => state.setIsSubmitted);
     const { ref, inView } = useInView({
-        rootMargin: "100px",
+        rootMargin: "500px",
     });
     if (localStorage.getItem("selectedSortBy") === "null")
         localStorage.setItem("selectedSortBy", "rating");
