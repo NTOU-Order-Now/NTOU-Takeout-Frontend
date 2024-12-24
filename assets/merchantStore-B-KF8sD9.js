@@ -1,1 +1,0 @@
-import{e as c}from"./index-Ff2Wmbfi.js";const d=c((a,n)=>({merchants:{},addMerchants:e=>a(s=>({merchants:{...s.merchants,...e.reduce((r,t)=>(r[t.id]=t,r),{})}})),getMerchantById:e=>n().merchants[e]||null}));export{d as u};
