@@ -4,7 +4,9 @@ import AcceptedList from "../components/storePage/management/order/AcceptedList.
 import ToggleNavBar from "../components/common/ToggleNavBar.jsx";
 import { useQueryClient } from "@tanstack/react-query";
 import NormalHeader from "../components/common/NormalHeader.jsx";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faUser } from "@fortawesome/free-solid-svg-icons";
+import useSidebarStore from "../stores/common/sidebarStore.js";
+import Sidebar from "../components/homePage/Sidebar.jsx";
 
 const HistoryOrders = () => {
     const queryClient = useQueryClient();
@@ -34,10 +36,15 @@ const HistoryOrders = () => {
         未完成: handleToUnaccepted,
         已完成: handleToAccepted,
     };
-
+    const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
     return (
         <div className="flex flex-col h-screen">
-            <NormalHeader leftIcon={faArrowLeft} title={"歷史訂單"} />
+            <NormalHeader
+                leftIcon={faUser}
+                title={"歷史訂單"}
+                handleClick={toggleSidebar}
+            />
+            <Sidebar></Sidebar>
             <div className="flex-1">
                 <div className="sticky top-[40px] mt-[40px] z-20 px-10   h-[85px] bg-white content-center rounded-b-xl shadow-sm ">
                     <ToggleNavBar options={options} InitActiveTab={"未完成"} />

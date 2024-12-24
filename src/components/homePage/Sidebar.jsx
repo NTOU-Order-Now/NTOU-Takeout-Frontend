@@ -74,6 +74,14 @@ const Sidebar = () => {
                     {/*    style={"px-4 py-4"}*/}
                     {/*/>*/}
                     <SidebarButton
+                        text="瀏覽商家"
+                        icon={faStore}
+                        iconSize="lg"
+                        iconColor={"#053766"}
+                        style={"px-4 py-4"}
+                        path="/"
+                    />
+                    <SidebarButton
                         text="歷史訂單"
                         icon={faHistory}
                         iconSize="lg"
@@ -110,13 +118,13 @@ const Sidebar = () => {
                     {/*    iconColor={"#606162"}*/}
                     {/*    style={"px-4 py-4"}*/}
                     {/*/>*/}
-                    {/*<SidebarButton*/}
-                    {/*    text="設定"*/}
-                    {/*    icon={faCog}*/}
-                    {/*    iconSize="lg"*/}
-                    {/*    iconColor={"#606162"}*/}
-                    {/*    style={"px-4 py-4"}*/}
-                    {/*/>*/}
+                    <SidebarButton
+                        text="設定"
+                        icon={faCog}
+                        iconSize="lg"
+                        iconColor={"#606162"}
+                        style={"px-4 py-4"}
+                    />
                 </div>
                 <div className="px-4 absolute bottom-8 left-0 right-2 flex justify-between">
                     {authToken && (

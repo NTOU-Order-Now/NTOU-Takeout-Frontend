@@ -17,7 +17,7 @@ const OrderDetails = () => {
     const orderData = useOrderStore((state) => state.orderData);
 
     const statusConfig = {
-        PENDING: { text: "未接單", bgColor: "bg-red-500" },
+        PENDING: { text: "未接單", bgColor: "bg-stone-600" },
         PROCESSING: { text: "製作中", bgColor: "bg-blue-500" },
         COMPLETED: { text: "未取餐", bgColor: "bg-yellow-500" },
         PICKED_UP: { text: "已取餐", bgColor: "bg-green-500" },
@@ -38,9 +38,8 @@ const OrderDetails = () => {
             {currentStatus(orderData?.status).text}
         </button>
     );
-    console.debug("orderData", orderData);
 
-    const { userInfo, merchantData } = useSystemContext();
+    const { userInfo } = useSystemContext();
     if (orderData === null) {
         navigate("/history/order");
         return;
@@ -58,11 +57,9 @@ const OrderDetails = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const { categoryData } = useCategoryQueries(
         menuCategoryList,
-        // storeData[0]?.menuId,
         menuId,
         userInfo !== undefined && menuId !== undefined,
     );
-    console.debug("categoryData", categoryData);
     const handleBackClick = () => {
         navigate(-1);
     };
@@ -72,7 +69,7 @@ const OrderDetails = () => {
         return dish ? dish.picture : null;
     };
 
-    if (isStoreDataLoading) {
+    if (isStoreDataLoading || storeData === undefined || isStoreDataError) {
         return <HeaderSkeleton />;
     }
     return (
@@ -89,7 +86,11 @@ const OrderDetails = () => {
                 {/* orderData items */}
 
                 <div className="bg-white text-black flex-1 p-4 overflow-auto">
-                    <UserInfo user={orderData} />
+                    <UserInfo
+                        user={orderData}
+                        storeData={storeData[0]}
+                        role={userInfo.role}
+                    />
                     <OrderNote note={orderData.note} />
                     {orderData.orderedDishes.map((item, _) => {
                         return (
