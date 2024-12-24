@@ -28,7 +28,7 @@ const Merchant = (props) => {
                         距離您約 {randomDistance} 公里
                     </div>
                     <div className="absolute h-[12px] left-[12px] top-[57px] text-green-700 font-bold text-xs leading-[12px]">
-                        平均花費約 {averageSpend} 元
+                        平均花費約 {Math.floor(averageSpend)} 元
                     </div>
                     <div className="absolute w-[75px] h-[20px] right-[3px] bottom-[11px] flex items-center">
                         <div className="flex items-center">
@@ -38,7 +38,7 @@ const Merchant = (props) => {
                                 className="h-[0.80em] w-[0.80em] mr-[1px]"
                             />
                             <span className="font-medium text-[13px] leading-[15px] text-gray-600 mb-[-1px]">
-                                {rating} ({reviews.length})
+                                {rating.toFixed(1)} ({reviews.length})
                             </span>
                         </div>
                     </div>

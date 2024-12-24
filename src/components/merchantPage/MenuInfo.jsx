@@ -55,8 +55,8 @@ const MenuInfo = ({ merchantData, onClose }) => {
             >
                 <div
                     className={`font-notoTC fixed z-50 left-1/2 w-[80%] max-w-sm p-4 bg-white shadow-md rounded-xl mx-auto transition-transform duration-500 ease-out  ${isExiting
-                            ? "translate-y-[100dvh] none -translate-x-1/2"
-                            : "translate-y-0 -translate-x-1/2 "
+                        ? "translate-y-[100dvh] none -translate-x-1/2"
+                        : "translate-y-0 -translate-x-1/2 "
                         }`}
                 >
                     <div className="absolute top-2 right-2 rounded-lg flex justify-center items-center">
