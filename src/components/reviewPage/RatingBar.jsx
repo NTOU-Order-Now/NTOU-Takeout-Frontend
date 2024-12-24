@@ -4,7 +4,7 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 const RatingBar = (prop) => {
     const { stars, percentage, count } = prop;
     return (
-        <div className="font-notoTC flex items-center mt-1">
+        <div className="font-notoTC items-center mt-1 flex flex-row">
             <div className="flex">
                 {[...Array(5)].map((_, i) => (
                     <FontAwesomeIcon
@@ -22,7 +22,7 @@ const RatingBar = (prop) => {
                     style={{ width: `${percentage}%` }}
                 />
             </div>
-            <span className="w-20 text-gray-700">({count})</span>
+            <span className="text-gray-700">({count})</span>
         </div>
     );
 };

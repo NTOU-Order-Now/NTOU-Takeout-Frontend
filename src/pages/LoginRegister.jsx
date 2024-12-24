@@ -1,28 +1,36 @@
-import { useState } from "react";
-import StatusBar from "../components/loginRegisterPage/StatusBar";
-import SubmitForm from "../components/loginRegisterPage/SubmitForm";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-
+import ToggleNavBar from "../components/common/ToggleNavBar";
+import RegisterForm from "../components/authPage/RegisterForm.jsx";
+import LoginForm from "../components/authPage/LoginForm.jsx";
 function LoginRegister() {
     const { authType } = useParams();
     const navigate = useNavigate();
-    if (authType !== "login" && authType !== "register") {
-        throw new Error("Invalid auth type");
-    }
-    const [isLogin, setIsLogin] = useState(authType === "login");
-    const handleStatusChange = (newStatus) => {
-        const newAuthType = newStatus ? "login" : "register";
-        navigate(`/auth/${newAuthType}`, { replace: true }); // replace: true to prevent adding new history
-        setIsLogin(newStatus);
+    const [curType, setCurType] = useState("login");
+    useEffect(() => {
+        setCurType(authType);
+    }, [authType]);
+
+    const handleStatusChange = (newCurType) => {
+        navigate(`/auth/${newCurType}`, { replace: true }); // replace: true to prevent adding new history
+        setCurType(newCurType);
+    };
+    const options = {
+        登入: () => {
+            handleStatusChange("login");
+        },
+        註冊: () => {
+            handleStatusChange("register");
+        },
     };
     return (
         <div className="min-h-screen bg-white flex justify-center pt-20">
             <div className="flex flex-col font-notoTC ">
-                <StatusBar
-                    status={isLogin}
-                    setStatus={handleStatusChange}
+                <ToggleNavBar
+                    options={options}
+                    InitActiveTab={curType === "login" ? "登入" : "註冊"}
                 />
-                <SubmitForm status={isLogin} />
+                {curType === "register" ? <RegisterForm /> : <LoginForm />}
             </div>
         </div>
     );

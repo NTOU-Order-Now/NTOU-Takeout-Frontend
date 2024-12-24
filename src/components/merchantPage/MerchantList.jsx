@@ -15,7 +15,7 @@ function MerchantList() {
     const isSubmitted = useSelectionStore((state) => state.isSubmitted);
     const setIsSubmitted = useSelectionStore((state) => state.setIsSubmitted);
     const { ref, inView } = useInView({
-        rootMargin: "100px",
+        rootMargin: "500px",
     });
     if (localStorage.getItem("selectedSortBy") === "null")
         localStorage.setItem("selectedSortBy", "rating");
@@ -44,8 +44,8 @@ function MerchantList() {
             setIsSubmitted(false);
             return merchants.data;
         },
-        enabled: isSubmitted,
-        staleTime: 1000 * 60 * 10,//10 minutes  
+        enabled: isSubmitted && !!sortBy && !!sortDir,
+        staleTime: 1000 * 60 * 10, //10 minutes
     });
 
     // Use useInfiniteQuery to fetch merchants in pages
@@ -107,11 +107,14 @@ function MerchantList() {
             <FontAwesomeIcon icon={faSpinner} spinPulse />
         </div>
     ) : (
-        <div className="-z-40-50 min-h-screen flex flex-col items-center space-y-6 py-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:p-20 p-8">
             {data?.pages.map((page) =>
                 page.map((merchant) => {
                     return (
-                        <Suspense fallback={<MerchantSkeleton />} key={merchant.id}>
+                        <Suspense
+                            fallback={<MerchantSkeleton />}
+                            key={merchant.id}
+                        >
                             <Merchant
                                 id={merchant.id}
                                 name={merchant.name}
@@ -119,18 +122,18 @@ function MerchantList() {
                                 rating={merchant.rating}
                                 reviews={merchant.reviewIdList}
                                 picture={merchant.picture}
-                                className="w-[70vw] h-[200px] bg-white border border-gray-300 rounded-xl shadow-lg"
+                                className="w-full h-full bg-white border border-gray-300 rounded-xl shadow-lg"
                             />
                         </Suspense>
                     );
                 }),
             )}
             <div ref={ref}>
-                {hasNextPage &&
+                {hasNextPage && (
                     <div className="flex justify-center items-center mt-4 fa-2x">
                         <MerchantSkeleton />
                     </div>
-                }
+                )}
             </div>
         </div>
     );

@@ -1,22 +1,33 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import useThemeStore from "../../stores/themeStore";
+import { useNavigate } from "react-router-dom";
+import useSidebarStore from "../../stores/common/sidebarStore";
 import PropTypes from "prop-types";
+
 const SidebarButton = ({
     icon,
     text,
+    setTitleText,
     textStyle,
     iconSize,
     iconColor,
-    onClick,
     style,
+    path,
+    onClick,
 }) => {
+    const navigate = useNavigate();
+    const setTitle = useSidebarStore((state) => state.setTitle);
+    const closeSidebar = useSidebarStore((state) => state.closeSidebar);
     const handleClick = (e) => {
-        console.log({ text });
         e.stopPropagation();
+        closeSidebar();
+        if (setTitleText !== undefined) {
+            setTitle(text);
+        }
         if (onClick) {
             onClick();
+        } else {
+            navigate(path);
         }
-        console.log(useThemeStore.getState().themeMode);
     };
     return (
         <button
@@ -43,11 +54,13 @@ const SidebarButton = ({
 SidebarButton.propTypes = {
     icon: PropTypes.object,
     text: PropTypes.string,
+    setTitleText: PropTypes.string,
     textStyle: PropTypes.string,
     iconSize: PropTypes.string,
     iconColor: PropTypes.string,
-    onClick: PropTypes.func,
     style: PropTypes.string,
+    path: PropTypes.string,
+    onClick: PropTypes.func,
 };
 
 export default SidebarButton;

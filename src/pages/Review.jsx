@@ -8,16 +8,16 @@ import getStoreClient from "../api/store/getStoreClient";
 import useMerchantStore from "../stores/merchantStore";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
-const star1Percentage = 90;
-const star2Percentage = 40;
-const star3Percentage = 10;
-const star4Percentage = 20;
-const star5Percentage = 5;
-const star1Count = 76;
-const star2Count = 10;
-const star3Count = 2;
+const star1Percentage = 10.0;
+const star2Percentage = 15.0;
+const star3Percentage = 40.0;
+const star4Percentage = 20.0;
+const star5Percentage = 15.0;
+const star1Count = 2;
+const star2Count = 3;
+const star3Count = 8;
 const star4Count = 4;
-const star5Count = 4;
+const star5Count = 3;
 
 const Review = () => {
     const { merchantId } = useParams();
@@ -67,20 +67,21 @@ const Review = () => {
                     </button>
                 </div>
                 <div className="title flex flex-col items-center">
-                    <h2 className="text-3xl font-bold text-black text-center">
+                    <h2 className="text-xl font-bold text-black text-center">
                         {merchant.name}的評論
                     </h2>
 
                     <div className="flex items-center mt-4 text-left">
-                        <span className="text-5xl font-bold">
-                            {merchant.rating}
+                        <span className="text-3xl font-bold">
+                            {Number(merchant.rating.toFixed(1))}
                         </span>
                         <FontAwesomeIcon
                             icon={faStar}
-                            className="text-yellow-300 ml-2 w-10 h-10"
+                            className="text-yellow-300 ml-2 w-8 h-8"
                         />
                     </div>
-                    <div className="mt-4 text-left w-full max-w-md">
+
+                    <div className="mt-4 text-left w-3/4 max-w-md mx-5">
                         <RatingBar
                             stars={5}
                             percentage={star1Percentage}

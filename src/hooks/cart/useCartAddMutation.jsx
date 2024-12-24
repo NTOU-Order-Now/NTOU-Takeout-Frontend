@@ -80,6 +80,7 @@ export const useCartAddMutation = () => {
             }
             // Alert error message
             alert("新增購物車失敗，請稍後再試");
+            throw error;
         },
         onSettled: () => {
             // finish or error refetch cart

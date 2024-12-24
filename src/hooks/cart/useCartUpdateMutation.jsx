@@ -21,13 +21,17 @@ export const useCartUpdateMutation = () => {
             const payload = {
                 quantity: newQuantity.toString(),
             };
-            const res = await patchCart(orderedDishId, payload, abortControllerRef.current.signal);
+            const res = await patchCart(
+                orderedDishId,
+                payload,
+                abortControllerRef.current.signal,
+            );
 
             if (abortControllerRef.current === controller) {
                 abortControllerRef.current = null;
             }
-            return res;
 
+            return res;
         },
         // optimistic update
         onMutate: async ({ orderedDishId, newQuantity }) => {
@@ -35,7 +39,9 @@ export const useCartUpdateMutation = () => {
             const previousCart = queryClient.getQueryData(["cart"]);
 
             // optimistic update
-            const newCart = previousCart ? { ...previousCart } : { orderedDishes: [] };
+            const newCart = previousCart
+                ? { ...previousCart }
+                : { orderedDishes: [] };
             if (!newCart.orderedDishes) {
                 newCart.orderedDishes = [];
             }
@@ -43,13 +49,14 @@ export const useCartUpdateMutation = () => {
             //if new quantity is 0, remove the dish from cart
             if (newQuantity === 0) {
                 newCart.orderedDishes = newCart.orderedDishes.filter(
-                    (dish) => dish.id !== orderedDishId
+                    (dish) => dish.id !== orderedDishId,
                 );
-            } else {// update quantity
+            } else {
+                // update quantity
                 newCart.orderedDishes = newCart.orderedDishes.map((dish) =>
                     dish.id === orderedDishId
                         ? { ...dish, quantity: newQuantity }
-                        : dish
+                        : dish,
                 );
             }
 
@@ -61,23 +68,24 @@ export const useCartUpdateMutation = () => {
         onError: (error, variables, context) => {
             // rollback to previous cart
             if (context?.previousCart) {
+                console.debug("rollback to previous cart", context);
                 queryClient.setQueryData(["cart"], context.previousCart);
             }
             // Alert error message
             alert("更新數量失敗，請稍後再試");
+            throw error;
         },
         onSettled: () => {
             // finish or error refetch cart
             console.debug("patchCartAsync onSettled");
             queryClient.invalidateQueries(["cart"]);
         },
-
     });
 
     return {
         patchCartAsync,
         patchCartError,
         patchCartOnMutate,
-        ispatchCartError
+        ispatchCartError,
     };
-}
+};

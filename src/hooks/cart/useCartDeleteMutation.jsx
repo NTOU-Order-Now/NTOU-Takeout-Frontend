@@ -31,7 +31,7 @@ export const useCartDeleteMutation = () => {
 
         },
         // optimistic update
-        onMutate: async (payload) => {
+        onMutate: async () => {
             await queryClient.cancelQueries(["cart"]);
             const previousCart = queryClient.getQueryData(["cart"]);
             const newCart = previousCart ? { ...previousCart } : { orderedDishes: [] };
@@ -58,6 +58,7 @@ export const useCartDeleteMutation = () => {
             }
             // Alert error message
             alert("刪除購物車失敗，請稍後再試");
+            throw error;
         },
         onSettled: () => {
             // finish or error refetch cart

@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import CartItemCard from "./CartItemCard";
 
 const CartItemCardList = ({ cartData, dishesMap }) => {
-
     if (!cartData.orderedDishes || cartData.orderedDishes.length === 0) {
         return (
             <div className="flex justify-center items-center mt-4 fa-2x">
@@ -10,14 +9,13 @@ const CartItemCardList = ({ cartData, dishesMap }) => {
             </div>
         );
     }
-
     return (
         <div>
             {cartData.orderedDishes.map((dish, _) => (
                 <CartItemCard
                     key={_}
                     dishData={dish}
-                    imageUrl={dishesMap[dish.dishId]?.picture || {}}
+                    imageUrl={dishesMap[dish?.dishId]?.picture}
                 />
             ))}
         </div>

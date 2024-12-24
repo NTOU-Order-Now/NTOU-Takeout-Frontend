@@ -1,21 +1,29 @@
 import { useParams } from "react-router-dom";
 import { useRef, useState, useEffect, lazy, Suspense } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useCategoryQueries } from "../hooks/menu/useCategoryQueries";
 import { useCategoryListQuery } from "../hooks/menu/useCategoryListQuery";
 import useMerchantStore from "../stores/merchantStore";
 import useNavStore from "../stores/merchantMenuNav";
 import getStoreClient from "../api/store/getStoreClient";
-import MenuPageSkeleton from "../hooks/menu/MenuPageSkeleton";
+import MenuPageSkeleton from "../skeleton/menu/MenuPageSkeleton.jsx";
 const NavbarSkeleton = lazy(() => import("../skeleton/menu/NavbarSkeleton"));
-const MenuHeaderSkeleton = lazy(() => import("../skeleton/menu/MenuHeaderSkeleton"));
-const ViewCartButtonSkeleton = lazy(() => import("../skeleton/menu/ViewCartButtonSkeleton"));
-const MenuSectionSkeleton = lazy(() => import("../skeleton/menu/MenuSectionSkeleton"));
+const MenuHeaderSkeleton = lazy(
+    () => import("../skeleton/menu/MenuHeaderSkeleton"),
+);
+const ViewCartButtonSkeleton = lazy(
+    () => import("../skeleton/menu/ViewCartButtonSkeleton"),
+);
+const MenuSectionSkeleton = lazy(
+    () => import("../skeleton/menu/MenuSectionSkeleton"),
+);
 const MenuHeader = lazy(() => import("../components/merchantPage/MenuHeader"));
 const MenuNavbar = lazy(() => import("../components/merchantPage/MenuNavbar"));
-const MenuSection = lazy(() => import("../components/merchantPage/MenuSection"));
-const ViewCartButton = lazy(() => import("../components/merchantPage/ViewCartButton"));
+const MenuSection = lazy(
+    () => import("../components/merchantPage/MenuSection"),
+);
+const ViewCartButton = lazy(
+    () => import("../components/merchantPage/ViewCartButton"),
+);
 
 function Menu() {
     const { merchantId } = useParams();
@@ -52,41 +60,42 @@ function Menu() {
         const merchantData = getMerchantById(merchantId);
         if (merchantData) {
             setMerchant(merchantData);
-            setMenuId(merchantData.menuId);
-        } else { // if merchant data is not in store, fetch it
+            setMenuId(merchantData?.menuId);
+        } else {
+            // if merchant data is not in store, fetch it
             const fetchMerchantData = async () => {
                 try {
-                    const res = await getStoreClient.getMerchantsByIdList([
+                    return await getStoreClient.getMerchantsByIdList([
                         merchantId,
                     ]);
-                    setMerchant(res.data[0]);
-                    setMenuId(res.data[0]?.menuId || null);
                 } catch (error) {
                     console.error("Failed to fetch merchant data:", error);
                 }
             };
-            fetchMerchantData();
+            fetchMerchantData().then((res) => {
+                setMerchant(res.data[0]);
+                setMenuId(res.data[0]?.menuId);
+            });
         }
     }, [merchantId, getMerchantById]);
 
-    const menuCategoryList = useCategoryListQuery(menuId);
-    const { categoryData } = useCategoryQueries(menuCategoryList, merchantId);
+    const { menuCategoryList } = useCategoryListQuery(menuId);
+    const { categoryData } = useCategoryQueries(menuCategoryList, menuId);
     const [selectedDish, setSelectedDish] = useState(null);
+
     // set navbar items
     useEffect(() => {
-        if (menuCategoryList?.length) {
-            setNavbarItems(menuCategoryList.map((category) => category.first));
-        }
+        setNavbarItems(
+            menuCategoryList.map((category) => category.categoryName),
+        );
     }, [menuCategoryList, setNavbarItems]);
 
     // if merchant data is not fetched yet, show loading spinner
     if (merchantId && !merchant) {
-        return (
-            <MenuPageSkeleton />
-        );
+        return <MenuPageSkeleton />;
     }
     return (
-        <div>
+        <div className="flex flex-col ">
             <Suspense fallback={<MenuHeaderSkeleton />}>
                 <MenuHeader merchantData={merchant} />
             </Suspense>
@@ -96,7 +105,6 @@ function Menu() {
                     isNavbarFixed={isNavbarFixed}
                 />
             </Suspense>
-
             <Suspense fallback={<MenuSectionSkeleton />}>
                 <MenuSection
                     selectedDish={selectedDish}
@@ -111,7 +119,7 @@ function Menu() {
                 </Suspense>
             )}
         </div>
-    )
+    );
 }
 
 export default Menu;

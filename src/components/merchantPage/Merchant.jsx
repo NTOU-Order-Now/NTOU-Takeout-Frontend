@@ -10,10 +10,7 @@ const Merchant = (props) => {
     const randomDistance = Math.floor(Math.random() * 30) + 1;
     return (
         <Link key={id} to={`/menu/${id}`}>
-            <div
-                className="font-notoTC relative w-[90vw] h-[241px] m-2 bg-white border-2
-                        border-gray-300 rounded-2xl overflow-hidden"
-            >
+            <div className="font-notoTC relative  h-60 bg-white rounded-2xl overflow-hidden shadow-lg transition-transform hover:scale-105">
                 <div className="object-cover w-full h-full">
                     <LazyLoadImage
                         src={picture}
@@ -23,25 +20,28 @@ const Merchant = (props) => {
                     />
                 </div>
 
-                <div className="box-border absolute w-[90vw] h-[87px] left-0 top-[154px] border-t-2 border-gray-300">
-                    <div className="absolute h-[22px] left-[12px] top-[9px] text-black font-bold text-lg leading-5">
-                        {name}
+                <div className="absolute  h-[87px] w-full top-[154px] border-gray-300 mt-1 ">
+                    <div className="flex flex-col">
+                        <div className="absolute h-[22px] left-[12px] top-[9px] text-black font-bold text-lg leading-5 line-clamp-3 overflow-hidden break-words transition">
+                            {name}
+                        </div>
+                        <div className="absolute h-[12px] left-[12px] top-[32px] text-gray-500 font-semibold text-xs leading-[12px]">
+                            距離您約 {randomDistance} 公里
+                        </div>
                     </div>
-                    <div className="absolute h-[12px] left-[12px] top-[32px] text-gray-500 font-semibold text-xs leading-[12px]">
-                        距離您約 {randomDistance} 公里
-                    </div>
-                    <div className="absolute h-[12px] left-[12px] top-[57px] text-green-700 font-bold text-xs leading-[12px]">
-                        平均花費約 {averageSpend} 元
-                    </div>
-                    <div className="absolute w-[75px] h-[20px] right-[3px] bottom-[11px] flex items-center">
-                        <div className="flex items-center">
+                    <div className="flex flex-row w-full relative justify-between -bottom-14 items-center mx-4 ">
+                        <div className=" text-green-700 font-bold text-xs leading-[12px]">
+                            平均花費約 {Math.floor(averageSpend)} 元
+                        </div>
+
+                        <div className="flex flex-row mr-7">
                             <FontAwesomeIcon
                                 icon={solidStar}
                                 style={{ color: "#FFD43B" }}
-                                className="h-[0.80em] w-[0.80em] mr-[1px]"
+                                className="h-[0.80em] w-[0.80em] "
                             />
                             <span className="font-medium text-[13px] leading-[15px] text-gray-600 mb-[-1px]">
-                                {rating} ({reviews.length})
+                                {rating.toFixed(1)} ({reviews.length})
                             </span>
                         </div>
                     </div>

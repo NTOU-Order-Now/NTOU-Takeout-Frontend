@@ -4,17 +4,19 @@ const getStoreClient = {
             `${import.meta.env.VITE_BASE_URL}/api/v2/stores/search`,
         );
 
-        Object.keys(params).forEach((key) =>
-            url.searchParams.append(key, params[key]),
-        );
+        Object.keys(params).forEach((key) => {
+            url.searchParams.append(key, params[key]);
+        });
         const response = await fetch(url);
         if (!response.ok) {
             throw new Error("Failed to fetch store ID list");
         }
-        const res = await response.json();
-        return res;
+        return await response.json();
     },
     getMerchantsByIdList: async (idList) => {
+        if (!idList || !idList[0]) {
+            return;
+        }
         const response = await fetch(
             `${import.meta.env.VITE_BASE_URL}/api/v2/stores/query`,
             {
@@ -30,8 +32,7 @@ const getStoreClient = {
                 `Failed to fetch details for merchant ID: ${idList}`,
             );
         }
-        const data = await response.json();
-        return data;
+        return await response.json();
     },
 };
 

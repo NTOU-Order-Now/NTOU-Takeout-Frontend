@@ -1,30 +1,36 @@
-import { useMutation } from '@tanstack/react-query';
-import loginClient from '../../api/auth/loginClient';
-import useUserInfoStore from '../../stores/userInfoStore';
-import CryptoJS from 'crypto-js';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import loginClient from "../../api/auth/loginClient";
+import CryptoJS from "crypto-js";
+import { useNavigate } from "react-router-dom";
+import userInfoStore from "../../stores/user/userInfoStore.js";
 
 export const useLoginMutation = (isEnabled = true) => {
-    const { setUserInfo } = useUserInfoStore();
-
+    const setUser = userInfoStore((state) => state.setUser);
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const {
         mutateAsync: loginMutation,
         isSuccess: isLoginSuccess,
-        isLoading,
-
+        isPending,
     } = useMutation({
         mutationFn: async (userDetails) => {
-            const hashedPassword = CryptoJS.SHA256(userDetails.password).toString();
-            userDetails.password = hashedPassword;
-            const response = await loginClient.loginUser(userDetails);
-            return response;
+            userDetails.password = CryptoJS.SHA256(
+                userDetails.password,
+            ).toString();
+            return await loginClient.loginUser(userDetails);
         },
         onSuccess: (data) => {
-            setUserInfo(data);
-            console.debug('Login successful return data:', data);
-            window.location.assign('/Order-Now-Frontend');
+            setUser(data);
+            //clear cache
+            queryClient.setQueryData(["cart"], []);
+            if (data.role === "CUSTOMER") {
+                navigate("/", { replace: true });
+            } else if (data.role === "MERCHANT") {
+                navigate(`/store/pos`, { replace: true });
+            }
         },
         onError: (error) => {
-            console.error('Login failed:', error);
+            console.error("Login failed:", error);
             throw error;
         },
         enabled: isEnabled,
@@ -33,6 +39,6 @@ export const useLoginMutation = (isEnabled = true) => {
     return {
         loginMutation,
         isLoginSuccess,
-        isLoading,
+        isPending,
     };
 };
