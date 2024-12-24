@@ -4,9 +4,9 @@ const getStoreClient = {
             `${import.meta.env.VITE_BASE_URL}/api/v2/stores/search`,
         );
 
-        Object.keys(params).forEach((key) =>
-            url.searchParams.append(key, params[key]),
-        );
+        Object.keys(params).forEach((key) => {
+            url.searchParams.append(key, params[key]);
+        });
         const response = await fetch(url);
         if (!response.ok) {
             throw new Error("Failed to fetch store ID list");
