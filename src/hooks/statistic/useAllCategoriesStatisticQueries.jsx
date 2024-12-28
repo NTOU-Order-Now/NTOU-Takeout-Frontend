@@ -2,18 +2,15 @@ import { useQueries } from "@tanstack/react-query";
 import { getStatistic } from "../../api/statistic/getStatistic.js";
 
 export const useAllCategoriesStatistic = (menuId, categories) => {
-    console.debug("useAllCategoriesStatistic", menuId, categories);
     return useQueries({
         queries: categories.map((category) => ({
             queryKey: ["dishSales", menuId, category.categoryName],
             queryFn: async ({ signal }) => {
-                const response = await getStatistic(
+                return await getStatistic(
                     menuId,
                     category.categoryName,
                     signal,
                 );
-                console.debug(response);
-                return response;
             },
             enabled: !!menuId && !!categories,
             staleTime: 5 * 60 * 1000,
