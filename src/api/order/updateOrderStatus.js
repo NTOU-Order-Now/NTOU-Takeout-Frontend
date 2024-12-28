@@ -12,15 +12,17 @@ import Cookies from "js-cookie";
 export const updateOrderStatus = async (orderId, status, signal) => {
     try {
         const authToken = Cookies.get("authToken");
-        const res = await API.patch(`/v1/order/${orderId}/status`, null, {
-            headers: {
-                Authorization: `Bearer ${authToken}`,
+        const queryParam = new URLSearchParams({ status: status });
+        const res = await API.patch(
+            `/v1/order/${orderId}/status?${queryParam.toString()}`,
+            null,
+            {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                },
+                signal,
             },
-            params: {
-                status,
-            },
-            signal,
-        });
+        );
         return res.data;
     } catch (error) {
         if (axios.isCancel(error)) {

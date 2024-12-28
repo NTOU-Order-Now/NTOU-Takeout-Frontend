@@ -1,14 +1,17 @@
-import OrderCard from "./OrderCard.jsx";
+import StoreOrderCard from "./OrderCard.jsx";
+import CustomerStoreOrderCard from "../../../../components/history/OrderCard.jsx";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { useOrderInfiniteQuery } from "../../../../hooks/order/useOrderInfiniteQuery.jsx";
-import { useQueryClient } from "@tanstack/react-query";
+import { useSystemContext } from "../../../../context/useSystemContext.jsx";
+
 const UnacceptedList = () => {
     const { ref, inView } = useInView({
         rootMargin: "100px",
     });
-    // const queryClient = useQueryClient();
-    // queryClient.invalidateQueries(["order"]);
+    const { userInfo } = useSystemContext();
+    const role = userInfo?.role;
+
     const {
         orders,
         fetchNextPage,
@@ -17,14 +20,21 @@ const UnacceptedList = () => {
         isLoading,
         isError,
         error,
-    } = useOrderInfiniteQuery("PENDING");
-
+    } = useOrderInfiniteQuery(role === "MERCHANT" ? "PENDING" : "ALL");
     useEffect(() => {
         if (inView && !isFetchingNextPage && hasNextPage) {
             fetchNextPage();
         }
     }, [inView, isFetchingNextPage, hasNextPage, fetchNextPage]);
-    if (isLoading) {
+
+    const filterOrders = orders?.pages.map((page) =>
+        page.content.filter((order) =>
+            role === "MERCHANT"
+                ? order.status === "PENDING"
+                : order.status !== "PICKED_UP" && order.status !== "CANCELED",
+        ),
+    );
+    if (isLoading || orders === undefined || filterOrders === undefined) {
         return <div className="text-center pt-20">Loading...</div>;
     }
 
@@ -34,9 +44,13 @@ const UnacceptedList = () => {
 
     return (
         <div className="flex flex-col text-center justify-between ">
-            {orders?.pages.map((page) =>
+            {filterOrders?.map((page) =>
                 page.map((order, _) => {
-                    return <OrderCard key={_} order={order} />;
+                    return role === "MERCHANT" ? (
+                        <StoreOrderCard key={_} order={order} />
+                    ) : (
+                        <CustomerStoreOrderCard key={_} order={order} />
+                    );
                 }),
             )}
             <div ref={ref}>

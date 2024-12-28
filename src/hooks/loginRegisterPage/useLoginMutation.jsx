@@ -8,7 +8,6 @@ export const useLoginMutation = (isEnabled = true) => {
     const setUser = userInfoStore((state) => state.setUser);
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-
     const {
         mutateAsync: loginMutation,
         isSuccess: isLoginSuccess,
@@ -27,7 +26,7 @@ export const useLoginMutation = (isEnabled = true) => {
             if (data.role === "CUSTOMER") {
                 navigate("/", { replace: true });
             } else if (data.role === "MERCHANT") {
-                navigate(`/store/pos`, { replace: true }); //there should use data here
+                navigate(`/store/pos`, { replace: true });
             }
         },
         onError: (error) => {

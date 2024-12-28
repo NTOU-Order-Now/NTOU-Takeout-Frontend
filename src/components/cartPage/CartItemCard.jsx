@@ -5,11 +5,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
-const CartItemCard = ({ dishData, imageUrl }) => {
-    const { id, dishName, price, quantity, chosenAttributes, note } = dishData;
+const CartItemCard = ({ dishData, imageUrl, showAdjustBtn = true }) => {
+    const { dishId, id, dishName, price, quantity, chosenAttributes, note } =
+        dishData;
     const [nowQuantity, setNowQuantity] = useState(quantity);
     const { patchCartAsync } = useCartUpdateMutation();
-
     const handleQuantityChange = async (change) => {
         const newQ = nowQuantity + change;
         if (newQ < 0 || newQ > 25) return;
@@ -62,29 +62,38 @@ const CartItemCard = ({ dishData, imageUrl }) => {
                     $ {(price + totalExtraCost) * nowQuantity}
                 </p>
             </div>
-            <div className="absolute bottom-[15px] right-[15px] flex items-end border border-gray-300 rounded-md">
-                <button
-                    onClick={() => handleQuantityChange(-1)}
-                    className="px-2 py-0 text-lg rounded-l-md w-7"
-                >
-                    {quantity <= 1 ? (
-                        <FontAwesomeIcon
-                            icon={faTrashCan}
-                            size="xs"
-                            style={{ color: "#d00b0b" }}
-                        />
-                    ) : (
-                        "-"
-                    )}
-                </button>
-                <span className="px-4 py-0.5">{nowQuantity}</span>
-                <button
-                    onClick={() => handleQuantityChange(1)}
-                    className="px-2 py-0 text-lg rounded-r-md w-7"
-                >
-                    +
-                </button>
-            </div>
+
+            {showAdjustBtn ? (
+                <div className="absolute bottom-[15px] right-[15px] flex items-end border border-gray-300 rounded-md">
+                    <button
+                        onClick={() => handleQuantityChange(-1)}
+                        className="px-2 py-0 text-lg rounded-l-md w-7"
+                    >
+                        {quantity <= 1 ? (
+                            <FontAwesomeIcon
+                                icon={faTrashCan}
+                                size="xs"
+                                style={{ color: "#d00b0b" }}
+                            />
+                        ) : (
+                            "-"
+                        )}
+                    </button>
+                    <span className="px-4 py-0.5">{nowQuantity}</span>
+                    <button
+                        onClick={() => handleQuantityChange(1)}
+                        className="px-2 py-0 text-lg rounded-r-md w-7"
+                    >
+                        +
+                    </button>
+                </div>
+            ) : (
+                <div className="absolute bottom-[21px] right-[15px]">
+                    <span className="px-4 font-extrabold text-sm bg-gray-200 rounded-md text-black py-2">
+                        數量： {nowQuantity}
+                    </span>
+                </div>
+            )}
         </div>
     );
 };
@@ -104,6 +113,7 @@ CartItemCard.propTypes = {
         note: PropTypes.string,
     }).isRequired,
     imageUrl: PropTypes.string,
+    showAdjustBtn: PropTypes.bool,
 };
 
 export default CartItemCard;

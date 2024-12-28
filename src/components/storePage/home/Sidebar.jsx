@@ -16,6 +16,7 @@ import {
 import Cookies from "js-cookie";
 import userInfoStore from "../../../stores/user/userInfoStore.js";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Sidebar = ({ merchantName }) => {
     const isOpen = useSidebarStore((state) => state.isOpen);
@@ -23,9 +24,13 @@ const Sidebar = ({ merchantName }) => {
     const toggleTheme = useThemeStore((state) => state.toggleTheme);
     const closeSidebar = useSidebarStore((state) => state.closeSidebar);
     const setUser = userInfoStore((state) => state.setUser);
+    const user = userInfoStore((state) => state.user);
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const handleLogout = () => {
         Cookies.remove("authToken");
+        queryClient.invalidateQueries(["orders", "ALL"]);
+        queryClient.invalidateQueries(["orders", "PENDING"]);
         setUser(undefined);
         navigate("/auth/login");
         closeSidebar();
@@ -86,6 +91,7 @@ const Sidebar = ({ merchantName }) => {
                         iconSize="lg"
                         iconColor={"#606162"}
                         style={"pt-8 pb-4 px-4"}
+                        path={`/menu/${user?.storeId}/review`}
                     />
                     <SidebarButton
                         text="營業分析"
@@ -93,6 +99,7 @@ const Sidebar = ({ merchantName }) => {
                         iconSize="lg"
                         iconColor={"#606162"}
                         style={"px-4 py-4"}
+                        path={"/store/pos/statistic"}
                     />
                     <SidebarButton
                         text="設定"
@@ -100,9 +107,10 @@ const Sidebar = ({ merchantName }) => {
                         iconSize="lg"
                         iconColor={"#606162"}
                         style={"px-4 py-4"}
+                        path={"/store/pos/setting"}
                     />
                 </div>
-                <div className="px-4 absolute bottom-0 left-0 right-2 flex justify-between">
+                <div className="px-4 absolute bottom-8 left-0 right-2 flex justify-between">
                     <SidebarButton
                         text="登出"
                         icon={faSignOutAlt}
@@ -110,14 +118,14 @@ const Sidebar = ({ merchantName }) => {
                         iconColor={"#606162"}
                         onClick={handleLogout}
                     />
-                    <SidebarButton
-                        icon={theme === "light" ? faMoon : faSun}
-                        text="切換主題"
-                        textStyle={"w-0  invisible"}
-                        iconSize="lg"
-                        iconColor={theme === "light" ? "#606162" : "#FFD43B"}
-                        onClick={toggleTheme}
-                    />
+                    {/*<SidebarButton*/}
+                    {/*    icon={theme === "light" ? faMoon : faSun}*/}
+                    {/*    text="切換主題"*/}
+                    {/*    textStyle={"w-0  invisible"}*/}
+                    {/*    iconSize="lg"*/}
+                    {/*    iconColor={theme === "light" ? "#606162" : "#FFD43B"}*/}
+                    {/*    onClick={toggleTheme}*/}
+                    {/*/>*/}
                 </div>
             </div>
         </>

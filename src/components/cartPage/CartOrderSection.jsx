@@ -3,8 +3,8 @@ import { useCartUpdateMutation } from "../../hooks/cart/useCartUpdateMutation";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons/faEllipsis";
 import { useCartSendMutation } from "../../hooks/cart/useCartSendMutation.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-const CartOrderSection = ({ orderDetail }) => {
-    const { totalSpend, estimateTime, cartData } = orderDetail;
+const CartOrderSection = ({ orderDetail, handleChangeRemark }) => {
+    const { totalSpend, estimateTime, cartData, remark } = orderDetail;
     const { ispatchCartError } = useCartUpdateMutation();
     const sendButtonColor = ispatchCartError ? "bg-gray-300" : "bg-white";
     const { sendCartAsync, sendCartIsPending } = useCartSendMutation();
@@ -13,8 +13,8 @@ const CartOrderSection = ({ orderDetail }) => {
         if (totalSpend === 0 || cartData?.orderedDishes.length === 0) {
             return;
         }
-        console.debug("sendCartHandler payload:", cartData);
-        await sendCartAsync(cartData);
+        handleChangeRemark("");
+        await sendCartAsync(remark);
     };
 
     return (
@@ -56,7 +56,9 @@ CartOrderSection.propTypes = {
         cartData: PropTypes.object.isRequired,
         totalSpend: PropTypes.number.isRequired,
         estimateTime: PropTypes.number.isRequired,
+        remark: PropTypes.string.isRequired,
     }).isRequired,
+    handleChangeRemark: PropTypes.func.isRequired,
 };
 
 export default CartOrderSection;

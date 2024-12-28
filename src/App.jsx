@@ -2,7 +2,6 @@ import { StrictMode, useEffect, lazy, Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import DevToolBubble from "./devtool/DevToolBubble";
 import { SystemContextProvider } from "./context/SystemContextProvider.jsx";
 import NotFound from "./pages/NotFound";
 import CartSkeleton from "./skeleton/cart/CartSkeleton";
@@ -21,11 +20,16 @@ const MerchantRegister = lazy(() => import("./pages/MerchantRegister"));
 const StoreHome = lazy(() => import("./pages/store/Home"));
 const StoreMenu = lazy(() => import("./pages/store/Menu"));
 const StoreOrder = lazy(() => import("./pages/store/Order"));
+const OrderDetail = lazy(() => import("./pages/store/OrderDetail"));
+const Settings = lazy(() => import("./pages/store/Settings"));
+const Statistic = lazy(() => import("./pages/store/Statistic"));
+const HistoryOrders = lazy(() => import("./pages/HistoryOrders"));
+const CustomerOrderDetail = lazy(() => import("./pages/CustomerOrderDetail"));
 const queryClient = new QueryClient();
-import OrderDetails from "./pages/store/OrderDetailPage";
 import AddReview from "./pages/AddReview.jsx";
 import MerchantProtectedRoute from "./route/MerchantProtectedRoute.jsx";
 import CustomerProtectedRoute from "./route/CustomerProtectedRoute.jsx";
+import ScrollToTop from "./route/ScrollTotop.jsx";
 
 const router = createBrowserRouter(
     [
@@ -34,6 +38,28 @@ const router = createBrowserRouter(
             element: (
                 <Suspense fallback={<HomeSkeleton />}>
                     <Home />
+                </Suspense>
+            ),
+            errorElement: <NotFound />,
+        },
+        {
+            path: "/history/order",
+            element: (
+                <Suspense fallback={<CartSkeleton />}>
+                    <CustomerProtectedRoute>
+                        <HistoryOrders />
+                    </CustomerProtectedRoute>
+                </Suspense>
+            ),
+            errorElement: <NotFound />,
+        },
+        {
+            path: "/history/order/:orderNumber",
+            element: (
+                <Suspense fallback={<CartSkeleton />}>
+                    <CustomerProtectedRoute>
+                        <CustomerOrderDetail />
+                    </CustomerProtectedRoute>
                 </Suspense>
             ),
             errorElement: <NotFound />,
@@ -132,17 +158,39 @@ const router = createBrowserRouter(
                     ),
                     errorElement: <NotFound />,
                 },
+                {
+                    path: "management/order/:orderNumber",
+                    element: (
+                        <Suspense fallback={<MenuPageSkeleton />}>
+                            <OrderDetail />
+                        </Suspense>
+                    ),
+                    errorElement: <NotFound />,
+                },
+                {
+                    path: "setting",
+                    element: (
+                        <Suspense fallback={<MenuPageSkeleton />}>
+                            <Settings />
+                        </Suspense>
+                    ),
+                    errorElement: <NotFound />,
+                },
+                {
+                    path: "statistic",
+                    element: (
+                        <Suspense fallback={<MenuPageSkeleton />}>
+                            <Statistic />
+                        </Suspense>
+                    ),
+                    errorElement: <NotFound />,
+                },
             ],
-        },
-        {
-            path: "/OrderDetails",
-            element: <OrderDetails />,
-            // errorElement: <NotFound />,
         },
         {
             path: "/AddReview",
             element: <AddReview />,
-            // errorElement: <NotFound />,
+            errorElement: <NotFound />,
         },
     ],
     {
@@ -162,15 +210,9 @@ function App() {
         <StrictMode>
             <QueryClientProvider client={queryClient}>
                 <SystemContextProvider>
-                    <RouterProvider router={router}></RouterProvider>
-                    {/*<DevToolBubble*/}
-                    {/*    router={router}*/}
-                    {/*    endPointReplacements={{*/}
-                    {/*        merchantId: "67178651994d5f6d435d6ef8",*/}
-                    {/*        authType: "login",*/}
-                    {/*        storeId: "67178651994d5f6d435d6ef8",*/}
-                    {/*    }}*/}
-                    {/*/>*/}
+                    <RouterProvider router={router}>
+                        <ScrollToTop />
+                    </RouterProvider>
                 </SystemContextProvider>
                 <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>

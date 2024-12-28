@@ -4,12 +4,14 @@ import Header from "../../components/storePage/home/Header";
 import Sidebar from "../../components/storePage/home/Sidebar";
 import useSidebarStore from "../../stores/common/sidebarStore";
 import userInfoStore from "../../stores/user/userInfoStore.js";
+import { useSystemContext } from "../../context/useSystemContext.jsx";
+import Dashboard from "./Dashboard.jsx";
 function Home() {
     const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
     const setTitle = useSidebarStore((state) => state.setTitle);
     const title = useSidebarStore((state) => state.title);
     const user = userInfoStore((state) => state.user);
-    const merchantName = "海洋大學店";
+    // const { userInfo, merchantData, menuCategoryList } = useSystemContext();
     const location = useLocation();
     // set title based on location
     useEffect(() => {
@@ -20,24 +22,28 @@ function Home() {
             case location.pathname.includes("order"):
                 setTitle("訂單管理");
                 break;
+            case location.pathname.includes("setting"):
+                setTitle("設定");
+                break;
+            case location.pathname.includes("statistic"):
+                setTitle("營業分析");
+                break;
             default:
                 setTitle("首頁");
         }
     }, [setTitle, location.pathname]);
 
     return (
-        <div>
+        <div className="flex flex-col h-screen">
             <Header title={title} onLeftClick={toggleSidebar}></Header>
             <Sidebar merchantName={user.name}></Sidebar>
-            {/*<div className="relative top-20 flex flex-col items-center justify-center z-0">*/}
-            {/*    {user.name}*/}
-
-            {/*    {user.id}*/}
-
-            {/*    {user.email}*/}
-
-            {/*    {user.storeId}*/}
-            {/*</div>*/}
+            {title === "首頁" ? (
+                <div className="sticky top-[54px] mt-[54px] overflow-auto mt-18 z-0 h-[dvh-34px]">
+                    <Dashboard merchantName={user.name} />
+                </div>
+            ) : (
+                <></>
+            )}
             <Outlet />
         </div>
     );

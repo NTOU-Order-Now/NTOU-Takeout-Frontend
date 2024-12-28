@@ -1,7 +1,8 @@
 import PropTypes from "prop-types";
 import useOrderStore from "../../../../stores/orderStore.js";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useOrderStatusMutation } from "../../../../hooks/order/useOrderStatusMutation.jsx";
+import { useNavigate } from "react-router-dom";
 
 const getStatusColors = (status) => {
     switch (status) {
@@ -44,6 +45,8 @@ const getNextStatus = (currentStatus) => {
             return "COMPLETED";
         case "COMPLETED":
             return "PICKED_UP";
+        case "PICKED_UP":
+            return "CANCELED";
         case "PENDING":
             return "PROCESSING";
         default:
@@ -54,7 +57,20 @@ const getNextStatus = (currentStatus) => {
 const OrderCard = ({ order, showStatus = true }) => {
     const { bgColor, textColor, statusText } = getStatusColors(order.status);
     const { updateOrderStatusAsync, isLoading } = useOrderStatusMutation();
-
+    const setOrderData = useOrderStore((state) => state.setOrderData);
+    const handleStatusClick = useCallback(async () => {
+        const nextStatus = getNextStatus(order.status);
+        if (nextStatus) {
+            try {
+                await updateOrderStatusAsync({
+                    orderId: order.id,
+                    newStatus: nextStatus,
+                });
+            } catch (error) {
+                console.error("Failed to update order status:", error);
+            }
+        }
+    }, [order.id, order.status, updateOrderStatusAsync]);
     const handleAccept = useCallback(
         async (orderId) => {
             try {
@@ -62,7 +78,6 @@ const OrderCard = ({ order, showStatus = true }) => {
                     orderId,
                     newStatus: "PROCESSING",
                 });
-                console.debug("Accept order: ", orderId);
             } catch (error) {
                 console.error("Failed to accept order:", error);
             }
@@ -83,26 +98,32 @@ const OrderCard = ({ order, showStatus = true }) => {
         },
         [updateOrderStatusAsync],
     );
-    const isOverdue = () => {
-        const now = new Date();
-        const estimate = new Date(order.estimatedPrepTime);
-        return order.status === "PROCESSING" && now > estimate;
+    const isOverdue = (orderTime, estimatedPrepTime) => {
+        const today = new Date();
+        const [hours, minutes, seconds] = orderTime.split(":");
+        const [secs, millisecs] = seconds.split(".");
+
+        const orderDate = new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate(),
+            parseInt(hours),
+            parseInt(minutes),
+            parseInt(secs),
+            parseInt(millisecs),
+        );
+        const expectedFinishTime = new Date(
+            orderDate.getTime() + estimatedPrepTime * 60 * 1000,
+        );
+        return new Date() > expectedFinishTime;
     };
 
-    const handleStatusClick = useCallback(async () => {
-        const nextStatus = getNextStatus(order.status);
-        if (nextStatus) {
-            try {
-                await updateOrderStatusAsync({
-                    orderId: order.id,
-                    newStatus: nextStatus,
-                });
-            } catch (error) {
-                console.error("Failed to update order status:", error);
-            }
-        }
-    }, [order.id, order.status, updateOrderStatusAsync]);
-
+    const navigate = useNavigate();
+    const handleSeeDetail = (e) => {
+        e.preventDefault();
+        setOrderData(order);
+        navigate(`/store/pos/management/order/${order.id.slice(-5)}`);
+    };
     return (
         <div className="relative flex justify-between rounded-lg p-4 shadow-lg mb-6 bg-gray-50">
             {/* Order Info */}
@@ -116,7 +137,10 @@ const OrderCard = ({ order, showStatus = true }) => {
                 <p className="text-sm font-medium">
                     下單時間: {order.orderTime}
                 </p>
-                <button className="bg-orange-500 mt-6 text-white px-3 py-1 text-sm font-bold rounded hover:bg-orange-600">
+                <button
+                    className="bg-orange-500 mt-6 text-white px-3 py-1 text-sm font-bold rounded hover:bg-orange-600"
+                    onClick={handleSeeDetail}
+                >
                     訂單內容
                 </button>
             </div>
@@ -126,11 +150,12 @@ const OrderCard = ({ order, showStatus = true }) => {
                 {/* Badge */}
                 {showStatus && order.status !== "PENDING" && (
                     <div className="flex items-center mb-2">
-                        {isOverdue() && (
-                            <span className="text-red-500 text-sm ml-2 font-bold pr-2">
-                                超時
-                            </span>
-                        )}
+                        {isOverdue(order.orderTime, order.estimatedPrepTime) &&
+                            order.status === "PROCESSING" && (
+                                <span className="text-red-500 text-sm ml-2 font-bold pr-2">
+                                    超時
+                                </span>
+                            )}
                         <button
                             onClick={handleStatusClick}
                             disabled={!getNextStatus(order.status)}

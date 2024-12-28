@@ -2,15 +2,19 @@ import axios from "axios";
 import { API } from "../axios.config";
 import Cookies from "js-cookie";
 
-export const sendCart = async (orderPayload, signal) => {
+export const sendCart = async (remark, signal) => {
+    const authToken = Cookies.get("authToken");
     try {
-        const authToken = Cookies.get("authToken");
-        const res = await API.patch("/v1/cart/send", orderPayload, {
-            headers: {
-                Authorization: `Bearer ${authToken}`,
+        const res = await API.patch(
+            "/v1/cart/send",
+            { note: remark },
+            {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                },
+                signal,
             },
-            signal,
-        });
+        );
         return res.data;
     } catch (error) {
         if (axios.isCancel(error)) {
