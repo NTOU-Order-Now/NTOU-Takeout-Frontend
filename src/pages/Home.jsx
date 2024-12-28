@@ -8,7 +8,7 @@ function Home() {
     const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
 
     return (
-        <div>
+        <div className="flex flex-col h-screen w-full">
             <Header
                 title="OrderNow"
                 onLeftClick={toggleSidebar}
