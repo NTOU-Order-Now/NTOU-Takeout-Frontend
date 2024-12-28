@@ -4,9 +4,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import NormalHeader from "../common/NormalHeader.jsx";
 import useReviewForm from "../../stores/review/AddReviewStore.js";
 import { useReviewMutation } from "../../hooks/review/useReviewMutation.jsx";
-import { faEllipsis } from "@fortawesome/free-solid-svg-icons/faEllipsis";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast.js";
 import { ToastAction } from "@/components/ui/toast.jsx";
 import { Button } from "@/components/ui/button.jsx";
@@ -16,17 +14,12 @@ const AddReview = ({ storeName, storeId, setShowAddReview }) => {
     const title = `對 ${storeName} 新增評論`;
     const { storeDescription, storeAverageSpend, storeRating, reset } =
         useReviewForm();
-    const {
-        addReview,
-        isPending,
-        isError: isSubmitError,
-        isSuccess,
-    } = useReviewMutation(storeId);
+    const { addReview, isPending, isSuccess } = useReviewMutation(storeId);
     const handleReturn = useCallback(() => {
         setShowAddReview(false);
     }, [setShowAddReview]);
-    // const [errorText, setErrorText] = useState(error);
     const { toast } = useToast();
+
     useEffect(() => {
         if (isSuccess) {
             toast({
@@ -43,6 +36,7 @@ const AddReview = ({ storeName, storeId, setShowAddReview }) => {
             });
         }
     }, [isSuccess, toast, handleReturn]);
+
     let errorText = "";
     const validateForm = () => {
         if (!storeDescription?.trim()) {
@@ -77,7 +71,6 @@ const AddReview = ({ storeName, storeId, setShowAddReview }) => {
             comment: storeDescription.trim(),
             rating: storeRating,
         };
-
         reset();
         try {
             await addReview({ payload });
@@ -119,18 +112,6 @@ const AddReview = ({ storeName, storeId, setShowAddReview }) => {
 };
 
 AddReview.propTypes = {
-    // orderData: PropTypes.shape({
-    //     id: PropTypes.string.isRequired,
-    //     customerId: PropTypes.string.isRequired,
-    //     storeId: PropTypes.string.isRequired,
-    //     cost: PropTypes.number.isRequired,
-    //     estimatedPrepTime: PropTypes.number.isRequired,
-    //     isReserved: PropTypes.bool.isRequired,
-    //     note: PropTypes.string.isRequired,
-    //     orderTime: PropTypes.string.isRequired,
-    //     status: PropTypes.string.isRequired,
-    //     orderedDishes: PropTypes.array.isRequired,
-    // }),
     storeName: PropTypes.string,
     storeId: PropTypes.string,
     setShowAddReview: PropTypes.func,
