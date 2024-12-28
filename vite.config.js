@@ -10,7 +10,7 @@ export default defineConfig({
   base: "/Order-Now-Frontend/",
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": path.resolve(-__dirname, "./src"),
     },
   },
   css: {
