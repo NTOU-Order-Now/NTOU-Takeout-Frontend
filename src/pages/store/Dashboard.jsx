@@ -12,7 +12,7 @@ import PropTypes from "prop-types";
 import Cookies from "js-cookie";
 import userInfoStore from "../../stores/user/userInfoStore.js";
 import useSidebarStore from "../../stores/common/sidebarStore.js";
-const Dashboard = ({ merchantName = "商家名稱" }) => {
+const Dashboard = ({ merchantName = "商家名稱", merchantId }) => {
     const navigate = useNavigate();
     const setUser = userInfoStore((state) => state.setUser);
     const closeSidebar = useSidebarStore((state) => state.closeSidebar);
@@ -32,7 +32,7 @@ const Dashboard = ({ merchantName = "商家名稱" }) => {
         {
             icon: MessageSquare,
             label: "評論",
-            path: "/menu/review",
+            path: `/menu/${merchantId}/review`,
             color: "bg-purple-100",
         },
         {
@@ -61,11 +61,6 @@ const Dashboard = ({ merchantName = "商家名稱" }) => {
         },
         // { icon: LogOut, label: "登出", path: "/store/pos", color: "bg-red-100" },
     ];
-
-    const handleLogout = () => {
-        // Add logout logic here
-        navigate("/auth/login");
-    };
 
     return (
         <div className="px-4 h-[calc(100vh-4rem)] min-w-full">
@@ -108,5 +103,6 @@ const Dashboard = ({ merchantName = "商家名稱" }) => {
 
 Dashboard.propTypes = {
     merchantName: PropTypes.string.isRequired,
+    merchantId: PropTypes.string.isRequired,
 };
 export default Dashboard;
