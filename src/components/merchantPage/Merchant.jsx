@@ -7,14 +7,16 @@ import "react-lazy-load-image-component/src/effects/blur.css";
 const Merchant = (props) => {
     const { id, name, averageSpend, rating, picture, reviews } = props;
 
-    const randomDistance = Math.floor(Math.random() * 30) + 1;
+    // const randomDistance = Math.floor(Math.random() * 30) + 1;
+    const randomDistance = 10;
     return (
         <Link key={id} to={`/menu/${id}`}>
             <div className="font-notoTC relative  h-60 bg-white rounded-2xl overflow-hidden shadow-lg transition-transform hover:scale-105">
                 <div className="object-cover w-full h-full">
                     <LazyLoadImage
                         src={picture}
-                        alt="Store Image"
+                        alt={name}
+                        effect="blur"
                         className="relative w-full h-[65%] object-cover"
                         wrapperClassName="object-cover w-full h-full"
                     />
