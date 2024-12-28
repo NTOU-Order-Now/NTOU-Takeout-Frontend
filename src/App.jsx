@@ -26,9 +26,11 @@ const Statistic = lazy(() => import("./pages/store/Statistic"));
 const HistoryOrders = lazy(() => import("./pages/HistoryOrders"));
 const CustomerOrderDetail = lazy(() => import("./pages/CustomerOrderDetail"));
 const queryClient = new QueryClient();
+import AddReview from "./components/history/AddReview.jsx";
 import MerchantProtectedRoute from "./route/MerchantProtectedRoute.jsx";
 import CustomerProtectedRoute from "./route/CustomerProtectedRoute.jsx";
 import ScrollToTop from "./route/ScrollTotop.jsx";
+import RootLayout from "@/RootLayout.jsx";
 
 const router = createBrowserRouter(
     [
@@ -208,7 +210,8 @@ function App() {
                         <ScrollToTop />
                     </RouterProvider>
                 </SystemContextProvider>
-                <ReactQueryDevtools initialIsOpen={false} />
+                <RootLayout />
+                {/*<ReactQueryDevtools initialIsOpen={false} />*/}
             </QueryClientProvider>
         </StrictMode>
     );
