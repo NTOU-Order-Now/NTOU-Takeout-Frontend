@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { getCart } from "../../api/cart/getCart";
 
 export const useCartQuery = (enabled = true) => {
-    console.debug("isEnable", enabled);
     const {
         data: cartData,
         isLoading,
