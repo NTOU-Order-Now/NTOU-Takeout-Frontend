@@ -9,20 +9,20 @@ import useSidebarStore from "../stores/common/sidebarStore.js";
 import Sidebar from "../components/homePage/Sidebar.jsx";
 
 const HistoryOrders = () => {
-    const queryClient = useQueryClient();
-    const orderCount = queryClient.getQueryData(["order", "PENDING"]);
+    // const queryClient = useQueryClient();
+    // const orderCount = queryClient.getQueryData(["order", "PENDING"]);
     const [navBarStatus, setNavBarStatus] = useState(0);
-
-    const orderCountButton = (
-        <button
-            onClick={() => {
-                console.debug("orderCountButton click");
-            }}
-            className=" bg-orange-500 text-white rounded-lg px-3 py-1 font-sm shadow-md"
-        >
-            共計 {orderCount} 筆訂單
-        </button>
-    );
+    console.debug("History Orders mounted");
+    // const orderCountButton = (
+    //     <button
+    //         onClick={() => {
+    //             console.debug("orderCountButton click");
+    //         }}
+    //         className=" bg-orange-500 text-white rounded-lg px-3 py-1 font-sm shadow-md"
+    //     >
+    //         共計 {orderCount} 筆訂單
+    //     </button>
+    // );
 
     const handleToUnaccepted = () => {
         setNavBarStatus(0);
@@ -38,18 +38,18 @@ const HistoryOrders = () => {
     };
     const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
     return (
-        <div className="flex flex-col h-screen overflow-hidden">
+        <div className="flex flex-col h-screen overflow-hidden ">
             <NormalHeader
                 leftIcon={faUser}
                 title={"歷史訂單"}
                 handleClick={toggleSidebar}
             />
             <Sidebar></Sidebar>
-            <div className="flex-1 overflow-hidden">
+            <div className="flex-1 h-dvh ">
                 <div className="sticky top-[40px] mt-[40px] z-20 px-10   h-[85px] bg-white content-center rounded-b-xl shadow-sm ">
                     <ToggleNavBar options={options} InitActiveTab={"未完成"} />
                 </div>
-                <div className="h-[calc(100dvh-189px)] overflow-y-auto px-8 py-2">
+                <div className="h-[calc(100dvh-120px)] overflow-y-auto px-8 py-2">
                     {navBarStatus === 0 ? <UnacceptedList /> : <AcceptedList />}
                 </div>
             </div>
