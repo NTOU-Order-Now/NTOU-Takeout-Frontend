@@ -10,16 +10,15 @@ function Statistic() {
     const { merchantData, menuCategoryList } = useSystemContext();
     const menuId = merchantData?.menuId;
     const [activeCategory, setActiveCategory] = useState("all");
-    console.debug("menuId", menuId);
-    console.debug("menuCategoryList", menuCategoryList);
+    const filteredMenuCategoryList = menuCategoryList.filter(
+        (category) => category.categoryName !== "",
+    );
     const {
         allData: allSalesData,
         isLoading: isAllLoading,
         isError,
         error,
-    } = useAllCategoriesStatistic(menuId, menuCategoryList);
-    console.debug("allSalesData", allSalesData.flat());
-    console.debug("activeCategory", activeCategory);
+    } = useAllCategoriesStatistic(menuId, filteredMenuCategoryList);
     const {
         data: categoryData,
         isLoading: isCategoryLoading,
@@ -35,12 +34,10 @@ function Statistic() {
 
     const isLoading =
         activeCategory === "all" ? isAllLoading : isCategoryLoading;
-    console.debug("currentData", currentData);
     // 當有總銷量時才計算百分比
     const totalSales =
         currentData?.reduce((acc, item) => acc + (item.salesVolume || 0), 0) ||
         0;
-    console.debug("totalSales", totalSales);
     const chartData =
         totalSales > 0
             ? currentData?.map((item) => ({
@@ -63,13 +60,12 @@ function Statistic() {
             </div>
         );
     }
-    console.debug("chartData,", chartData);
     return (
         <div className="flex flex-col h-screen">
             <div className="mt-16 flex-1 w-full ">
                 <div className="fixed z-30 w-full ">
                     <CategoryTabs
-                        categories={menuCategoryList}
+                        categories={filteredMenuCategoryList}
                         activeCategory={activeCategory}
                         onCategoryChange={setActiveCategory}
                     />
