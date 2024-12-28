@@ -10,6 +10,7 @@ on:
             - "**/README.*"
 env:
     VITE_BASE_URL: ${{ secrets.VITE_BASE_URL }}
+    VITE_IMAGE_SERVICE_URL: ${{secrets.VITE_IMAGE_SERVICE_URL}}
 jobs:
     build:
         name: Build
