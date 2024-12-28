@@ -4,7 +4,7 @@ import UserInfo from "../components/orderPage/UserInfo";
 import OrderNote from "../components/orderPage/OrderNote";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/storePage/home/Header";
-import { faArrowLeft, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSystemContext } from "../context/useSystemContext.jsx";
 import { useCategoryQueries } from "../hooks/menu/useCategoryQueries.jsx";
@@ -13,6 +13,9 @@ import EstimatedTime from "../components/orderPage/EstimatedTime.jsx";
 import { useStoreQuery } from "../hooks/store/useStoreQuery.jsx";
 import HeaderSkeleton from "../skeleton/common/HeaderSkeleton.jsx";
 import { useCategoryListQuery } from "../hooks/menu/useCategoryListQuery.jsx";
+import { useState } from "react";
+import AddReview from "../components/history/AddReview.jsx";
+import AddReviewBtn from "../components/history/AddReviewBtn.jsx";
 const OrderDetails = () => {
     const orderData = useOrderStore((state) => state.orderData);
 
@@ -38,7 +41,7 @@ const OrderDetails = () => {
             {currentStatus(orderData?.status).text}
         </button>
     );
-
+    const [showAddReview, setShowAddReview] = useState(false);
     const { userInfo } = useSystemContext();
     if (orderData === null) {
         navigate("/history/order");
@@ -72,6 +75,10 @@ const OrderDetails = () => {
     if (isStoreDataLoading || storeData === undefined || isStoreDataError) {
         return <HeaderSkeleton />;
     }
+    if (orderData?.status === "PICKED_UP" && showAddReview) {
+        return <AddReview />;
+    }
+
     return (
         <div className="flex flex-col h-screen">
             <div className="sticky mt-[54px] z-50 shadow-sm">
@@ -104,9 +111,15 @@ const OrderDetails = () => {
                     })}
                 </div>
                 {/* Footer */}
-                <div className="fixed bottom-0 left-0 right-0 w-full">
-                    <EstimatedTime value={orderData.estimatedPrepTime} />
-                </div>
+                {orderData?.status === "PICKED_UP" ? (
+                    <div className="fixed bottom-0 left-0 right-0 w-full">
+                        <AddReviewBtn setShowAddReview={setShowAddReview} />
+                    </div>
+                ) : (
+                    <div className="fixed bottom-0 left-0 right-0 w-full">
+                        <EstimatedTime value={orderData.estimatedPrepTime} />
+                    </div>
+                )}
             </div>
         </div>
     );

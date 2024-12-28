@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
-import Header from "../components/orderPage/addReview/Header";
-import ReviewForm from "../components/orderPage/addReview/ReviewForm";
-import SubmitButton from "../components/orderPage/addReview/SubmitButton";
+import Header from "../orderPage/addReview/Header.jsx";
+import ReviewForm from "../orderPage/addReview/ReviewForm.jsx";
+import SubmitButton from "../orderPage/addReview/SubmitButton.jsx";
 import { useNavigate } from "react-router-dom";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
@@ -21,7 +21,7 @@ const AddReview = ({ storeId = "海洋大學店" }) => {
                 leftIcon={faArrowLeft}
             />
             <ReviewForm />
-            <SubmitButton/>
+            <SubmitButton />
         </div>
     );
 };
