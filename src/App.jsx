@@ -188,11 +188,6 @@ const router = createBrowserRouter(
                 },
             ],
         },
-        {
-            path: "/AddReview",
-            element: <AddReview />,
-            errorElement: <NotFound />,
-        },
     ],
     {
         basename: "/Order-Now-Frontend/",

@@ -129,9 +129,13 @@ const CustomerOrderDetail = () => {
                         <AddReviewBtn setShowAddReview={setShowAddReview} />
                     </div>
                 ) : (
-                    <div className="fixed bottom-0 left-0 right-0 w-full">
-                        <EstimatedTime value={orderData.estimatedPrepTime} />
-                    </div>
+                    orderData?.status !== "CANCELED" && (
+                        <div className="fixed bottom-0 left-0 right-0 w-full">
+                            <EstimatedTime
+                                value={orderData.estimatedPrepTime}
+                            />
+                        </div>
+                    )
                 )}
             </div>
         </div>
