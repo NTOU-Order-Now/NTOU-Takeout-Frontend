@@ -47,7 +47,7 @@ const Order = () => {
                 <div className="sticky top-[50px] mt-[50px] z-20 px-10 py-1  h-[85px] bg-white content-center rounded-b-xl shadow-sm ">
                     <ToggleNavBar options={options} InitActiveTab={"未接受"} />
                 </div>
-                <div className="h-[calc(100dvh-189px)] overflow-y-auto px-8 py-2">
+                <div className="h-[calc(100dvh-120px)] overflow-y-auto px-8 py-2">
                     {navBarStatus === 0 ? <UnacceptedList /> : <AcceptedList />}
                 </div>
             </div>

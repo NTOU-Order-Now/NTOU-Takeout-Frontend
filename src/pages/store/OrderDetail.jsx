@@ -1,17 +1,31 @@
-import PropTypes from "prop-types";
 import useOrderStore from "../../stores/orderStore";
 import UserInfo from "../../components/orderPage/UserInfo";
 import OrderNote from "../../components/orderPage/OrderNote";
 import { Navigate, useNavigate } from "react-router-dom";
 import Header from "../../components/storePage/home/Header";
-import { faArrowLeft, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSystemContext } from "../../context/useSystemContext.jsx";
 import { useCategoryQueries } from "../../hooks/menu/useCategoryQueries.jsx";
 import CartItemCard from "../../components/cartPage/CartItemCard.jsx";
 import EstimatedTime from "../../components/orderPage/EstimatedTime.jsx";
+import { useEffect } from "react";
+import HeaderSkeleton from "../../skeleton/common/HeaderSkeleton.jsx";
 const OrderDetails = () => {
     const orderData = useOrderStore((state) => state.orderData);
+    const { userInfo, merchantData, menuCategoryList } = useSystemContext();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (orderData === null) {
+            navigate("/store/pos/management/order");
+        }
+    }, [orderData, navigate]);
+
+    if (orderData === null) {
+        return <HeaderSkeleton />;
+    }
+
     const statusConfig = {
         PENDING: { text: "未接單", bgColor: "bg-red-500" },
         PROCESSING: { text: "製作中", bgColor: "bg-blue-500" },
@@ -34,20 +48,15 @@ const OrderDetails = () => {
         </button>
     );
 
-    const { userInfo, merchantData, menuCategoryList } = useSystemContext();
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const { categoryData } = useCategoryQueries(
         menuCategoryList,
         merchantData?.menuId,
         userInfo !== undefined,
     );
-    const navigate = useNavigate();
     const handleBackClick = () => {
         navigate(-1);
     };
-    if (orderData === null) {
-        navigate("/store/pos/management/order");
-        return;
-    }
     const findDishPicture = (targetId) => {
         const allDishes = categoryData.flatMap((category) => category.dishes);
         const dish = allDishes.find((dish) => dish.id === targetId);
@@ -87,28 +96,6 @@ const OrderDetails = () => {
             </div>
         </div>
     );
-};
-
-OrderDetails.propTypes = {
-    // orderData: PropTypes.shape({
-    //     id: PropTypes.string.isRequired,
-    //     userId: PropTypes.string.isRequired,
-    //     email: PropTypes.string.isRequired,
-    //     phone: PropTypes.string.isRequired,
-    //     time: PropTypes.string.isRequired,
-    //     total: PropTypes.number.isRequired,
-    //     note: PropTypes.string.isRequired,
-    //     items: PropTypes.arrayOf(
-    //         PropTypes.shape({
-    //             id: PropTypes.number.isRequired,
-    //             name: PropTypes.string.isRequired,
-    //             imageUrl: PropTypes.string.isRequired,
-    //             price: PropTypes.number.isRequired,
-    //             quantity: PropTypes.number.isRequired,
-    //         }),
-    //     ),
-    //     estimatedTime: PropTypes.number.isRequired,
-    // }),
 };
 
 export default OrderDetails;
