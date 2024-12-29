@@ -211,7 +211,7 @@ function App() {
                     </RouterProvider>
                 </SystemContextProvider>
                 <RootLayout />
-                {/*<ReactQueryDevtools initialIsOpen={false} />*/}
+                <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
         </StrictMode>
     );

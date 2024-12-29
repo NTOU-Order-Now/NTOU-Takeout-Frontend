@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getStoreData } from "../../api/store/getStoreData.js";
+import { getStoreDataById } from "@/api/store/getStoreDataById.js";
 
 export const useStoreQuery = (storeIdList) => {
     const {
@@ -9,7 +9,7 @@ export const useStoreQuery = (storeIdList) => {
         refetch,
     } = useQuery({
         queryKey: ["store", storeIdList],
-        queryFn: ({ signal }) => getStoreData(storeIdList, signal),
+        queryFn: ({ signal }) => getStoreDataById(storeIdList, signal),
         enabled: storeIdList.length > 0,
         staleTime: 15 * 60 * 1000, // 15 minutes
     });

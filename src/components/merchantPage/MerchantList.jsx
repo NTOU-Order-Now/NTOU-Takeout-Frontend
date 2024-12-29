@@ -1,16 +1,15 @@
 import { useEffect, Suspense } from "react";
-import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import useMerchantStore from "../../stores/merchantStore";
 import useSelectionStore from "../../stores/selectionStore";
-import getStoreClient from "../../api/store/getStoreClient";
-import Merchant from "./Merchant";
+import MerchantCard from "./MerchantCard.jsx";
 import MerchantSkeleton from "../../skeleton/merchant/MerchantSkeleton";
+import { useStoreInfiniteQueries } from "@/hooks/store/useStoreInfiniteQueries.jsx";
 function MerchantList() {
     const { addMerchants } = useMerchantStore();
-    const LOAD_SIZE = 4;
+    const LOAD_SIZE = 5;
 
     const isSubmitted = useSelectionStore((state) => state.isSubmitted);
     const setIsSubmitted = useSelectionStore((state) => state.setIsSubmitted);
@@ -28,94 +27,42 @@ function MerchantList() {
     const keyword = localStorage.getItem("selectedKeyword");
 
     const {
-        data: merchantIdList,
-        isLoading: isMerchantIdListLoading,
-        isError: isMerchantIdListError,
-        error: merchantIdListError,
-        isSuccess: isMerchantIdListSuccess,
-    } = useQuery({
-        queryKey: ["MerchantIdList", sortBy, sortDir, keyword],
-        queryFn: async () => {
-            const merchants = await getStoreClient.getStoreIdList({
-                sortBy,
-                sortDir,
-                keyword,
-            });
-            setIsSubmitted(false);
-            return merchants.data;
-        },
-        enabled: isSubmitted && !!sortBy && !!sortDir,
-        staleTime: 1000 * 60 * 10, //10 minutes
-    });
-
-    // Use useInfiniteQuery to fetch merchants in pages
-    const {
-        data,
+        storeData,
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
-        isLoading: isMerchantsLoading,
-        isError: isMerchantsError,
-        error: merchantsError,
-    } = useInfiniteQuery({
-        queryKey: ["merchants", merchantIdList], //will refetch when merchantIdList changes
-        queryFn: async ({ pageParam }) => {
-            const start = pageParam * LOAD_SIZE;
-            const end = start + LOAD_SIZE;
-            const idList = merchantIdList.slice(start, end);
-
-            if (idList.length === 0) {
-                return [];
-            }
-            const merchants = await getStoreClient.getMerchantsByIdList(idList);
-            addMerchants(merchants.data);
-            return merchants.data;
-        },
-        initialPageParam: 0,
-        getNextPageParam: (lastPage, allPages) => {
-            const nextPage = allPages.length;
-            const totalMerchants = merchantIdList?.length || 0;
-
-            if (nextPage * LOAD_SIZE < totalMerchants) {
-                return nextPage;
-            } else {
-                return undefined; // No more pages
-            }
-        },
-        enabled: isMerchantIdListSuccess,
-    });
+        isLoading,
+        isError,
+        error,
+    } = useStoreInfiniteQueries(keyword, sortBy, sortDir, LOAD_SIZE);
 
     //for infinite scroll
     useEffect(() => {
         if (inView && !isFetchingNextPage && hasNextPage) {
+            console.debug("fetchNextPage");
             fetchNextPage();
         }
     }, [inView, isFetchingNextPage, hasNextPage, fetchNextPage]);
 
     //detect error and show error message
-    if (isMerchantIdListError || isMerchantsError) {
-        return (
-            <div className="text-center">
-                {isMerchantIdListError && merchantIdListError.message}
-                {isMerchantsError && merchantsError.message}
-            </div>
-        );
+    if (isError) {
+        return <div className="text-center">{error}</div>;
     }
 
-    return isMerchantIdListLoading || isMerchantsLoading ? (
+    return isLoading ? (
         <div className="flex justify-center items-center mt-4 fa-2x">
             <FontAwesomeIcon icon={faSpinner} spinPulse />
         </div>
     ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:p-20 p-8">
-            {data?.pages.map((page) =>
-                page.map((merchant) => {
+            {storeData?.pages.map((page) =>
+                page.content.map((merchant) => {
                     return (
                         <Suspense
                             fallback={<MerchantSkeleton />}
                             key={merchant.id}
                         >
-                            <Merchant
+                            <MerchantCard
                                 id={merchant.id}
                                 name={merchant.name}
                                 averageSpend={merchant.averageSpend}
@@ -129,7 +76,7 @@ function MerchantList() {
                 }),
             )}
             <div ref={ref}>
-                {hasNextPage && (
+                {hasNextPage && isFetchingNextPage && (
                     <div className="flex justify-center items-center mt-4 fa-2x">
                         <MerchantSkeleton />
                     </div>

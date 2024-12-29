@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { searchOrder } from "../../api/order/searchOrder.js";
+import { searchOrder } from "@/api/order/searchOrder.js";
 
 export const useOrderInfiniteQuery = (status) => {
     const PAGE_SIZE = 3;
