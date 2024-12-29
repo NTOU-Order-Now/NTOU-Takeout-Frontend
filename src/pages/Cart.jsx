@@ -21,7 +21,7 @@ const Cart = () => {
         totalQuantity,
         refetchCart,
     } = useSystemContext();
-    if (cartData === undefined) {
+    if (userInfo && cartData === undefined) {
         console.error("Cart not found, refetchCart");
         refetchCart();
     }
