@@ -29,7 +29,7 @@ const Cart = () => {
 
     const { categoryData, isQueriesSuccess } = useCategoryQueries(
         menuCategoryList,
-        merchantData?.menuId,
+        merchantData?.[0].menuId,
         userInfo !== undefined && userInfo?.role === "CUSTOMER",
     );
 
@@ -46,7 +46,7 @@ const Cart = () => {
         }, {});
     }, [categoryData]);
     // console.debug("cartData:", cartData);
-    // console.debug("merchantData:", merchantData);
+    // console.debug("merchantData:", merchantData?.[0]);
     // console.debug("isMerchantLoading:", isMerchantLoading);
     // console.debug("isQueriesSuccess:", isQueriesSuccess);
     // console.debug("dishesMap:", dishesMap);
@@ -79,7 +79,7 @@ const Cart = () => {
                 <CartTotalSpend
                     orderDetail={{
                         cartData: cartData,
-                        merchantName: merchantData?.name,
+                        merchantName: merchantData?.[0].name,
                         totalSpend: totalSpend,
                     }}
                 />
