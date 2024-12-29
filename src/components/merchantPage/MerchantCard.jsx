@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
-const Merchant = (props) => {
-    const { id, name, averageSpend, rating, picture, reviews } = props;
+const MerchantCard = (props) => {
+    const { id, name, averageSpend, rating, picture } = props;
 
     // const randomDistance = Math.floor(Math.random() * 30) + 1;
     const randomDistance = 10;
@@ -40,10 +40,10 @@ const Merchant = (props) => {
                             <FontAwesomeIcon
                                 icon={solidStar}
                                 style={{ color: "#FFD43B" }}
-                                className="h-[0.80em] w-[0.80em] "
+                                className="h-[0.80em] top-0.5 relative pr-1"
                             />
                             <span className="font-medium text-[13px] leading-[15px] text-gray-600 mb-[-1px]">
-                                {rating.toFixed(1)} ({reviews.length})
+                                {rating.toFixed(1)}
                             </span>
                         </div>
                     </div>
@@ -52,13 +52,12 @@ const Merchant = (props) => {
         </Link>
     );
 };
-Merchant.propTypes = {
+MerchantCard.propTypes = {
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     // distance: PropTypes.string.isRequired,
     averageSpend: PropTypes.number.isRequired,
     rating: PropTypes.number.isRequired,
     picture: PropTypes.string.isRequired,
-    reviews: PropTypes.array.isRequired,
 };
-export default Merchant;
+export default MerchantCard;
