@@ -6,7 +6,7 @@ import userInfoStore from "../../stores/user/userInfoStore.js";
 import CartIcon from "./CartIcon";
 import Cookies from "js-cookie";
 // Header Component
-const Header = ({ title, onLeftClick = () => {} }) => {
+const Header = ({ title, onLeftClick = () => {}, className }) => {
     const navigate = useNavigate();
     const authToken = Cookies.get("authToken");
     const user = userInfoStore((state) => state.user);
@@ -20,7 +20,9 @@ const Header = ({ title, onLeftClick = () => {} }) => {
     };
 
     return (
-        <header className="fixed z-30  top-0 left-0 w-full flex justify-between items-center bg-white shadow-md transition-shadow duration-300 ease-in-out p-2 font-notoTC">
+        <header
+            className={`flex justify-between items-center bg-white shadow-md transition-shadow duration-300 ease-in-out p-2 font-notoTC ${className}`}
+        >
             <div className="text-xl cursor-pointer" onClick={onLeftClick}>
                 <FontAwesomeIcon icon={faUser} />
             </div>
@@ -40,6 +42,7 @@ Header.propTypes = {
     rightIcon: PropTypes.object,
     onLeftClick: PropTypes.func,
     onRightClick: PropTypes.func,
+    className: PropTypes.string,
 };
 
 export default Header;

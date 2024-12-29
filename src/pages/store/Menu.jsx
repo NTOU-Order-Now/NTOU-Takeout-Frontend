@@ -27,10 +27,10 @@ const Menu = () => {
     const { userInfo, merchantData, menuCategoryList } = useSystemContext();
     const merchantId = userInfo?.id;
     const storeId = userInfo?.storeId;
-    const menuId = merchantData?.menuId;
+    const menuId = merchantData?.[0].menuId;
     const { categoryData } = useCategoryQueries(
         menuCategoryList,
-        merchantData?.menuId,
+        merchantData?.[0].menuId,
         userInfo !== undefined,
     );
     const navigate = useNavigate();

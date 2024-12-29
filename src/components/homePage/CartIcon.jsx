@@ -6,7 +6,6 @@ const CartIcon = () => {
     if (userInfo && cartCount === undefined) {
         refetchCart();
     }
-    console.debug("CartIcon cartCount:", cartCount);
     return (
         <div className="relative inline-flex items-center right-2 top-1">
             <FontAwesomeIcon icon={faShoppingCart} className="text-xl" />
