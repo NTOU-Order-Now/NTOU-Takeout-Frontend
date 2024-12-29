@@ -14,16 +14,25 @@ function Home() {
         const scrollableEl = scrollableRef.current;
         if (!scrollableEl) return;
         let lastScrollTop = 0;
+        const THRESHOLD = 15;
         const handleScroll = () => {
             const currentScrollTop = scrollableEl.scrollTop;
-            if (currentScrollTop > lastScrollTop) {
-                // scroll down
-                setShowHeader(false);
-            } else {
-                // scroll up
-                setShowHeader(true);
+            if (currentScrollTop < 0) {
+                return;
             }
-            lastScrollTop = currentScrollTop;
+            if (currentScrollTop === 0) {
+                setShowHeader(true);
+                lastScrollTop = 0;
+                return;
+            }
+            const diff = currentScrollTop - lastScrollTop;
+            if (diff > THRESHOLD) {
+                setShowHeader(false);
+                lastScrollTop = currentScrollTop;
+            } else if (diff < -THRESHOLD) {
+                setShowHeader(true);
+                lastScrollTop = currentScrollTop;
+            }
         };
 
         scrollableEl.addEventListener("scroll", handleScroll);
@@ -35,13 +44,13 @@ function Home() {
     }, []);
 
     return (
-        <div className="flex flex-col h-screen w-full overflow-hidden">
+        <div className="flex flex-col h-screen w-dvw overflow-hidden">
             <Header
                 title="OrderNow"
                 onLeftClick={toggleSidebar}
                 className={`
-                fixed top-0 z-30  left-0 w-full
-                transition-transform duration-300 
+                fixed top-0 z-30 w-full
+                transition-transform duration-300 ease-in-out
                 ${showHeader ? "translate-y-0" : "-translate-y-full "}
             `}
             />
@@ -49,14 +58,14 @@ function Home() {
             <div className="flex-1 h-dvh ">
                 <div
                     className={`
-                    fixed left-0 w-full z-20 bg-white transition-all duration-300 pb-5 shadow-sm items-center
+                    fixed left-0 w-full z-20 bg-white transition-all duration-300 pb-5 shadow-sm items-center  ease-in-out
                     ${showHeader ? "top-[46px]" : "top-0"}
                   `}
                 >
                     <Searchbar />
                 </div>
                 <div
-                    className={`fixed left-0 w-full pb-20 h-dvh transition-all duration-300 overflow-y-auto ${showHeader ? "top-[120px]" : "top-20"} `}
+                    className={`fixed left-0 w-full pb-20 h-dvh transition-all duration-300 overflow-y-auto ${showHeader ? "top-[120px]" : "top-[80px]"} `}
                     ref={scrollableRef}
                 >
                     <MerchantList />
