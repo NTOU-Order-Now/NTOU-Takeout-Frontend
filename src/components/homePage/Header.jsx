@@ -21,15 +21,18 @@ const Header = ({ title, onLeftClick = () => {}, className }) => {
 
     return (
         <header
-            className={`flex justify-between items-center bg-white shadow-md transition-shadow duration-300 ease-in-out p-2 font-notoTC ${className}`}
+            className={`flex justify-between bg-white shadow-md  p-2 font-notoTC ${className}`}
         >
-            <div className="text-xl cursor-pointer" onClick={onLeftClick}>
+            <div className="text-xl pl-2 cursor-pointer" onClick={onLeftClick}>
                 <FontAwesomeIcon icon={faUser} />
             </div>
             <h1 className="font-noto font-bold text-2xl m-0">
                 <a href="/Order-Now-Frontend/">{title}</a>
             </h1>
-            <div className="text-xl cursor-pointer" onClick={handleRightClick}>
+            <div
+                className="text-xl pr-2 cursor-pointer"
+                onClick={handleRightClick}
+            >
                 <CartIcon />
             </div>
         </header>
