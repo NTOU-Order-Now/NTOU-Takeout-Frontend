@@ -2,30 +2,16 @@ import { useEffect, Suspense } from "react";
 import { useInView } from "react-intersection-observer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import useMerchantStore from "../../stores/merchantStore";
-import useSelectionStore from "../../stores/selectionStore";
 import MerchantCard from "./MerchantCard.jsx";
 import MerchantSkeleton from "../../skeleton/merchant/MerchantSkeleton";
 import { useStoreInfiniteQueries } from "@/hooks/store/useStoreInfiniteQueries.jsx";
+import filterStoreDataStore from "@/stores/filterStoreDataStore.js";
 function MerchantList() {
-    const { addMerchants } = useMerchantStore();
     const LOAD_SIZE = 5;
-
-    const isSubmitted = useSelectionStore((state) => state.isSubmitted);
-    const setIsSubmitted = useSelectionStore((state) => state.setIsSubmitted);
     const { ref, inView } = useInView({
         rootMargin: "500px",
     });
-    if (localStorage.getItem("selectedSortBy") === "null")
-        localStorage.setItem("selectedSortBy", "rating");
-    if (localStorage.getItem("selectedSortDir") === "null")
-        localStorage.setItem("selectedSortDir", "desc");
-    if (localStorage.getItem("selectedKeyword") === "null")
-        localStorage.setItem("selectedKeyword", "");
-    const sortBy = localStorage.getItem("selectedSortBy");
-    const sortDir = localStorage.getItem("selectedSortDir");
-    const keyword = localStorage.getItem("selectedKeyword");
-
+    const { keyword, sortBy, sortDir } = filterStoreDataStore();
     const {
         storeData,
         fetchNextPage,
@@ -39,7 +25,6 @@ function MerchantList() {
     //for infinite scroll
     useEffect(() => {
         if (inView && !isFetchingNextPage && hasNextPage) {
-            console.debug("fetchNextPage");
             fetchNextPage();
         }
     }, [inView, isFetchingNextPage, hasNextPage, fetchNextPage]);
