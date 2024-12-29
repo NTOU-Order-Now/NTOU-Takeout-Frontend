@@ -8,6 +8,7 @@ import { useSystemContext } from "../context/useSystemContext.jsx";
 import CartRemark from "../components/cartPage/CartRemark";
 import CartSkeleton from "../skeleton/cart/CartSkeleton.jsx";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
     const {
@@ -33,6 +34,7 @@ const Cart = () => {
     );
 
     const [remark, setRemark] = useState("");
+    const navigate = useNavigate();
     // Create a map of dishes for easy access
     const dishesMap = useMemo(() => {
         if (!categoryData) return {};
@@ -65,10 +67,15 @@ const Cart = () => {
             </div>
         );
     }
+
     return (
         <div className="mt-3">
             <div className="flex-none">
-                <NormalHeader leftIcon={faTimes} title={"購物車"} />
+                <NormalHeader
+                    leftIcon={faTimes}
+                    title={"購物車"}
+                    handleClick={async () => await navigate(-1)}
+                />
                 <CartTotalSpend
                     orderDetail={{
                         cartData: cartData,
