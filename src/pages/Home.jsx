@@ -3,21 +3,65 @@ import useSidebarStore from "../stores/common/sidebarStore";
 import Sidebar from "../components/homePage/Sidebar";
 import Searchbar from "../components/homePage/Searchbar";
 import MerchantList from "../components/merchantPage/MerchantList";
+import { useEffect, useRef, useState } from "react";
 
 function Home() {
     const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
+    const [showHeader, setShowHeader] = useState(true);
+    const scrollableRef = useRef(null);
+
+    useEffect(() => {
+        const scrollableEl = scrollableRef.current;
+        if (!scrollableEl) return;
+        let lastScrollTop = 0;
+        const handleScroll = () => {
+            const currentScrollTop = scrollableEl.scrollTop;
+            if (currentScrollTop > lastScrollTop) {
+                // scroll down
+                setShowHeader(false);
+            } else {
+                // scroll up
+                setShowHeader(true);
+            }
+            lastScrollTop = currentScrollTop;
+        };
+
+        scrollableEl.addEventListener("scroll", handleScroll);
+
+        // cleanup
+        return () => {
+            scrollableEl.removeEventListener("scroll", handleScroll);
+        };
+    }, []);
 
     return (
-        <div className="flex flex-col h-screen w-full">
+        <div className="flex flex-col h-screen w-full overflow-hidden">
             <Header
                 title="OrderNow"
                 onLeftClick={toggleSidebar}
-                className="fixed top-0"
+                className={`
+                fixed top-0 z-30  left-0 w-full
+                transition-transform duration-300 
+                ${showHeader ? "translate-y-0" : "-translate-y-full "}
+            `}
             />
-            <div className="py-5"></div>
-            <Sidebar></Sidebar>
-            <Searchbar></Searchbar>
-            <MerchantList></MerchantList>
+            <Sidebar />
+            <div className="flex-1 h-dvh ">
+                <div
+                    className={`
+                    fixed left-0 w-full z-20 bg-white transition-all duration-300 pb-5 shadow-sm items-center
+                    ${showHeader ? "top-[46px]" : "top-0"}
+                  `}
+                >
+                    <Searchbar />
+                </div>
+                <div
+                    className={`fixed left-0 w-full pb-20 h-dvh transition-all duration-300 overflow-y-auto ${showHeader ? "top-[120px]" : "top-20"} `}
+                    ref={scrollableRef}
+                >
+                    <MerchantList />
+                </div>
+            </div>
         </div>
     );
 }
