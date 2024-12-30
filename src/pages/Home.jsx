@@ -65,7 +65,7 @@ function Home() {
                     <Searchbar />
                 </div>
                 <div
-                    className={`fixed left-0 w-full  h-[calc(100dvh-${showHeader ? "120px" : "80px"})] transition-all duration-300 overflow-y-auto ${showHeader ? "top-[120px]" : "top-[80px]"} `}
+                    className={`fixed 0 w-full mb-10 h-[calc(100dvh-${showHeader ? "120px" : "80px"})] transition-all duration-300 overflow-y-auto ${showHeader ? "top-[120px]" : "top-[80px]"} `}
                     ref={scrollableRef}
                 >
                     <MerchantList />

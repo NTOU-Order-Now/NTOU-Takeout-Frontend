@@ -1,4 +1,4 @@
-import { StrictMode, useEffect, lazy, Suspense } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -26,10 +26,8 @@ const Statistic = lazy(() => import("./pages/store/Statistic"));
 const HistoryOrders = lazy(() => import("./pages/HistoryOrders"));
 const CustomerOrderDetail = lazy(() => import("./pages/CustomerOrderDetail"));
 const queryClient = new QueryClient();
-import AddReview from "./components/history/AddReview.jsx";
 import MerchantProtectedRoute from "./route/MerchantProtectedRoute.jsx";
 import CustomerProtectedRoute from "./route/CustomerProtectedRoute.jsx";
-import ScrollToTop from "./route/ScrollTotop.jsx";
 import RootLayout from "@/RootLayout.jsx";
 
 const router = createBrowserRouter(
@@ -203,17 +201,13 @@ function App() {
         }
     }, []);
     return (
-        <StrictMode>
-            <QueryClientProvider client={queryClient}>
-                <SystemContextProvider>
-                    <RouterProvider router={router}>
-                        <ScrollToTop />
-                    </RouterProvider>
-                </SystemContextProvider>
-                <RootLayout />
-                <ReactQueryDevtools initialIsOpen={false} />
-            </QueryClientProvider>
-        </StrictMode>
+        <QueryClientProvider client={queryClient}>
+            <SystemContextProvider>
+                <RouterProvider router={router} />
+            </SystemContextProvider>
+            <RootLayout />
+            <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
     );
 }
 
