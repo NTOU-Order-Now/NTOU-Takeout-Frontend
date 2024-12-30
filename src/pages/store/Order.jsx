@@ -44,21 +44,21 @@ const Order = () => {
     };
 
     return (
-        <div className="flex flex-col h-screen overflow-hidden">
+        <div className="flex flex-col h-screen overflow-hidden  w-dvw">
             <Header
                 title={title}
                 onLeftClick={toggleSidebar}
                 // rightComponents={[orderCountButton]}
             />
-            <div className="flex-1 overflow-hidden">
-                <div className="sticky top-[50px] mt-[50px] z-20 px-10 py-1  h-[65px] bg-white content-center rounded-b-xl shadow-sm ">
+            <div className="flex-1 overflow-hidden h-dvh">
+                <div className="fixed left-0 w-full top-[50px] z-20 px-10 py-1  h-[65px] bg-white content-center rounded-b-xl shadow-sm ">
                     <ToggleNavBar
                         options={options}
                         InitActiveTab={"未接受"}
                         height={"44"}
                     />
                 </div>
-                <div className="h-[calc(100dvh-120px)] overflow-y-auto px-8 py-2 pb-10">
+                <div className="h-[calc(100dvh-120px)] top-[120px] fixed  w-full left-0 overflow-y-auto px-8 py-2 pb-10">
                     {navBarStatus === 0 ? (
                         <Suspense fallback={<OrderCardSkeleton />}>
                             <UnacceptedList />
