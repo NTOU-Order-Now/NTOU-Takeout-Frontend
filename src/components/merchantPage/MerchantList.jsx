@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import MerchantCard from "./MerchantCard.jsx";
 import MerchantSkeleton from "../../skeleton/merchant/MerchantSkeleton";
-import { useStoreInfiniteQueries } from "@/hooks/store/useStoreInfiniteQueries.jsx";
+import { useStoreInfiniteQuery } from "@/hooks/store/useStoreInfiniteQuery.jsx";
 import filterStoreDataStore from "@/stores/filterStoreDataStore.js";
 function MerchantList() {
     const LOAD_SIZE = 5;
@@ -20,7 +20,7 @@ function MerchantList() {
         isLoading,
         isError,
         error,
-    } = useStoreInfiniteQueries(keyword, sortBy, sortDir, LOAD_SIZE);
+    } = useStoreInfiniteQuery(keyword, sortBy, sortDir, LOAD_SIZE);
 
     //for infinite scroll
     useEffect(() => {
