@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 
 function Home() {
     const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
+    const isOpen = useSidebarStore((state) => state.isOpen);
     const [showHeader, setShowHeader] = useState(true);
     const scrollableRef = useRef(null);
 
@@ -55,7 +56,10 @@ function Home() {
             `}
             />
             <Sidebar />
-            <div className="flex-1 h-dvh overflow-hidden">
+            <div
+                className="flex-1 h-dvh"
+                style={{ overflow: isOpen ? "hidden" : "auto" }}
+            >
                 <div
                     className={`
                     fixed left-0 w-full z-20 bg-white transition-all duration-300 pb-5 shadow-sm items-center  ease-in-out
