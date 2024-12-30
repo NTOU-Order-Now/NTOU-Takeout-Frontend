@@ -1,31 +1,16 @@
 import StoreOrderCard from "./OrderCard.jsx";
 import CustomerStoreOrderCard from "../../../../components/history/OrderCard.jsx";
-import { useEffect } from "react";
-import { useInView } from "react-intersection-observer";
-import { useOrderInfiniteQuery } from "../../../../hooks/order/useOrderInfiniteQuery.jsx";
-import { useSystemContext } from "../../../../context/useSystemContext.jsx";
+
+import { useSystemContext } from "@/context/useSystemContext.jsx";
+import { useOrderQueries } from "@/hooks/order/useOrderQueries.jsx";
 
 const UnacceptedList = () => {
-    const { ref, inView } = useInView({
-        rootMargin: "100px",
-    });
     const { userInfo } = useSystemContext();
     const role = userInfo?.role;
 
-    const {
-        orders,
-        fetchNextPage,
-        hasNextPage,
-        isFetchingNextPage,
-        isLoading,
-        isError,
-        error,
-    } = useOrderInfiniteQuery(role === "MERCHANT" ? "PENDING" : "ALL");
-    useEffect(() => {
-        if (inView && !isFetchingNextPage && hasNextPage) {
-            fetchNextPage();
-        }
-    }, [inView, isFetchingNextPage, hasNextPage, fetchNextPage]);
+    const { orders, isLoading, isError, error } = useOrderQueries(
+        role === "MERCHANT" ? "PENDING" : "ALL",
+    );
 
     const filterOrders = orders?.pages.map((page) =>
         page.content.filter((order) =>
@@ -53,11 +38,6 @@ const UnacceptedList = () => {
                     );
                 }),
             )}
-            <div ref={ref}>
-                {hasNextPage && isFetchingNextPage && (
-                    <div className="text-center py-4">Loading more...</div>
-                )}
-            </div>
         </div>
     );
 };
