@@ -13,7 +13,6 @@ export const useOrderQueries = (status) => {
     } = useOrderStore();
     let totalPages =
         status === "ALL" ? acceptedListNumber : unacceptedListNumber;
-    console.debug("totalPages===========", totalPages);
     const pages = useMemo(() => {
         return Array.from({ length: totalPages }, (_, index) => index);
     }, [totalPages]);

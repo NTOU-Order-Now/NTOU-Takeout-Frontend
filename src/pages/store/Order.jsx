@@ -48,7 +48,7 @@ const Order = () => {
                     <ToggleNavBar
                         options={options}
                         InitActiveTab={"未接受"}
-                        height={44}
+                        height={"44"}
                     />
                 </div>
                 <div className="h-[calc(100dvh-120px)] overflow-y-auto px-8 py-2 pb-10">

@@ -46,10 +46,10 @@ function AcceptedList() {
     }
     return (
         <div className="flex flex-col text-center justify-between ">
-            {filterOrders.map((page) =>
+            {filterOrders.map((page, idx) =>
                 page.map((order, _) => {
                     return role === "MERCHANT" ? (
-                        <StoreOrderCard key={_} order={order} />
+                        <StoreOrderCard key={_} order={order} pageId={idx} />
                     ) : (
                         <CustomerStoreOrderCard key={_} order={order} />
                     );

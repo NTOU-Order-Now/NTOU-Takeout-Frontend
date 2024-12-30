@@ -54,9 +54,10 @@ const getNextStatus = (currentStatus) => {
     }
 };
 
-const OrderCard = ({ order, showStatus = true }) => {
+const OrderCard = ({ order, showStatus = true, pageId }) => {
     const { bgColor, textColor, statusText } = getStatusColors(order.status);
-    const { updateOrderStatusAsync, isLoading } = useOrderStatusMutation();
+    const { updateOrderStatusAsync, isLoading } =
+        useOrderStatusMutation(pageId);
     const setOrderData = useOrderStore((state) => state.setOrderData);
     const handleStatusClick = useCallback(async () => {
         const nextStatus = getNextStatus(order.status);
@@ -208,6 +209,7 @@ OrderCard.propTypes = {
     onReject: PropTypes.func,
     onStatusChange: PropTypes.func,
     showStatus: PropTypes.bool,
+    pageId: PropTypes.number.isRequired,
 };
 
 export default OrderCard;
