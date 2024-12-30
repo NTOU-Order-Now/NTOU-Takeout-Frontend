@@ -1,11 +1,19 @@
 import { useQueries } from "@tanstack/react-query";
 import { searchOrder } from "@/api/order/searchOrder.js";
 import { useState, useMemo } from "react";
+import useOrderStore from "@/stores/pos/orderStore.js";
 
 export const useOrderQueries = (status) => {
     const PAGE_SIZE = 5;
-    const [totalPages, setTotalPages] = useState(1);
-
+    const {
+        acceptedListNumber,
+        setAcceptedListNumber,
+        unacceptedListNumber,
+        setUnacceptedListNumber,
+    } = useOrderStore();
+    let totalPages =
+        status === "ALL" ? acceptedListNumber : unacceptedListNumber;
+    console.debug("totalPages===========", totalPages);
     const pages = useMemo(() => {
         return Array.from({ length: totalPages }, (_, index) => index);
     }, [totalPages]);
@@ -23,18 +31,28 @@ export const useOrderQueries = (status) => {
                     signal,
                 );
                 if (response.data.totalPages !== totalPages) {
-                    setTotalPages(response.data.totalPages);
+                    if (status === "ALL") {
+                        setAcceptedListNumber(response.data.totalPages);
+                    } else {
+                        setUnacceptedListNumber(response.data.totalPages);
+                    }
                 }
 
                 return response.data;
             },
-            staleTime: 1000 * 60, // 1 minute
         })),
         combine: (results) => {
             const successfulResults = results.filter(
                 (result) => result.isSuccess && result.data,
             );
-
+            //calculate progress
+            const totalQueries = totalPages;
+            const completedQueries = results.filter(
+                (result) => result.isSuccess || result.isError,
+            ).length;
+            const progressPercentage = Math.round(
+                (completedQueries / totalQueries) * 180,
+            );
             return {
                 orders: {
                     pages: successfulResults.map((result) => result.data),
@@ -43,6 +61,8 @@ export const useOrderQueries = (status) => {
                 isLoading: results.some((result) => result.isLoading),
                 isError: results.some((result) => result.isError),
                 error: results.find((result) => result.error)?.error,
+                progress: progressPercentage,
+                completedQueries,
             };
         },
     });

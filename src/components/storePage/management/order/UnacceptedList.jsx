@@ -3,14 +3,15 @@ import CustomerStoreOrderCard from "../../../../components/history/OrderCard.jsx
 
 import { useSystemContext } from "@/context/useSystemContext.jsx";
 import { useOrderQueries } from "@/hooks/order/useOrderQueries.jsx";
+import { Progress } from "@/components/ui/progress.jsx";
+import useOrderStore from "@/stores/pos/orderStore.js";
 
 const UnacceptedList = () => {
     const { userInfo } = useSystemContext();
     const role = userInfo?.role;
 
-    const { orders, isLoading, isError, error } = useOrderQueries(
-        role === "MERCHANT" ? "PENDING" : "ALL",
-    );
+    const { orders, isLoading, isError, error, progress, completedQueries } =
+        useOrderQueries(role === "MERCHANT" ? "PENDING" : "ALL");
 
     const filterOrders = orders?.pages.map((page) =>
         page.content.filter((order) =>
@@ -19,8 +20,23 @@ const UnacceptedList = () => {
                 : order.status !== "PICKED_UP" && order.status !== "CANCELED",
         ),
     );
-    if (isLoading || orders === undefined || filterOrders === undefined) {
-        return <div className="text-center pt-20">Loading...</div>;
+    const { unacceptedListNumber } = useOrderStore();
+    if (
+        isLoading ||
+        orders === undefined ||
+        orders.pages.length === 0 ||
+        progress < 180
+    ) {
+        return (
+            <div className="w-full flex justify-center mt-20">
+                <div className="w-3/5 flex flex-col justify-center items-center">
+                    <Progress value={progress} className="w-full" />
+                    <div className="text-sm text-gray-500">
+                        Loading {completedQueries} of {unacceptedListNumber} ...
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     if (isError) {
