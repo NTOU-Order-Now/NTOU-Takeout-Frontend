@@ -8,7 +8,7 @@ import { useStatisticQuery } from "../../hooks/statistic/useStatisticQuery.jsx";
 import CategoryTabs from "../../components/storePage/statistic/CategoryTabs.jsx";
 function Statistic() {
     const { merchantData, menuCategoryList } = useSystemContext();
-    const menuId = merchantData?.menuId;
+    const menuId = merchantData?.[0].menuId;
     const [activeCategory, setActiveCategory] = useState("all");
     const filteredMenuCategoryList = menuCategoryList.filter(
         (category) => category.categoryName !== "",

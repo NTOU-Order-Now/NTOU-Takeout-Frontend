@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import ReviewCard from "./ReviewCard";
 import PropTypes from "prop-types";
-import { useReviewInfiniteQueries } from "@/hooks/review/useReviewInfiniteQueries.jsx";
+import { useReviewInfiniteQuery } from "@/hooks/review/useReviewInfiniteQuery.jsx";
 
 const ReviewCardList = ({ merchantId }) => {
     const LOAD_SIZE = 5;
@@ -19,7 +19,7 @@ const ReviewCardList = ({ merchantId }) => {
         isLoading,
         isError,
         error,
-    } = useReviewInfiniteQueries(merchantId, LOAD_SIZE);
+    } = useReviewInfiniteQuery(merchantId, LOAD_SIZE);
     //for infinite scroll
     useEffect(() => {
         if (inView && hasNextPage && !isFetchingNextPage) {

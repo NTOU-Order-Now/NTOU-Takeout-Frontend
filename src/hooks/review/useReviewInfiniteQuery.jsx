@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getReviewByParams } from "@/api/review/getReviewByParams.js";
 
-export const useReviewInfiniteQueries = (storeId, size) => {
+export const useReviewInfiniteQuery = (storeId, size) => {
     const {
         data: reviews,
         fetchNextPage,

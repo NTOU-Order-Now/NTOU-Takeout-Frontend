@@ -49,13 +49,13 @@ function Home() {
                 title="OrderNow"
                 onLeftClick={toggleSidebar}
                 className={`
-                fixed top-0 z-30 w-full
+                fixed top-0 z-30 w-full overflow-hidden
                 transition-transform duration-300 ease-in-out
                 ${showHeader ? "translate-y-0" : "-translate-y-full "}
             `}
             />
             <Sidebar />
-            <div className="flex-1 h-dvh ">
+            <div className="flex-1 h-dvh overflow-hidden">
                 <div
                     className={`
                     fixed left-0 w-full z-20 bg-white transition-all duration-300 pb-5 shadow-sm items-center  ease-in-out
@@ -65,7 +65,7 @@ function Home() {
                     <Searchbar />
                 </div>
                 <div
-                    className={`fixed left-0 w-full pb-20 h-dvh transition-all duration-300 overflow-y-auto ${showHeader ? "top-[120px]" : "top-[80px]"} `}
+                    className={`fixed 0 w-full mb-10 h-[calc(100dvh-${showHeader ? "120px" : "80px"})] transition-all duration-300 overflow-y-auto ${showHeader ? "top-[120px]" : "top-[80px]"} `}
                     ref={scrollableRef}
                 >
                     <MerchantList />

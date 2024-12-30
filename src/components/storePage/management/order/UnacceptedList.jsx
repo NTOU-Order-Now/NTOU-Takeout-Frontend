@@ -1,31 +1,16 @@
 import StoreOrderCard from "./OrderCard.jsx";
 import CustomerStoreOrderCard from "../../../../components/history/OrderCard.jsx";
-import { useEffect } from "react";
-import { useInView } from "react-intersection-observer";
-import { useOrderInfiniteQuery } from "../../../../hooks/order/useOrderInfiniteQuery.jsx";
-import { useSystemContext } from "../../../../context/useSystemContext.jsx";
+import { useSystemContext } from "@/context/useSystemContext.jsx";
+import { useOrderQueries } from "@/hooks/order/useOrderQueries.jsx";
+import { Progress } from "@/components/ui/progress.jsx";
+import useOrderStore from "@/stores/pos/orderStore.js";
 
 const UnacceptedList = () => {
-    const { ref, inView } = useInView({
-        rootMargin: "100px",
-    });
     const { userInfo } = useSystemContext();
     const role = userInfo?.role;
 
-    const {
-        orders,
-        fetchNextPage,
-        hasNextPage,
-        isFetchingNextPage,
-        isLoading,
-        isError,
-        error,
-    } = useOrderInfiniteQuery(role === "MERCHANT" ? "PENDING" : "ALL");
-    useEffect(() => {
-        if (inView && !isFetchingNextPage && hasNextPage) {
-            fetchNextPage();
-        }
-    }, [inView, isFetchingNextPage, hasNextPage, fetchNextPage]);
+    const { orders, isLoading, isError, error, progress, completedQueries } =
+        useOrderQueries(role === "MERCHANT" ? "PENDING" : "ALL");
 
     const filterOrders = orders?.pages.map((page) =>
         page.content.filter((order) =>
@@ -34,8 +19,28 @@ const UnacceptedList = () => {
                 : order.status !== "PICKED_UP" && order.status !== "CANCELED",
         ),
     );
-    if (isLoading || orders === undefined || filterOrders === undefined) {
-        return <div className="text-center pt-20">Loading...</div>;
+    const { unacceptedListNumber } = useOrderStore();
+    if (isLoading || progress < 180) {
+        return (
+            <div className="w-full flex justify-center mt-20">
+                <div className="w-3/5 flex flex-col justify-center items-center">
+                    <Progress value={progress} className="w-full" />
+                    <div className="text-sm text-gray-500">
+                        Loading {completedQueries} of {unacceptedListNumber} ...
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (filterOrders[0].length === 0) {
+        return (
+            <div className="w-full flex justify-center mt-20">
+                <div className="w-3/5 flex flex-col justify-center items-center">
+                    <div className="text-lg text-gray-500">目前無未接訂單</div>
+                </div>
+            </div>
+        );
     }
 
     if (isError) {
@@ -44,20 +49,15 @@ const UnacceptedList = () => {
 
     return (
         <div className="flex flex-col text-center justify-between ">
-            {filterOrders?.map((page) =>
+            {filterOrders?.map((page, idx) =>
                 page.map((order, _) => {
                     return role === "MERCHANT" ? (
-                        <StoreOrderCard key={_} order={order} />
+                        <StoreOrderCard key={_} order={order} pageId={idx} />
                     ) : (
                         <CustomerStoreOrderCard key={_} order={order} />
                     );
                 }),
             )}
-            <div ref={ref}>
-                {hasNextPage && isFetchingNextPage && (
-                    <div className="text-center py-4">Loading more...</div>
-                )}
-            </div>
         </div>
     );
 };

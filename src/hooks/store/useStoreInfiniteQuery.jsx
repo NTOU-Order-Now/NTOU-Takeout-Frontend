@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getStoreDataByParams } from "@/api/store/getStoreDataByParams.js";
 
-export const useStoreInfiniteQueries = (keyword, sortBy, sortDir, size) => {
+export const useStoreInfiniteQuery = (keyword, sortBy, sortDir, size) => {
     const {
         data: storeData,
         fetchNextPage,

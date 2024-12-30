@@ -1,6 +1,6 @@
 import { Search } from "lucide-react";
 import filterStoreDataStore from "@/stores/filterStoreDataStore.js";
-import { FilterDialog } from "@/components/homePage/FilterDialog.jsx";
+import { FilterDrawer } from "@/components/homePage/FilterDrawer.jsx";
 const Searchbar = () => {
     const { isOpen, setIsOpen, setKeyword, keyword } = filterStoreDataStore();
 
@@ -33,7 +33,7 @@ const Searchbar = () => {
                     className="rounded-lg w-10 h-6 justify-center flex items-center hover:bg-zinc-300"
                     onClick={() => setIsOpen(!isOpen)}
                 >
-                    <FilterDialog />
+                    <FilterDrawer />
                 </button>
             </div>
         </div>

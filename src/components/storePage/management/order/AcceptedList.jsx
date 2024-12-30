@@ -1,24 +1,16 @@
 import PropTypes from "prop-types";
-import { useEffect } from "react";
-import { useInView } from "react-intersection-observer";
-import { useOrderInfiniteQuery } from "../../../../hooks/order/useOrderInfiniteQuery.jsx";
-import StoreOrderCard from "./OrderCard.jsx";
+import { lazy, Suspense } from "react";
+// import StoreOrderCard from "./OrderCard.jsx";
 import CustomerStoreOrderCard from "../../../history/OrderCard.jsx";
-import { useSystemContext } from "../../../../context/useSystemContext.jsx";
+import { Progress } from "@/components/ui/progress";
+import { useSystemContext } from "@/context/useSystemContext.jsx";
+import { useOrderQueries } from "@/hooks/order/useOrderQueries.jsx";
+import useOrderStore from "@/stores/pos/orderStore.js";
+import OrderCardSkeleton from "@/skeleton/pos/order/OrderCardSkeleton.jsx";
+const StoreOrderCard = lazy(() => import("./OrderCard.jsx"));
 function AcceptedList() {
-    const { ref, inView } = useInView({
-        rootMargin: "100px",
-    });
-
-    const {
-        orders,
-        fetchNextPage,
-        hasNextPage,
-        isFetchingNextPage,
-        isLoading,
-        isError,
-        error,
-    } = useOrderInfiniteQuery("ALL");
+    const { orders, isLoading, isError, error, progress, completedQueries } =
+        useOrderQueries("ALL");
 
     const { userInfo } = useSystemContext();
     const role = userInfo?.role;
@@ -31,38 +23,49 @@ function AcceptedList() {
                   order.status !== "COMPLETED",
         ),
     );
-    useEffect(() => {
-        if (inView && !isFetchingNextPage && hasNextPage) {
-            fetchNextPage();
-        }
-    }, [inView, isFetchingNextPage, hasNextPage, fetchNextPage]);
-    if (isLoading || filterOrders === undefined || orders === undefined) {
-        return <div className="text-center pt-20">Loading...</div>;
-    }
 
+    const { acceptedListNumber } = useOrderStore();
+    if (isLoading || progress < 180) {
+        return (
+            <div className="w-full flex justify-center mt-20">
+                <div className="w-3/5 flex flex-col justify-center items-center">
+                    <Progress value={progress} className="w-full" />
+                    <div className="text-sm text-gray-500">
+                        Loading {completedQueries} of {acceptedListNumber} ...
+                    </div>
+                </div>
+            </div>
+        );
+    }
+    if (filterOrders[0].length === 0) {
+        return (
+            <div className="w-full flex justify-center mt-20">
+                <div className="w-3/5 flex flex-col justify-center items-center">
+                    <div className="text-lg text-gray-500">目前無已接訂單</div>
+                </div>
+            </div>
+        );
+    }
     if (isError) {
         return <div className="text-center pt-20">Error: {error}</div>;
     }
-    // console.debug("filterOrders", filterOrders);
-    // if (filterOrders.map) {
-    //     return <div className="text-center pt-20">目前沒有已接訂單</div>;
-    // }
     return (
         <div className="flex flex-col text-center justify-between ">
-            {filterOrders.map((page) =>
+            {filterOrders.map((page, idx) =>
                 page.map((order, _) => {
                     return role === "MERCHANT" ? (
-                        <StoreOrderCard key={_} order={order} />
+                        <Suspense fallback={<OrderCardSkeleton />} key={_}>
+                            <StoreOrderCard
+                                key={_}
+                                order={order}
+                                pageId={idx}
+                            />
+                        </Suspense>
                     ) : (
                         <CustomerStoreOrderCard key={_} order={order} />
                     );
                 }),
             )}
-            <div ref={ref}>
-                {hasNextPage && isFetchingNextPage && (
-                    <div className="text-center py-4">Loading more...</div>
-                )}
-            </div>
         </div>
     );
 }
