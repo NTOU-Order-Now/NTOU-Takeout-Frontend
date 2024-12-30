@@ -14,7 +14,7 @@ import filterStoreDataStore from "@/stores/filterStoreDataStore.js";
 import { SlidersHorizontal } from "lucide-react";
 import { useState } from "react";
 
-export function FilterDialog() {
+export function FilterDrawer() {
     // const isDesktop = window.matchMedia("(min-width: 768px)").matches;
     const { sortBy, sortDir, setSortBy, setSortDir } = filterStoreDataStore();
     const [selectedSortBy, setSelectedSortBy] = useState(sortBy);
