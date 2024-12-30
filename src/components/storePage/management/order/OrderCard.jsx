@@ -1,85 +1,13 @@
 import PropTypes from "prop-types";
 import useOrderStore from "../../../../stores/orderStore.js";
-import { useCallback } from "react";
-import { useOrderStatusMutation } from "@/hooks/order/useOrderStatusMutation.jsx";
 import { useNavigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 const ConfirmAcceptDialog = lazy(
-    () =>
-        import(
-            "@/components/storePage/management/order/ConfirmAcceptDialog.jsx"
-        ),
+    () => import("@/components/storePage/management/order/ConfirmDialog.jsx"),
 );
-
-const getStatusColors = (status) => {
-    switch (status) {
-        case "PROCESSING":
-            return {
-                bgColor: "bg-blue-500",
-                textColor: "text-gray-100",
-                statusText: "製作中",
-            };
-        case "COMPLETED":
-            return {
-                bgColor: "bg-yellow-500",
-                textColor: "text-gray-100",
-                statusText: "未取餐",
-            };
-        case "PICKED_UP":
-            return {
-                bgColor: "bg-lime-600",
-                textColor: "text-gray-100",
-                statusText: "已取餐",
-            };
-        case "CANCELED":
-            return {
-                bgColor: "bg-gray-500",
-                textColor: "text-gray-100",
-                statusText: "取消",
-            };
-        default:
-            return {
-                bgColor: "bg-gray-200",
-                textColor: "text-gray-100",
-                statusText: "",
-            };
-    }
-};
-
-const getNextStatus = (currentStatus) => {
-    switch (currentStatus) {
-        case "PROCESSING":
-            return "COMPLETED";
-        case "COMPLETED":
-            return "PICKED_UP";
-        case "PICKED_UP":
-            return "CANCELED";
-        case "PENDING":
-            return "PROCESSING";
-        default:
-            return null;
-    }
-};
-
 const OrderCard = ({ order, showStatus = true, pageId }) => {
-    const { bgColor, textColor, statusText } = getStatusColors(order.status);
-    const { updateOrderStatusAsync } = useOrderStatusMutation(pageId);
     const setOrderData = useOrderStore((state) => state.setOrderData);
-
-    const handleStatusClick = useCallback(async () => {
-        const nextStatus = getNextStatus(order.status);
-        if (nextStatus) {
-            try {
-                await updateOrderStatusAsync({
-                    orderId: order.id,
-                    newStatus: nextStatus,
-                });
-            } catch (error) {
-                console.error("Failed to update order status:", error);
-            }
-        }
-    }, [order.id, order.status, updateOrderStatusAsync]);
 
     const isOverdue = (orderTime, estimatedPrepTime) => {
         const today = new Date();
@@ -130,7 +58,7 @@ const OrderCard = ({ order, showStatus = true, pageId }) => {
 
             {/* Status */}
             <div className="flex flex-col items-end">
-                {/* Badge */}
+                {/* accepted Badge */}
                 {showStatus && order.status !== "PENDING" && (
                     <div className="flex items-center mb-2">
                         {isOverdue(order.orderTime, order.estimatedPrepTime) &&
@@ -139,16 +67,20 @@ const OrderCard = ({ order, showStatus = true, pageId }) => {
                                     超時
                                 </span>
                             )}
-                        <button
-                            onClick={handleStatusClick}
-                            disabled={!getNextStatus(order.status)}
-                            className={`px-3 py-1 rounded-md text-sm font-bold ${bgColor} ${textColor} ${!getNextStatus(order.status) ? "opacity-50 cursor-not-allowed" : ""}`}
+                        <Suspense
+                            fallback={
+                                <Skeleton className="px-3 py-1 rounded bg-gray-300 opacity-5 w-14 h-6" />
+                            }
                         >
-                            {statusText}
-                        </button>
+                            <ConfirmAcceptDialog
+                                order={order}
+                                status={order.status}
+                                pageId={pageId}
+                            />
+                        </Suspense>
                     </div>
                 )}
-                {/* Buttons */}
+                {/* unaccepted Badge */}
                 {order.status === "PENDING" && (
                     <div className="flex gap-2">
                         {
@@ -159,7 +91,7 @@ const OrderCard = ({ order, showStatus = true, pageId }) => {
                             >
                                 <ConfirmAcceptDialog
                                     order={order}
-                                    type={"cancelAccept"}
+                                    status={"REJECT"}
                                     pageId={pageId}
                                 />
                             </Suspense>
@@ -172,7 +104,7 @@ const OrderCard = ({ order, showStatus = true, pageId }) => {
                             >
                                 <ConfirmAcceptDialog
                                     order={order}
-                                    type={"confirmAccept"}
+                                    status={"ACCEPT"}
                                     pageId={pageId}
                                 />
                             </Suspense>
