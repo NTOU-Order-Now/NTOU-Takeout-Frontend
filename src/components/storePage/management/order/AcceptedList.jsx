@@ -1,11 +1,13 @@
 import PropTypes from "prop-types";
-
-import StoreOrderCard from "./OrderCard.jsx";
+import { lazy, Suspense } from "react";
+// import StoreOrderCard from "./OrderCard.jsx";
 import CustomerStoreOrderCard from "../../../history/OrderCard.jsx";
 import { Progress } from "@/components/ui/progress";
 import { useSystemContext } from "@/context/useSystemContext.jsx";
 import { useOrderQueries } from "@/hooks/order/useOrderQueries.jsx";
 import useOrderStore from "@/stores/pos/orderStore.js";
+import OrderCardSkeleton from "@/skeleton/pos/order/OrderCardSkeleton.jsx";
+const StoreOrderCard = lazy(() => import("./OrderCard.jsx"));
 function AcceptedList() {
     const { orders, isLoading, isError, error, progress, completedQueries } =
         useOrderQueries("ALL");
@@ -23,12 +25,7 @@ function AcceptedList() {
     );
 
     const { acceptedListNumber } = useOrderStore();
-    if (
-        isLoading ||
-        orders === undefined ||
-        orders.pages.length === 0 ||
-        progress < 180
-    ) {
+    if (isLoading || progress < 180) {
         return (
             <div className="w-full flex justify-center mt-20">
                 <div className="w-3/5 flex flex-col justify-center items-center">
@@ -40,7 +37,15 @@ function AcceptedList() {
             </div>
         );
     }
-
+    if (filterOrders[0].length === 0) {
+        return (
+            <div className="w-full flex justify-center mt-20">
+                <div className="w-3/5 flex flex-col justify-center items-center">
+                    <div className="text-lg text-gray-500">目前無已接訂單</div>
+                </div>
+            </div>
+        );
+    }
     if (isError) {
         return <div className="text-center pt-20">Error: {error}</div>;
     }
@@ -49,7 +54,13 @@ function AcceptedList() {
             {filterOrders.map((page, idx) =>
                 page.map((order, _) => {
                     return role === "MERCHANT" ? (
-                        <StoreOrderCard key={_} order={order} pageId={idx} />
+                        <Suspense fallback={<OrderCardSkeleton />} key={_}>
+                            <StoreOrderCard
+                                key={_}
+                                order={order}
+                                pageId={idx}
+                            />
+                        </Suspense>
                     ) : (
                         <CustomerStoreOrderCard key={_} order={order} />
                     );

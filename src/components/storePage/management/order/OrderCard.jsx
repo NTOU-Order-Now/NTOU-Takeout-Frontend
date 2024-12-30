@@ -1,8 +1,16 @@
 import PropTypes from "prop-types";
 import useOrderStore from "../../../../stores/orderStore.js";
-import { useCallback, useEffect } from "react";
-import { useOrderStatusMutation } from "../../../../hooks/order/useOrderStatusMutation.jsx";
+import { useCallback } from "react";
+import { useOrderStatusMutation } from "@/hooks/order/useOrderStatusMutation.jsx";
 import { useNavigate } from "react-router-dom";
+import { lazy, Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+const ConfirmAcceptDialog = lazy(
+    () =>
+        import(
+            "@/components/storePage/management/order/ConfirmAcceptDialog.jsx"
+        ),
+);
 
 const getStatusColors = (status) => {
     switch (status) {
@@ -56,9 +64,9 @@ const getNextStatus = (currentStatus) => {
 
 const OrderCard = ({ order, showStatus = true, pageId }) => {
     const { bgColor, textColor, statusText } = getStatusColors(order.status);
-    const { updateOrderStatusAsync, isLoading } =
-        useOrderStatusMutation(pageId);
+    const { updateOrderStatusAsync } = useOrderStatusMutation(pageId);
     const setOrderData = useOrderStore((state) => state.setOrderData);
+
     const handleStatusClick = useCallback(async () => {
         const nextStatus = getNextStatus(order.status);
         if (nextStatus) {
@@ -72,33 +80,7 @@ const OrderCard = ({ order, showStatus = true, pageId }) => {
             }
         }
     }, [order.id, order.status, updateOrderStatusAsync]);
-    const handleAccept = useCallback(
-        async (orderId) => {
-            try {
-                await updateOrderStatusAsync({
-                    orderId,
-                    newStatus: "PROCESSING",
-                });
-            } catch (error) {
-                console.error("Failed to accept order:", error);
-            }
-        },
-        [updateOrderStatusAsync],
-    );
-    const handleReject = useCallback(
-        async (orderId) => {
-            try {
-                await updateOrderStatusAsync({
-                    orderId,
-                    newStatus: "CANCELED",
-                });
-                console.debug("Reject order: ", orderId);
-            } catch (error) {
-                console.error("Failed to reject order:", error);
-            }
-        },
-        [updateOrderStatusAsync],
-    );
+
     const isOverdue = (orderTime, estimatedPrepTime) => {
         const today = new Date();
         const [hours, minutes, seconds] = orderTime.split(":");
@@ -170,20 +152,30 @@ const OrderCard = ({ order, showStatus = true, pageId }) => {
                 {order.status === "PENDING" && (
                     <div className="flex gap-2">
                         {
-                            <button
-                                onClick={() => handleReject(order.id)}
-                                className="bg-red-500 text-white px-3 py-1 text-sm font-bold rounded hover:bg-red-600"
+                            <Suspense
+                                fallback={
+                                    <Skeleton className="px-3 py-1 rounded bg-red-500 opacity-5 w-12 h-6" />
+                                }
                             >
-                                拒絕
-                            </button>
+                                <ConfirmAcceptDialog
+                                    order={order}
+                                    type={"cancelAccept"}
+                                    pageId={pageId}
+                                />
+                            </Suspense>
                         }
                         {
-                            <button
-                                onClick={() => handleAccept(order.id)}
-                                className="bg-green-500 text-white px-3 py-1 text-sm font-bold rounded hover:bg-green-600"
+                            <Suspense
+                                fallback={
+                                    <Skeleton className="px-3 py-1 rounded bg-green-500 opacity-5 w-12 h-6" />
+                                }
                             >
-                                接單
-                            </button>
+                                <ConfirmAcceptDialog
+                                    order={order}
+                                    type={"confirmAccept"}
+                                    pageId={pageId}
+                                />
+                            </Suspense>
                         }
                     </div>
                 )}

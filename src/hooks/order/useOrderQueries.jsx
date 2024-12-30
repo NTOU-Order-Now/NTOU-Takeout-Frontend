@@ -1,6 +1,6 @@
 import { useQueries } from "@tanstack/react-query";
 import { searchOrder } from "@/api/order/searchOrder.js";
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import useOrderStore from "@/stores/pos/orderStore.js";
 
 export const useOrderQueries = (status) => {
@@ -13,12 +13,12 @@ export const useOrderQueries = (status) => {
     } = useOrderStore();
     let totalPages =
         status === "ALL" ? acceptedListNumber : unacceptedListNumber;
+    if (totalPages <= 0) totalPages = 1;
     const pages = useMemo(() => {
         return Array.from({ length: totalPages }, (_, index) => index);
     }, [totalPages]);
-
     const results = useQueries({
-        queries: pages.map((page) => ({
+        queries: pages?.map((page) => ({
             queryKey: ["orders", status, page],
             queryFn: async ({ signal }) => {
                 const response = await searchOrder(

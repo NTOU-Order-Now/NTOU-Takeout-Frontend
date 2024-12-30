@@ -1,11 +1,18 @@
 import { useState } from "react";
 import Header from "../../components/storePage/home/Header";
 import useSidebarStore from "../../stores/common/sidebarStore";
-import UnacceptedList from "../../components/storePage/management/order/UnacceptedList.jsx";
+// import UnacceptedList from "../../components/storePage/management/order/UnacceptedList.jsx";
 import AcceptedList from "../../components/storePage/management/order/AcceptedList.jsx";
 import ToggleNavBar from "../../components/common/ToggleNavBar.jsx";
 import { useQueryClient } from "@tanstack/react-query";
-
+import { lazy, Suspense } from "react";
+const UnacceptedList = lazy(
+    () =>
+        import(
+            "../../components/storePage/management/order/UnacceptedList.jsx"
+        ),
+);
+import OrderCardSkeleton from "@/skeleton/pos/order/OrderCardSkeleton.jsx";
 const Order = () => {
     const queryClient = useQueryClient();
     const orderCount = queryClient.getQueryData(["order", "PENDING"]);
@@ -52,7 +59,13 @@ const Order = () => {
                     />
                 </div>
                 <div className="h-[calc(100dvh-120px)] overflow-y-auto px-8 py-2 pb-10">
-                    {navBarStatus === 0 ? <UnacceptedList /> : <AcceptedList />}
+                    {navBarStatus === 0 ? (
+                        <Suspense fallback={<OrderCardSkeleton />}>
+                            <UnacceptedList />
+                        </Suspense>
+                    ) : (
+                        <AcceptedList />
+                    )}
                 </div>
             </div>
         </div>

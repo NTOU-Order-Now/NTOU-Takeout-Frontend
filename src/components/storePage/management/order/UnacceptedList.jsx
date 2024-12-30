@@ -1,6 +1,5 @@
 import StoreOrderCard from "./OrderCard.jsx";
 import CustomerStoreOrderCard from "../../../../components/history/OrderCard.jsx";
-
 import { useSystemContext } from "@/context/useSystemContext.jsx";
 import { useOrderQueries } from "@/hooks/order/useOrderQueries.jsx";
 import { Progress } from "@/components/ui/progress.jsx";
@@ -21,12 +20,7 @@ const UnacceptedList = () => {
         ),
     );
     const { unacceptedListNumber } = useOrderStore();
-    if (
-        isLoading ||
-        orders === undefined ||
-        orders.pages.length === 0 ||
-        progress < 180
-    ) {
+    if (isLoading || progress < 180) {
         return (
             <div className="w-full flex justify-center mt-20">
                 <div className="w-3/5 flex flex-col justify-center items-center">
@@ -34,6 +28,16 @@ const UnacceptedList = () => {
                     <div className="text-sm text-gray-500">
                         Loading {completedQueries} of {unacceptedListNumber} ...
                     </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (filterOrders[0].length === 0) {
+        return (
+            <div className="w-full flex justify-center mt-20">
+                <div className="w-3/5 flex flex-col justify-center items-center">
+                    <div className="text-lg text-gray-500">目前無未接訂單</div>
                 </div>
             </div>
         );
