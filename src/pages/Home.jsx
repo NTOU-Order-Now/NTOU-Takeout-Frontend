@@ -44,7 +44,7 @@ function Home() {
     }, []);
 
     return (
-        <div className="flex flex-col h-screen w-dvw overflow-hidden">
+        <div className="flex flex-col h-dvh w-dvw overflow-hidden">
             <Header
                 title="OrderNow"
                 onLeftClick={toggleSidebar}
