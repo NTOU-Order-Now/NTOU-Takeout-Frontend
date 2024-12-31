@@ -29,6 +29,7 @@ const queryClient = new QueryClient();
 import MerchantProtectedRoute from "./route/MerchantProtectedRoute.jsx";
 import CustomerProtectedRoute from "./route/CustomerProtectedRoute.jsx";
 import RootLayout from "@/RootLayout.jsx";
+import { WebSocketContextProvider } from "@/context/WebSocketContextProvider.jsx";
 
 const router = createBrowserRouter(
     [
@@ -203,7 +204,9 @@ function App() {
     return (
         <QueryClientProvider client={queryClient}>
             <SystemContextProvider>
-                <RouterProvider router={router} />
+                <WebSocketContextProvider>
+                    <RouterProvider router={router} />
+                </WebSocketContextProvider>
             </SystemContextProvider>
             <RootLayout />
             <ReactQueryDevtools initialIsOpen={false} />
