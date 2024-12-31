@@ -25,7 +25,7 @@ export const WebSocketContextProvider = ({ children }) => {
     const role = userInfo?.role;
     const { orders } = useOrderQueries(role === "MERCHANT" ? "PENDING" : "ALL");
     const { toast } = useToast();
-
+    console.debug("WebSocket_Url:", WebSocket_Url);
     const queryClient = useQueryClient();
 
     const flatOrders = useMemo(() => {
