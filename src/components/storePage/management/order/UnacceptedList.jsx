@@ -1,5 +1,5 @@
 import StoreOrderCard from "./OrderCard.jsx";
-import CustomerStoreOrderCard from "../../../../components/history/OrderCard.jsx";
+import CustomerStoreOrderCard from "../../../history/CustomerStoreOrderCard.jsx";
 import { useSystemContext } from "@/context/useSystemContext.jsx";
 import { useOrderQueries } from "@/hooks/order/useOrderQueries.jsx";
 import { Progress } from "@/components/ui/progress.jsx";
@@ -8,7 +8,6 @@ import useOrderStore from "@/stores/pos/orderStore.js";
 const UnacceptedList = () => {
     const { userInfo } = useSystemContext();
     const role = userInfo?.role;
-
     const { orders, isLoading, isError, error, progress, completedQueries } =
         useOrderQueries(role === "MERCHANT" ? "PENDING" : "ALL");
 
@@ -19,6 +18,8 @@ const UnacceptedList = () => {
                 : order.status !== "PICKED_UP" && order.status !== "CANCELED",
         ),
     );
+    const flatOrders = filterOrders?.flatMap((orders) => orders);
+    console.debug("flatOrders", flatOrders);
     const { unacceptedListNumber } = useOrderStore();
     if (isLoading || progress < 180) {
         return (
@@ -33,7 +34,7 @@ const UnacceptedList = () => {
         );
     }
 
-    if (filterOrders[0].length === 0) {
+    if (flatOrders?.length === 0) {
         return (
             <div className="w-full flex justify-center mt-20">
                 <div className="w-3/5 flex flex-col justify-center items-center">

@@ -1,4 +1,4 @@
 import { useContext } from "react";
-import { SystemContext } from "./SystemContext.jsx"; // 請確定路徑正確
+import { SystemContext } from "./SystemContext.jsx";
 
 export const useSystemContext = () => useContext(SystemContext);
