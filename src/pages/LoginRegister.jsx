@@ -24,7 +24,7 @@ function LoginRegister() {
         },
     };
     return (
-        <div className="min-h-screen bg-white flex justify-center pt-20">
+        <div className="h-dvh bg-white flex justify-center pt-20">
             <div className="flex flex-col font-notoTC ">
                 <ToggleNavBar
                     options={options}
