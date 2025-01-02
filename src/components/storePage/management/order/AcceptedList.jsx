@@ -27,7 +27,6 @@ function AcceptedList() {
     if (isLoading || progress < 180) {
         return (
             <div className="w-full flex justify-center mt-20">
-                感
                 <div className="w-3/5 flex flex-col justify-center items-center">
                     <Progress value={progress} className="w-full" />
                     <div className="text-sm text-gray-500">
