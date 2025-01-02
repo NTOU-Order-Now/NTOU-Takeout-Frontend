@@ -110,6 +110,10 @@ const Sidebar = () => {
                         iconSize="lg"
                         iconColor={"#053766"}
                         style={"px-4 py-4"}
+                        onClick={() => {
+                            window.location.href =
+                                "mailto:ntoutakeout@gmail.com";
+                        }}
                     />
                     {/*<SidebarButton*/}
                     {/*    text="語言"*/}
