@@ -34,9 +34,9 @@ function Home() {
     }, [setTitle, location.pathname]);
 
     return (
-        <div className="flex flex-col h-screen">
+        <div className="flex flex-col h-dvh">
             <Header title={title} onLeftClick={toggleSidebar}></Header>
-            <Sidebar merchantName={user.name}></Sidebar>
+            <Sidebar />
             {title === "首頁" ? (
                 <div className="sticky top-[54px] mt-[54px] overflow-auto mt-18 z-0 h-[dvh-34px]">
                     <Dashboard

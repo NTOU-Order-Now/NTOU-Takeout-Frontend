@@ -16,7 +16,6 @@ import {
     faSun,
     faCartShopping,
 } from "@fortawesome/free-solid-svg-icons";
-import CartIcon from "./CartIcon";
 import userInfoStore from "../../stores/user/userInfoStore.js";
 const Sidebar = () => {
     const isOpen = useSidebarStore((state) => state.isOpen);

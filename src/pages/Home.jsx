@@ -1,12 +1,15 @@
 import Header from "../components/homePage/Header";
 import useSidebarStore from "../stores/common/sidebarStore";
 import Sidebar from "../components/homePage/Sidebar";
+import MerchantSidebar from "../components/storePage/home/Sidebar.jsx";
 import Searchbar from "../components/homePage/Searchbar";
 import MerchantList from "../components/merchantPage/MerchantList";
 import { useEffect, useRef, useState } from "react";
+import { useSystemContext } from "@/context/useSystemContext.jsx";
 
 function Home() {
     const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
+    const { userInfo } = useSystemContext();
     const [showHeader, setShowHeader] = useState(true);
     const scrollableRef = useRef(null);
 
@@ -54,7 +57,11 @@ function Home() {
                 ${showHeader ? "translate-y-0" : "-translate-y-full "}
             `}
             />
-            <Sidebar />
+            {userInfo?.role === "CUSTOMER" || userInfo === undefined ? (
+                <Sidebar />
+            ) : (
+                <MerchantSidebar />
+            )}
             <div className="flex-1 h-dvh overflow-hidden">
                 <div
                     className={`
