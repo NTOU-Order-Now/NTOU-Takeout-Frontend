@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Header from "../../components/storePage/home/Header";
 import useSidebarStore from "../../stores/common/sidebarStore";
-// import UnacceptedList from "../../components/storePage/management/order/UnacceptedList.jsx";
 import AcceptedList from "../../components/storePage/management/order/AcceptedList.jsx";
 import ToggleNavBar from "../../components/common/ToggleNavBar.jsx";
 import { useQueryClient } from "@tanstack/react-query";
@@ -13,12 +12,15 @@ const UnacceptedList = lazy(
         ),
 );
 import OrderCardSkeleton from "@/skeleton/pos/order/OrderCardSkeleton.jsx";
+import { useWebSocketContext } from "@/context/WebSocketContextProvider.jsx";
+import ActiveNotifyDialog from "@/components/common/ActiveNotifyDialog.jsx";
 const Order = () => {
     const queryClient = useQueryClient();
     const orderCount = queryClient.getQueryData(["order", "PENDING"]);
     const [navBarStatus, setNavBarStatus] = useState(0);
     const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
     const title = useSidebarStore((state) => state.title);
+    const { isActiveNotifyDialogShow } = useWebSocketContext();
     const orderCountButton = (
         <button
             onClick={() => {
@@ -28,6 +30,11 @@ const Order = () => {
         >
             共計 {orderCount} 筆訂單
         </button>
+    );
+
+    console.debug("isActiveNotifyDialogShow", isActiveNotifyDialogShow);
+    const notifyButton = (
+        <ActiveNotifyDialog isOpen={isActiveNotifyDialogShow} />
     );
 
     const handleToUnaccepted = () => {
@@ -48,7 +55,7 @@ const Order = () => {
             <Header
                 title={title}
                 onLeftClick={toggleSidebar}
-                // rightComponents={[orderCountButton]}
+                rightComponents={[notifyButton]}
             />
             <div className="flex-1 overflow-hidden h-dvh">
                 <div className="fixed left-0 w-full top-[50px] z-20 px-10 py-1  h-[65px] bg-white content-center rounded-b-xl shadow-sm ">
