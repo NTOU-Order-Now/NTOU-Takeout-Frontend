@@ -44,7 +44,7 @@ const HistoryOrders = () => {
                 title={"歷史訂單"}
                 handleClick={toggleSidebar}
             />
-            <Sidebar></Sidebar>
+            <Sidebar />
             <div className="flex-1 h-dvh ">
                 <div className="sticky top-[40px] mt-[40px] z-20 px-10   h-[85px] bg-white content-center rounded-b-xl shadow-sm ">
                     <ToggleNavBar options={options} InitActiveTab={"未完成"} />

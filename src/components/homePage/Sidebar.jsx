@@ -16,7 +16,6 @@ import {
     faSun,
     faCartShopping,
 } from "@fortawesome/free-solid-svg-icons";
-import CartIcon from "./CartIcon";
 import userInfoStore from "../../stores/user/userInfoStore.js";
 const Sidebar = () => {
     const isOpen = useSidebarStore((state) => state.isOpen);
@@ -81,22 +80,26 @@ const Sidebar = () => {
                         style={"px-4 py-4"}
                         path="/"
                     />
-                    <SidebarButton
-                        text="歷史訂單"
-                        icon={faHistory}
-                        iconSize="lg"
-                        iconColor={"#053766"}
-                        style={"px-4 py-4"}
-                        path="/history/order"
-                    />
-                    <SidebarButton
-                        text="購物車"
-                        icon={faCartShopping}
-                        iconSize="lg"
-                        iconColor={"#053766"}
-                        style={"px-4 py-4"}
-                        path="/cart"
-                    />
+                    {authToken && user !== undefined && (
+                        <SidebarButton
+                            text="歷史訂單"
+                            icon={faHistory}
+                            iconSize="lg"
+                            iconColor={"#053766"}
+                            style={"px-4 py-4"}
+                            path="/history/order"
+                        />
+                    )}
+                    {authToken && user !== undefined && (
+                        <SidebarButton
+                            text="購物車"
+                            icon={faCartShopping}
+                            iconSize="lg"
+                            iconColor={"#053766"}
+                            style={"px-4 py-4"}
+                            path="/cart"
+                        />
+                    )}
                     {/*<SidebarButton*/}
                     {/*    text="收藏店家"*/}
                     {/*    icon={faHeart}*/}
@@ -110,6 +113,10 @@ const Sidebar = () => {
                         iconSize="lg"
                         iconColor={"#053766"}
                         style={"px-4 py-4"}
+                        onClick={() => {
+                            window.location.href =
+                                "mailto:ntoutakeout@gmail.com";
+                        }}
                     />
                     {/*<SidebarButton*/}
                     {/*    text="語言"*/}
@@ -118,21 +125,23 @@ const Sidebar = () => {
                     {/*    iconColor={"#606162"}*/}
                     {/*    style={"px-4 py-4"}*/}
                     {/*/>*/}
-                    <SidebarButton
-                        text="設定"
-                        icon={faCog}
-                        iconSize="lg"
-                        iconColor={"#606162"}
-                        style={"px-4 py-4"}
-                    />
+                    {authToken && user !== undefined && (
+                        <SidebarButton
+                            text="設定"
+                            icon={faCog}
+                            iconSize="lg"
+                            iconColor={"#606162"}
+                            style={"px-4 py-4"}
+                        />
+                    )}
                 </div>
                 <div className="px-4 absolute bottom-8 left-0 right-2 flex justify-between">
-                    {authToken && (
+                    {authToken && user !== undefined && (
                         <SidebarButton
                             text="登出"
                             icon={faSignOutAlt}
                             iconSize="lg"
-                            iconColor={"#606162"}
+                            iconColor={"#7c2d12"}
                             onClick={handleLogout}
                         />
                     )}

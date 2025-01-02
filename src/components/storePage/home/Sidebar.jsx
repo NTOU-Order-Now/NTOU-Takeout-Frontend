@@ -18,7 +18,7 @@ import userInfoStore from "../../../stores/user/userInfoStore.js";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 
-const Sidebar = ({ merchantName }) => {
+const Sidebar = () => {
     const isOpen = useSidebarStore((state) => state.isOpen);
     const theme = useThemeStore((state) => state.themeMode);
     const toggleTheme = useThemeStore((state) => state.toggleTheme);
@@ -52,8 +52,8 @@ const Sidebar = ({ merchantName }) => {
             >
                 <div className="p-4">
                     <SidebarButton
-                        text={merchantName}
-                        setUser={merchantName + " 主頁"}
+                        text={user?.name}
+                        setUser={user?.name + " 主頁"}
                         textStyle={"text-2xl px-2"}
                         icon={faStore}
                         iconSize="2xl"
@@ -89,15 +89,15 @@ const Sidebar = ({ merchantName }) => {
                         text="評論"
                         icon={faComment}
                         iconSize="lg"
-                        iconColor={"#606162"}
-                        style={"pt-8 pb-4 px-4"}
+                        iconColor={"#053766"}
+                        style={" py-4 px-4"}
                         path={`/menu/${user?.storeId}/review`}
                     />
                     <SidebarButton
                         text="營業分析"
                         icon={faChartPie}
                         iconSize="lg"
-                        iconColor={"#606162"}
+                        iconColor={"#053766"}
                         style={"px-4 py-4"}
                         path={"/store/pos/statistic"}
                     />
@@ -105,7 +105,7 @@ const Sidebar = ({ merchantName }) => {
                         text="設定"
                         icon={faCog}
                         iconSize="lg"
-                        iconColor={"#606162"}
+                        iconColor={"#053766"}
                         style={"px-4 py-4"}
                         path={"/store/pos/setting"}
                     />
@@ -130,9 +130,6 @@ const Sidebar = ({ merchantName }) => {
             </div>
         </>
     );
-};
-Sidebar.propTypes = {
-    merchantName: PropTypes.string,
 };
 
 export default Sidebar;
