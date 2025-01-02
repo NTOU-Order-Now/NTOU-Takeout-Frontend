@@ -4,12 +4,9 @@ import Header from "../../components/storePage/home/Header";
 import Sidebar from "../../components/storePage/home/Sidebar";
 import useSidebarStore from "../../stores/common/sidebarStore";
 import userInfoStore from "../../stores/user/userInfoStore.js";
-import { useSystemContext } from "../../context/useSystemContext.jsx";
 import Dashboard from "./Dashboard.jsx";
 function Home() {
-    const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
-    const setTitle = useSidebarStore((state) => state.setTitle);
-    const title = useSidebarStore((state) => state.title);
+    const { toggleSidebar, setTitle, title } = useSidebarStore();
     const user = userInfoStore((state) => state.user);
     // const { userInfo, merchantData, menuCategoryList } = useSystemContext();
     const location = useLocation();
