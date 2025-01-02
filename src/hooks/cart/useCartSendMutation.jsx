@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { sendCart } from "@/api/cart/sendCart.js";
 import { useRef } from "react";
-import { useWebSocketContext } from "@/context/WebSocketContextProvider.jsx";
 
 export const useCartSendMutation = () => {
     const queryClient = useQueryClient();
