@@ -31,7 +31,7 @@ const SidebarButton = ({
     };
     return (
         <button
-            className={`flex items-center text-left  ${style}`}
+            className={`flex items-center text-left truncate ${style}`}
             onClick={handleClick}
         >
             {icon && (
