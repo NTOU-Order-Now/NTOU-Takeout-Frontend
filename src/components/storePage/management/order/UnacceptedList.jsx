@@ -19,7 +19,6 @@ const UnacceptedList = () => {
         ),
     );
     const flatOrders = filterOrders?.flatMap((orders) => orders);
-    console.debug("flatOrders", flatOrders);
     const { unacceptedListNumber } = useOrderStore();
     if (isLoading || progress < 180) {
         return (

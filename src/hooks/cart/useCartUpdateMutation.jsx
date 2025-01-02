@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { patchCart } from "../../api/cart/patchCart";
+import { patchCart } from "@/api/cart/patchCart.js";
 import { useRef } from "react";
+
 export const useCartUpdateMutation = () => {
     const queryClient = useQueryClient();
     const abortControllerRef = useRef(null);
-
     const {
         mutateAsync: patchCartAsync,
         onError: patchCartError,
