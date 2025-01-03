@@ -34,7 +34,12 @@ const ActiveNotifyDialog = () => {
                 </DialogHeader>
                 <DialogFooter>
                     <DialogClose asChild>
-                        <Button type="button" onClick={() => enableSound}>
+                        <Button
+                            type="button"
+                            onClick={() => {
+                                enableSound();
+                            }}
+                        >
                             確定
                         </Button>
                     </DialogClose>
