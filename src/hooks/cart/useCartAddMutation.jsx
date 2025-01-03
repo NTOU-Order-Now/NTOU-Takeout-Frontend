@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postCart } from "../../api/cart/postCart";
+import { postCart } from "@/api/cart/postCart.js";
 import { useRef } from "react";
 export const useCartAddMutation = () => {
     const queryClient = useQueryClient();
@@ -18,28 +18,33 @@ export const useCartAddMutation = () => {
             const controller = new AbortController();
             abortControllerRef.current = controller;
 
-            const res = await postCart(abortControllerRef.current.signal, payload);
+            const res = await postCart(
+                abortControllerRef.current.signal,
+                payload,
+            );
 
             if (abortControllerRef.current === controller) {
                 abortControllerRef.current = null;
             }
             return res;
-
         },
         // optimistic update
         onMutate: async (payload) => {
-
             await queryClient.cancelQueries(["cart"]);
             const previousCart = queryClient.getQueryData(["cart"]);
 
-            const newCart = previousCart ? { ...previousCart } : { orderedDishes: [] };
+            const newCart = previousCart
+                ? { ...previousCart }
+                : { orderedDishes: [] };
             if (!newCart.orderedDishes) {
                 newCart.orderedDishes = [];
             }
 
             // find existing dish in cart
             const existingDishIndex = newCart.orderedDishes.findIndex(
-                (dish) => dish.dishId === payload.dishId && dish.chosenAttributes === payload.chosenAttributes
+                (dish) =>
+                    dish.dishId === payload.dishId &&
+                    dish.chosenAttributes === payload.chosenAttributes,
             );
 
             if (existingDishIndex > -1) {
@@ -51,7 +56,6 @@ export const useCartAddMutation = () => {
                         ...existingDish,
                         quantity: existingDish.quantity + payload.quantity,
                         note: payload.note || existingDish.note,
-
                     },
                     ...newCart.orderedDishes.slice(existingDishIndex + 1),
                 ];
@@ -87,7 +91,6 @@ export const useCartAddMutation = () => {
             console.debug("patchCartAsync onSettled");
             queryClient.invalidateQueries(["cart"]);
         },
-
     });
 
     return {
@@ -96,4 +99,4 @@ export const useCartAddMutation = () => {
         postCartOnMutate,
         postCartIsError,
     };
-}
+};

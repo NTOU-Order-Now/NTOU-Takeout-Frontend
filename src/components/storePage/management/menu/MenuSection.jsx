@@ -1,9 +1,9 @@
 import { lazy, Suspense } from "react";
 import PropTypes from "prop-types";
 import CategoryHeader from "./CategoryHeader.jsx";
-import { useUpdateDishOrderMutation } from "../../../../hooks/store/useUpdateDishOrderMutation.jsx";
-import { useDeleteDishMutation } from "../../../../hooks/store/useDeleteDishMutation.jsx";
-import { useCategoryNameMutation } from "../../../../hooks/store/useCategoryNameMutation.jsx";
+import { useUpdateDishOrderMutation } from "@/hooks/store/useUpdateDishOrderMutation.jsx";
+import { useDeleteDishMutation } from "@/hooks/store/useDeleteDishMutation.jsx";
+import { useCategoryNameMutation } from "@/hooks/store/useCategoryNameMutation.jsx";
 
 const CartItemCardSkeleton = lazy(
     () => import("../../../../skeleton/menu/CartItemCardSkeleton"),
@@ -30,7 +30,6 @@ function MenuSection({ sectionRefs, categoryData, menuId }) {
             (c) => c.categoryName === categoryName,
         );
         const currentIndex = category.dishes.findIndex((d) => d.id === dishId);
-        // const newOrder = [...category.dishes].map((d) => d.id);
         const newOrder = [...category.dishes];
 
         if (direction === "up" && currentIndex > 0) {

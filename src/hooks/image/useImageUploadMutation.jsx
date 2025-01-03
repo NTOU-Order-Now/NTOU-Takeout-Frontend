@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postImage } from "../../api/image/postImage.js";
+import { postImage } from "@/api/image/postImage.js";
 import { useRef } from "react";
 
 export const useImageUploadMutation = () => {
@@ -29,7 +29,7 @@ export const useImageUploadMutation = () => {
         },
         onError: (err) => {
             console.log(err);
-            alert("圖片上傳失敗");
+            alert("圖片上傳失敗，請勿傳超過10MB大小，格式只能為PNG,JPG,GIF等");
         },
     });
     return {
