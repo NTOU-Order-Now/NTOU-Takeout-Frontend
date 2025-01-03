@@ -1,7 +1,7 @@
 import { useState, lazy } from "react";
-import { useCartDeleteMutation } from "../../../hooks/cart/useCartDeleteMutation";
-import { useCartAddMutation } from "../../../hooks/cart/useCartAddMutation";
-import { useSystemContext } from "../../../context/useSystemContext.jsx";
+import { useCartDeleteMutation } from "@/hooks/cart/useCartDeleteMutation.jsx";
+import { useCartAddMutation } from "@/hooks/cart/useCartAddMutation.jsx";
+import { useSystemContext } from "@/context/useSystemContext.jsx";
 import PropTypes from "prop-types";
 import useDishDetailStore from "../../../stores/dishDetailStore";
 const ConfirmClearCartModal = lazy(() => import("./ConfirmClearCartModal"));

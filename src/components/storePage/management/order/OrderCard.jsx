@@ -69,7 +69,7 @@ const OrderCard = ({ order, showStatus = true, pageId }) => {
                             )}
                         <Suspense
                             fallback={
-                                <Skeleton className="px-3 py-1 rounded bg-gray-300 opacity-5 w-14 h-6" />
+                                <Skeleton className="px-3 py-1 rounded bg-gray-300 opacity-5 w-full h-6" />
                             }
                         >
                             <ConfirmAcceptDialog
@@ -86,7 +86,7 @@ const OrderCard = ({ order, showStatus = true, pageId }) => {
                         {
                             <Suspense
                                 fallback={
-                                    <Skeleton className="px-3 py-1 rounded bg-red-500 opacity-5 w-12 h-6" />
+                                    <Skeleton className="px-3 py-1 rounded bg-red-500 opacity-5 w-full h-6" />
                                 }
                             >
                                 <ConfirmAcceptDialog

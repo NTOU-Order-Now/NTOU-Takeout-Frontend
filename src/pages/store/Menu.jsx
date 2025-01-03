@@ -93,7 +93,6 @@ const Menu = () => {
         </button>
     );
 
-    // 取得 categoryNames
     const categoryNames = menuCategoryList.map(
         (category) => category.categoryName,
     );
