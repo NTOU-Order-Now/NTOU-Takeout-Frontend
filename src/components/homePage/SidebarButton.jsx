@@ -13,6 +13,7 @@ const SidebarButton = ({
     style,
     path,
     onClick,
+    isShowSelected = true,
 }) => {
     const navigate = useNavigate();
     const setTitle = useSidebarStore((state) => state.setTitle);
@@ -33,7 +34,7 @@ const SidebarButton = ({
     };
     return (
         <button
-            className={`flex items-center text-left  ${style} ${isSelected ? "bg-zinc-200" : ""} my-1 w-full rounded-lg`}
+            className={`flex items-center text-left  ${style} ${isSelected && isShowSelected ? "bg-zinc-200" : ""} my-1 w-full rounded-lg`}
             onClick={handleClick}
         >
             {icon && (
@@ -63,6 +64,7 @@ SidebarButton.propTypes = {
     style: PropTypes.string,
     path: PropTypes.string,
     onClick: PropTypes.func,
+    isShowSelected: PropTypes.bool,
 };
 
 export default SidebarButton;
