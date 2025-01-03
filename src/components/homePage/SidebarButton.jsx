@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useSidebarStore from "../../stores/common/sidebarStore";
 import PropTypes from "prop-types";
 
@@ -17,6 +17,8 @@ const SidebarButton = ({
     const navigate = useNavigate();
     const setTitle = useSidebarStore((state) => state.setTitle);
     const closeSidebar = useSidebarStore((state) => state.closeSidebar);
+    const location = useLocation();
+    const isSelected = path ? location.pathname === path : false;
     const handleClick = (e) => {
         e.stopPropagation();
         closeSidebar();
@@ -31,7 +33,7 @@ const SidebarButton = ({
     };
     return (
         <button
-            className={`flex items-center text-left  ${style}`}
+            className={`flex items-center text-left  ${style} ${isSelected ? "bg-zinc-200" : ""} my-1 w-full rounded-lg`}
             onClick={handleClick}
         >
             {icon && (
