@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../hooks/loginRegisterPage/useLoginMutation.jsx";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons/faEllipsis";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
+import { googleSignIn } from "@/api/auth/googleSignIn.js";
 
 const LoginForm = () => {
     const [email, setEmail] = useState("");
@@ -73,11 +74,11 @@ const LoginForm = () => {
                 >
                     忘記密碼
                 </p>
-                <div className="fixed bottom-[2rem] left-1/2 transform -translate-x-1/2 h-[150px] flex flex-col justify-between w-[70vw]">
+                <div className="fixed bottom-[2rem] left-1/2 transform -translate-x-1/2 h-[140px] flex flex-col justify-between w-[70vw]">
                     <button
                         ref={loginButtonRef}
                         type="submit"
-                        className="w-full bg-white border-orange-500 border-2 text-orange-500 py-2 rounded-lg hover:bg-gray-200 transition"
+                        className="w-full bg-white border-orange-500 border-2 text-orange-500 py-1 rounded-lg hover:bg-gray-200 transition"
                         disabled={isPending}
                         onClick={() => {
                             navigate("/");
@@ -93,6 +94,13 @@ const LoginForm = () => {
                         ) : (
                             "返回首頁"
                         )}
+                    </button>
+                    <button
+                        onClick={googleSignIn}
+                        className="w-full text-center text-black py-1 rounded-lg border-2 border-gray-600 transition"
+                    >
+                        <FontAwesomeIcon icon={faGoogle} className="mr-2" />
+                        Google 登入
                     </button>
                     <button
                         ref={loginButtonRef}
@@ -112,13 +120,6 @@ const LoginForm = () => {
                             "登入"
                         )}
                     </button>
-                    <a
-                        href={`${import.meta.env.VITE_BASE_URL}/oauth2/authorization/google`}
-                        className="w-full text-black py-1 rounded-lg border border-gray-600 transition"
-                    >
-                        <FontAwesomeIcon icon={faGoogle} className="mr-2" />
-                        Google 登入
-                    </a>
                 </div>
             </form>
         </div>
