@@ -1,10 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { sendCart } from "../../api/cart/sendCart.js";
+import { sendCart } from "@/api/cart/sendCart.js";
 import { useRef } from "react";
+import { useWebSocketContext } from "@/context/WebSocketContextProvider.jsx";
+
 export const useCartSendMutation = () => {
     const queryClient = useQueryClient();
     const abortControllerRef = useRef(null);
-
     const {
         mutateAsync: sendCartAsync,
         isPending: sendCartIsPending,
@@ -26,7 +27,7 @@ export const useCartSendMutation = () => {
             if (abortControllerRef.current === controller) {
                 abortControllerRef.current = null;
             }
-            return res;
+            return res.data;
         },
         // optimistic update
         onMutate: async () => {

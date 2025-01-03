@@ -9,6 +9,7 @@ import {
     faPenToSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import menuStore from "../../../../stores/pos/menuStore.js";
+import { useToast } from "@/hooks/use-toast.js";
 
 const MenuItemCard = ({ categoryName, food, onMove, onDelete }) => {
     const { id, name, picture, price, description } = food;
@@ -17,13 +18,21 @@ const MenuItemCard = ({ categoryName, food, onMove, onDelete }) => {
         e.stopPropagation();
         await onDelete({ dishId: id, categoryName });
     };
-
+    const { toast } = useToast();
     const handleClickMove = async (e, dir) => {
         e.stopPropagation();
         await onMove(categoryName, id, dir);
     };
     const handleClick = (e) => {
         e.stopPropagation();
+        if (categoryName === "") {
+            toast({
+                title: "類別名稱不可為空",
+                description: "請先對類別名稱命名後再進行品項編輯",
+                variant: "destructive",
+            });
+            return;
+        }
         setSelectedDish(food);
     };
     return (

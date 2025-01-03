@@ -1,12 +1,10 @@
-import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useParams } from "react-router-dom";
 import ReviewCardList from "../components/reviewPage/ReviewCardList";
 import RatingBar from "../components/reviewPage/RatingBar";
-import getStoreClient from "../api/store/getStoreClient";
-import useMerchantStore from "../stores/merchantStore";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { useStoreQuery } from "@/hooks/store/useStoreQuery.jsx";
 
 const star1Percentage = 10.0;
 const star2Percentage = 15.0;
@@ -21,37 +19,14 @@ const star5Count = 3;
 
 const Review = () => {
     const { merchantId } = useParams();
-    const getMerchantById = useMerchantStore((state) => state.getMerchantById);
-    const [merchant, setMerchant] = useState(null);
-    const [reviewIdList, setReviewIdList] = useState([]);
     const navigate = useNavigate();
     const handleClose = () => {
         navigate(-1);
     };
+    const { storeData: merchantData, isLoading: isMerchantLoading } =
+        useStoreQuery([merchantId]);
 
-    useEffect(() => {
-        const merchantData = getMerchantById(merchantId);
-        if (merchantData) {
-            setMerchant(merchantData);
-            setReviewIdList(merchantData.reviewIdList);
-        } else {
-            // Fetch merchant data if not in store
-            const fetchMerchantData = async () => {
-                try {
-                    const res = await getStoreClient.getMerchantsByIdList([
-                        merchantId,
-                    ]);
-                    setMerchant(res.data[0]);
-                    setReviewIdList(res.data[0]?.reviewIdList || null);
-                } catch (error) {
-                    console.error("Failed to fetch merchant data:", error);
-                }
-            };
-            fetchMerchantData();
-        }
-    }, [merchantId, getMerchantById]);
-
-    return !merchant || !reviewIdList ? (
+    return isMerchantLoading ? (
         <div className="font-notoTC flex justify-center items-center mt-4 fa-2x">
             <FontAwesomeIcon icon={faSpinner} spinPulse />
         </div>
@@ -68,12 +43,12 @@ const Review = () => {
                 </div>
                 <div className="title flex flex-col items-center">
                     <h2 className="text-xl font-bold text-black text-center">
-                        {merchant.name}的評論
+                        {merchantData?.[0].name}的評論
                     </h2>
 
                     <div className="flex items-center mt-4 text-left">
                         <span className="text-3xl font-bold">
-                            {Number(merchant.rating.toFixed(1))}
+                            {Number(merchantData?.[0].rating.toFixed(1))}
                         </span>
                         <FontAwesomeIcon
                             icon={faStar}
@@ -110,10 +85,7 @@ const Review = () => {
                     </div>
                 </div>
 
-                <ReviewCardList
-                    reviewIdList={reviewIdList}
-                    merchantId={merchantId}
-                ></ReviewCardList>
+                <ReviewCardList merchantId={merchantId}></ReviewCardList>
             </div>
         </div>
     );

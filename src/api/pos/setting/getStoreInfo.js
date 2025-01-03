@@ -7,7 +7,6 @@ export const getStoreInfo = async (storeId, signal) => {
         const res = await API.get(`/v2/stores/${storeId}`, {
             signal,
         });
-        console.debug("rrrrrrrrrrrrrrrr", res.data);
         return res.data.data;
     } catch (error) {
         if (axios.isCancel(error)) {

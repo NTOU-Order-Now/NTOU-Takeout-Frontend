@@ -10,9 +10,6 @@ export const useCartQuery = (enabled = true) => {
     } = useQuery({
         queryKey: ["cart"],
         queryFn: async ({ signal }) => {
-            if (!enabled) {
-                return null;
-            }
             const res = await getCart(signal);
             return res.data;
         },

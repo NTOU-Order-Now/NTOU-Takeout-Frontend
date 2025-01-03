@@ -60,7 +60,7 @@ const getNextStatus = (currentStatus) => {
     }
 };
 
-const OrderCard = ({ order, showStatus = true }) => {
+const CustomerStoreOrderCard = ({ order, showStatus = true }) => {
     const { bgColor, textColor, statusText } = getStatusColors(order.status);
     const { updateOrderStatusAsync, isLoading } = useOrderStatusMutation();
     const setOrderData = useOrderStore((state) => state.setOrderData);
@@ -129,7 +129,7 @@ const OrderCard = ({ order, showStatus = true }) => {
     );
 };
 
-OrderCard.propTypes = {
+CustomerStoreOrderCard.propTypes = {
     order: PropTypes.shape({
         id: PropTypes.string.isRequired,
         status: PropTypes.string.isRequired,
@@ -143,4 +143,4 @@ OrderCard.propTypes = {
     showStatus: PropTypes.bool,
 };
 
-export default OrderCard;
+export default CustomerStoreOrderCard;

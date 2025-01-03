@@ -24,7 +24,7 @@ const HomeSkeleton = () => {
                 </div>
             </div>
 
-            {/* Merchant List Skeleton */}
+            {/* MerchantCard List Skeleton */}
             <div className="flex flex-col items-center px-4">
                 {mockMerchants.map((_, index) => (
                     <div

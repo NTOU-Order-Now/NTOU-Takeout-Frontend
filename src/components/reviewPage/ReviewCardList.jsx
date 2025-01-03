@@ -1,53 +1,25 @@
 import { useEffect } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import ReviewCard from "./ReviewCard";
 import PropTypes from "prop-types";
-import getReviewClient from "../../api/review/getReviewClient";
+import { useReviewInfiniteQuery } from "@/hooks/review/useReviewInfiniteQuery.jsx";
 
-const ReviewCardList = ({ reviewIdList, merchantId }) => {
-    const LOAD_SIZE = 10;
+const ReviewCardList = ({ merchantId }) => {
+    const LOAD_SIZE = 5;
     const { ref, inView } = useInView({
         rootMargin: "100px",
     });
-
-
     const {
-        data,
+        reviews,
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
-        isLoading: isReviewCardsLoading,
-    } = useInfiniteQuery({
-        queryKey: ["reviewCards" + merchantId],
-        queryFn: async ({ pageParam }) => {
-            const start = pageParam * LOAD_SIZE;
-            const end = start + LOAD_SIZE;
-            const idList = reviewIdList.slice(start, end);
-
-            if (idList.length === 0) {
-                return [];
-            }
-            const reviewCards = await getReviewClient.getReivewByIds(idList);
-            console.log("reviewCards:", reviewCards);
-
-            return reviewCards;
-        },
-
-        initialPageParam: 0,
-        getNextPageParam: (lastPage, allPages) => {
-            const nextPage = allPages.length;
-            const totalReviewCards = reviewIdList?.length || 0;
-
-            if (nextPage * LOAD_SIZE < totalReviewCards) {
-                return nextPage;
-            } else {
-                return undefined; // No more pages
-            }
-        },
-    });
+        isLoading,
+        isError,
+        error,
+    } = useReviewInfiniteQuery(merchantId, LOAD_SIZE);
     //for infinite scroll
     useEffect(() => {
         if (inView && hasNextPage && !isFetchingNextPage) {
@@ -55,7 +27,7 @@ const ReviewCardList = ({ reviewIdList, merchantId }) => {
         }
     }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-    return isReviewCardsLoading ? (
+    return isLoading ? (
         <div className="font-notoTC w-screen flex justify-center items-center mt-4 fa-2x">
             <FontAwesomeIcon
                 icon={faSpinner}
@@ -65,8 +37,8 @@ const ReviewCardList = ({ reviewIdList, merchantId }) => {
         </div>
     ) : (
         <div className="font-notoTC flex flex-col items-center ">
-            {data?.pages.map((page) =>
-                page.map((reviewCard) => {
+            {reviews?.pages.map((page) =>
+                page.content.map((reviewCard) => {
                     return (
                         <ReviewCard
                             key={reviewCard.id}
@@ -84,13 +56,12 @@ const ReviewCardList = ({ reviewIdList, merchantId }) => {
                     <FontAwesomeIcon icon={faSpinner} spinPulse />
                 </div>
             ) : (
-                "No more reviews to show"
+                "沒有更多評論"
             )}
         </div>
     );
 };
 ReviewCardList.propTypes = {
-    reviewIdList: PropTypes.arrayOf(PropTypes.string).isRequired,
     merchantId: PropTypes.string.isRequired,
 };
 

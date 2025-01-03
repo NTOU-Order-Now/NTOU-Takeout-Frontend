@@ -1,5 +1,5 @@
 import { useQueries } from "@tanstack/react-query";
-import { getStatistic } from "../../api/statistic/getStatistic.js";
+import { getStatistic } from "@/api/statistic/getStatistic.js";
 
 export const useAllCategoriesStatistic = (menuId, categories) => {
     return useQueries({

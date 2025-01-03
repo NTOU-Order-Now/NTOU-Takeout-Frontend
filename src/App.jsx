@@ -1,4 +1,4 @@
-import { StrictMode, useEffect, lazy, Suspense } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -16,7 +16,6 @@ const Menu = lazy(() => import("./pages/Menu"));
 const LoginRegister = lazy(() => import("./pages/LoginRegister"));
 const ForgetPassword = lazy(() => import("./pages/ForgetPassword"));
 const Verify = lazy(() => import("./pages/Verify.jsx"));
-const MerchantRegister = lazy(() => import("./pages/MerchantRegister"));
 const StoreHome = lazy(() => import("./pages/store/Home"));
 const StoreMenu = lazy(() => import("./pages/store/Menu"));
 const StoreOrder = lazy(() => import("./pages/store/Order"));
@@ -26,11 +25,10 @@ const Statistic = lazy(() => import("./pages/store/Statistic"));
 const HistoryOrders = lazy(() => import("./pages/HistoryOrders"));
 const CustomerOrderDetail = lazy(() => import("./pages/CustomerOrderDetail"));
 const queryClient = new QueryClient();
-import AddReview from "./components/history/AddReview.jsx";
 import MerchantProtectedRoute from "./route/MerchantProtectedRoute.jsx";
 import CustomerProtectedRoute from "./route/CustomerProtectedRoute.jsx";
-import ScrollToTop from "./route/ScrollTotop.jsx";
 import RootLayout from "@/RootLayout.jsx";
+import { WebSocketContextProvider } from "@/context/WebSocketContextProvider.jsx";
 
 const router = createBrowserRouter(
     [
@@ -122,15 +120,6 @@ const router = createBrowserRouter(
             errorElement: <NotFound />,
         },
         {
-            path: "/auth/register/merchant",
-            element: (
-                <Suspense fallback={LoginRegisterSkeleton}>
-                    <MerchantRegister />
-                </Suspense>
-            ),
-            errorElement: <NotFound />,
-        },
-        {
             path: "/store/pos",
             element: (
                 <Suspense fallback={<HomeSkeleton />}>
@@ -203,17 +192,15 @@ function App() {
         }
     }, []);
     return (
-        <StrictMode>
-            <QueryClientProvider client={queryClient}>
-                <SystemContextProvider>
-                    <RouterProvider router={router}>
-                        <ScrollToTop />
-                    </RouterProvider>
-                </SystemContextProvider>
-                <RootLayout />
-                {/*<ReactQueryDevtools initialIsOpen={false} />*/}
-            </QueryClientProvider>
-        </StrictMode>
+        <QueryClientProvider client={queryClient}>
+            <SystemContextProvider>
+                <WebSocketContextProvider>
+                    <RouterProvider router={router} />
+                </WebSocketContextProvider>
+            </SystemContextProvider>
+            <RootLayout />
+            {/*<ReactQueryDevtools initialIsOpen={false} />*/}
+        </QueryClientProvider>
     );
 }
 
