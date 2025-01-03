@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button.jsx";
 import { Loader2 } from "lucide-react";
 
 const AddReview = ({ storeName, storeId, setShowAddReview }) => {
-    const title = `對 ${storeName} 新增評論`;
     const { storeDescription, storeAverageSpend, storeRating, reset } =
         useReviewForm();
     const { addReview, isPending, isSuccess } = useReviewMutation(storeId);
@@ -86,13 +85,16 @@ const AddReview = ({ storeName, storeId, setShowAddReview }) => {
     return (
         <div className="flex flex-col h-screen overflow-hidden">
             <NormalHeader
-                title={title}
+                title={"新增評論"}
                 onLeftClick={handleReturn}
                 leftIcon={faArrowLeft}
                 handleClick={handleReturn}
             />
             <div className="flex-1 overflow-hidden">
                 <div className="sticky top-[54px] mt-[54px] z-20 ">
+                    <h1 className="font-notoTC font-semibold px-8  py-2 text-xl ">
+                        {storeName}
+                    </h1>
                     <ReviewForm />
                     <div className="flex items-center w-full">
                         <Button

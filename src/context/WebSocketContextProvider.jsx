@@ -13,7 +13,7 @@ import { useSystemContext } from "@/context/useSystemContext.jsx";
 import { useOrderQueries } from "@/hooks/order/useOrderQueries.jsx";
 import { useToast } from "@/hooks/use-toast.js";
 import { useQueryClient } from "@tanstack/react-query";
-import newOrderNotify from "../../public/newOrderNotify.mp3";
+import newOrderNotify from "../assets/newOrderNotify.mp3";
 const WebSocketContext = createContext(null);
 export const WebSocketContextProvider = ({ children }) => {
     const WebSocket_Url = import.meta.env.VITE_WEBSOCKET_URL;
