@@ -36,20 +36,22 @@ const OrderCard = ({ order, showStatus = true, pageId }) => {
         navigate(`/store/pos/management/order/${order.id.slice(-5)}`);
     };
     return (
-        <div className="relative flex justify-between rounded-lg p-4 shadow-lg mb-6 bg-gray-50">
+        <div className="relative flex justify-between  rounded-lg p-4 shadow-lg mb-6 bg-gray-50">
             {/* Order Info */}
-            <div className="flex flex-col items-start text-start">
-                <p className="text-xl font-bold ">
-                    單號： {order.id.slice(-5)}
-                </p>
-                <p className="text-sm font-semibold ">
-                    預估製作時間: {order.estimatedPrepTime} 分鐘
-                </p>
-                <p className="text-sm font-medium">
-                    下單時間: {order.orderTime}
-                </p>
+            <div className="flex flex-col items-start text-start ">
+                <div className="flex flex-col max-w-[200px]">
+                    <p className="text-xl font-bold break-words">
+                        單號： {order.id.slice(-5)}
+                    </p>
+                    <p className="text-sm font-semibold break-words">
+                        預估製作時間: {order.estimatedPrepTime} 分鐘
+                    </p>
+                    <p className="text-sm font-medium break-words">
+                        下單時間: {order.orderTime}
+                    </p>
+                </div>
                 <button
-                    className="bg-orange-500 mt-6 text-white px-3 py-1 text-sm font-bold rounded hover:bg-orange-600"
+                    className="bg-orange-500 mt-6 text-white px-3 py-1 text-sm font-bold rounded hover:bg-orange-600 whitespace-nowrap"
                     onClick={handleSeeDetail}
                 >
                     訂單內容

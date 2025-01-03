@@ -19,7 +19,7 @@ const NormalHeader = ({
     };
     return (
         <header
-            className={`h-12 fixed z-30 top-0 left-0 w-full flex justify-between items-center bg-${backgroundColor} shadow-md transition-shadow duration-300 ease-in-out p-2 font-notoTC`}
+            className={`h-12 fixed z-30 top-0 left-0 w-full flex truncate justify-between items-center bg-${backgroundColor} shadow-md transition-shadow duration-300 ease-in-out p-2 font-notoTC`}
         >
             <div className="flex ml-3 items-center text-xl ">
                 <FontAwesomeIcon
