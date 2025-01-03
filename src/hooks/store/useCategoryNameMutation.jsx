@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
-import { patchCategoryName } from "../../api/pos/menu/patchCategoryName.js";
+import { patchCategoryName } from "@/api/pos/menu/patchCategoryName.js";
 
 export const useCategoryNameMutation = (menuId) => {
     const queryClient = useQueryClient();
@@ -103,17 +103,17 @@ export const useCategoryNameMutation = (menuId) => {
         },
         onSettled: (data) => {
             // 重新驗證所有相關的查詢
-            queryClient.invalidateQueries(["menuCategoryList", menuId]);
-            if (data) {
-                queryClient.invalidateQueries([
-                    "categoryDishes",
-                    data.oldCategoryName,
-                ]);
-                queryClient.invalidateQueries([
-                    "categoryDishes",
-                    data.newCategoryName,
-                ]);
-            }
+            // queryClient.invalidateQueries(["menuCategoryList", menuId]);
+            // if (data) {
+            //     queryClient.invalidateQueries([
+            //         "categoryDishes",
+            //         data.oldCategoryName,
+            //     ]);
+            //     queryClient.invalidateQueries([
+            //         "categoryDishes",
+            //         data.newCategoryName,
+            //     ]);
+            // }
         },
     });
     return {
