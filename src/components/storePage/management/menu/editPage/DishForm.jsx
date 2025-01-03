@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useImageUploadMutation } from "../../../../../hooks/image/useImageUploadMutation.jsx";
+import { useImageUploadMutation } from "@/hooks/image/useImageUploadMutation.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner, faUpload } from "@fortawesome/free-solid-svg-icons";
 
@@ -30,7 +30,6 @@ const DishForm = ({
                 console.debug("file:", file);
                 // 上傳圖片
                 const imageUrl = await uploadImage(file);
-
                 // 更新圖片 URL
                 onImageChange({ url: imageUrl });
             } catch (error) {

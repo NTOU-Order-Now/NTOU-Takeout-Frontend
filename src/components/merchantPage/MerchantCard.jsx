@@ -11,7 +11,7 @@ const MerchantCard = (props) => {
     const randomDistance = 10;
     return (
         <Link key={id} to={`/menu/${id}`}>
-            <div className="font-notoTC relative  h-60 bg-white rounded-2xl overflow-hidden shadow-lg transition-transform hover:scale-105">
+            <div className="font-notoTC relative  h-60 bg-white rounded-2xl overflow-hidden shadow-lg ">
                 <div className="object-cover w-full h-full">
                     <LazyLoadImage
                         src={picture}
@@ -27,9 +27,9 @@ const MerchantCard = (props) => {
                         <div className="absolute h-[22px] left-[12px] top-[9px] text-black font-bold text-lg leading-5 line-clamp-3 overflow-hidden break-words transition">
                             {name}
                         </div>
-                        <div className="absolute h-[12px] left-[12px] top-[32px] text-gray-500 font-semibold text-xs leading-[12px]">
-                            距離您約 {randomDistance} 公里
-                        </div>
+                        {/*<div className="absolute h-[12px] left-[12px] top-[32px] text-gray-500 font-semibold text-xs leading-[12px]">*/}
+                        {/*    距離您約 {randomDistance} 公里*/}
+                        {/*</div>*/}
                     </div>
                     <div className="flex flex-row w-full relative justify-between -bottom-14 items-center mx-4 ">
                         <div className=" text-green-700 font-bold text-xs leading-[12px]">

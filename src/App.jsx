@@ -16,7 +16,6 @@ const Menu = lazy(() => import("./pages/Menu"));
 const LoginRegister = lazy(() => import("./pages/LoginRegister"));
 const ForgetPassword = lazy(() => import("./pages/ForgetPassword"));
 const Verify = lazy(() => import("./pages/Verify.jsx"));
-const MerchantRegister = lazy(() => import("./pages/MerchantRegister"));
 const StoreHome = lazy(() => import("./pages/store/Home"));
 const StoreMenu = lazy(() => import("./pages/store/Menu"));
 const StoreOrder = lazy(() => import("./pages/store/Order"));
@@ -121,15 +120,6 @@ const router = createBrowserRouter(
             errorElement: <NotFound />,
         },
         {
-            path: "/auth/register/merchant",
-            element: (
-                <Suspense fallback={LoginRegisterSkeleton}>
-                    <MerchantRegister />
-                </Suspense>
-            ),
-            errorElement: <NotFound />,
-        },
-        {
             path: "/store/pos",
             element: (
                 <Suspense fallback={<HomeSkeleton />}>
@@ -209,7 +199,7 @@ function App() {
                 </WebSocketContextProvider>
             </SystemContextProvider>
             <RootLayout />
-            <ReactQueryDevtools initialIsOpen={false} />
+            {/*<ReactQueryDevtools initialIsOpen={false} />*/}
         </QueryClientProvider>
     );
 }

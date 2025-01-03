@@ -128,12 +128,12 @@ const ConfirmDialog = ({ order, status, pageId }) => {
         <Dialog>
             <DialogTrigger asChild>
                 <button
-                    className={`${bgColor} text-white px-3 py-1 text-sm font-bold rounded-md hover:${bgHoverColor} disabled:${disable}`}
+                    className={`${bgColor} text-white px-3 py-1 text-sm w-full font-bold rounded-md hover:${bgHoverColor} disabled:${disable}`}
                 >
                     {statusText}
                 </button>
             </DialogTrigger>
-            <DialogContent className="w-3/4">
+            <DialogContent className="w-full">
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>
                     <DialogDescription>{description}</DialogDescription>

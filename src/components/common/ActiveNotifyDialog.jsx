@@ -30,7 +30,7 @@ const ActiveNotifyDialog = () => {
                 <DialogHeader>
                     <DialogTitle>您未開啟訂單通知鈴聲，是否要開啟?</DialogTitle>
                     <DialogDescription>
-                        若沒開啟鈴聲，新訂單進來時將吳無通知音效
+                        若沒開啟鈴聲，新訂單進來時將無通知音效
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>

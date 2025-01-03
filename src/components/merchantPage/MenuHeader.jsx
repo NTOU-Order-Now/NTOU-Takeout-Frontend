@@ -1,4 +1,4 @@
-import { useState, lazy } from "react";
+import { lazy } from "react";
 import PropTypes from "prop-types";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -6,11 +6,10 @@ import {
     faArrowLeft,
     faShareNodes,
     faStar,
-    faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
-const MenuInfo = lazy(() => import("./MenuInfo"));
+const MenuInfo = lazy(() => import("./MenuInfoDrawer.jsx"));
 const MenuHeader = ({ merchantData }) => {
     const {
         name,
@@ -21,7 +20,6 @@ const MenuHeader = ({ merchantData }) => {
         id,
     } = merchantData;
     const merchantId = id;
-    const [showMenuInfo, setShowMenuInfo] = useState(false);
     const navigate = useNavigate();
     return (
         <div>
@@ -67,11 +65,7 @@ const MenuHeader = ({ merchantData }) => {
                     </div>
                     <div className="flex flex-col items-end">
                         <div className="text-xl text-gray-500 mb-5">
-                            <FontAwesomeIcon
-                                icon={faInfoCircle}
-                                onClick={() => setShowMenuInfo(true)}
-                                className="cursor-pointer"
-                            />
+                            <MenuInfo merchantData={merchantData} />
                         </div>
                         <Link to={`/menu/${merchantId}/review`}>
                             <div className="flex flex-row items-center justify-end">
@@ -91,12 +85,6 @@ const MenuHeader = ({ merchantData }) => {
                     </div>
                 </div>
             </div>
-            {showMenuInfo && (
-                <MenuInfo
-                    merchantData={merchantData}
-                    onClose={() => setShowMenuInfo(false)}
-                />
-            )}
         </div>
     );
 };
