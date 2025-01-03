@@ -5,7 +5,7 @@ const RatingBar = (prop) => {
     const { stars, percentage, count } = prop;
     return (
         <div className="font-notoTC items-center mt-1 flex flex-row">
-            <div className="flex">
+            <div className="flex w-24 shrink-0">
                 {[...Array(5)].map((_, i) => (
                     <FontAwesomeIcon
                         key={i}
@@ -16,13 +16,15 @@ const RatingBar = (prop) => {
                     />
                 ))}
             </div>
-            <div className="w-full mr-31 bg-gray-200 rounded-full h-2.5 mx-2">
+            <div className="flex-1 bg-gray-200 rounded-full h-2.5 mx-2">
                 <div
                     className="bg-yellow-300 h-2.5 rounded-full"
                     style={{ width: `${percentage}%` }}
                 />
             </div>
-            <span className="text-gray-700">({count})</span>
+            <span className="w-12 shrink-0 text-gray-700 text-right">
+                ({count})
+            </span>
         </div>
     );
 };

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getMenuById } from "../../api/menu/getMenuById.js";
+import { getMenuById } from "@/api/menu/getMenuById.js";
 
 // Fetch dish details for each category separately
 export const useCategoryListQuery = (menuId, isEnable = true) => {

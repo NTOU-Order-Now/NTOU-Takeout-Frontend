@@ -16,8 +16,7 @@ const getReviewClient = {
                 `Failed to fetch details for review ID: ${reviewIds}`,
             );
         }
-        const data = await response.json();
-        return data;
+        return await response.json();
     },
 };
 
