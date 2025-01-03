@@ -141,7 +141,7 @@ const Sidebar = () => {
                             text="登出"
                             icon={faSignOutAlt}
                             iconSize="lg"
-                            iconColor={"#7c2d12"}
+                            iconColor={"#606162"}
                             onClick={handleLogout}
                         />
                     )}
