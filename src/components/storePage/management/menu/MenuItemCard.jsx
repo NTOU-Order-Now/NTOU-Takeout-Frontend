@@ -10,6 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import menuStore from "../../../../stores/pos/menuStore.js";
 import { useToast } from "@/hooks/use-toast.js";
+import { useQueryClient } from "@tanstack/react-query";
 
 const MenuItemCard = ({ categoryName, food, onMove, onDelete }) => {
     const { id, name, picture, price, description } = food;

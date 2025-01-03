@@ -199,7 +199,7 @@ function App() {
                 </WebSocketContextProvider>
             </SystemContextProvider>
             <RootLayout />
-            {/*<ReactQueryDevtools initialIsOpen={false} />*/}
+            <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
     );
 }

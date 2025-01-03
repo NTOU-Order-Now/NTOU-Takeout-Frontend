@@ -1,10 +1,12 @@
 import { lazy, Suspense } from "react";
 import PropTypes from "prop-types";
-import CategoryHeader from "./CategoryHeader.jsx";
 import { useUpdateDishOrderMutation } from "@/hooks/store/useUpdateDishOrderMutation.jsx";
 import { useDeleteDishMutation } from "@/hooks/store/useDeleteDishMutation.jsx";
 import { useCategoryNameMutation } from "@/hooks/store/useCategoryNameMutation.jsx";
+import { useQueryClient } from "@tanstack/react-query";
+import { Skeleton } from "@/components/ui/skeleton.jsx";
 
+const CategoryHeader = lazy(() => import("./CategoryHeader"));
 const CartItemCardSkeleton = lazy(
     () => import("../../../../skeleton/menu/CartItemCardSkeleton"),
 );
@@ -17,14 +19,16 @@ function MenuSection({ sectionRefs, categoryData, menuId }) {
         useDeleteDishMutation(menuId);
     const { isPending: isChangeCategoryNamePending } =
         useCategoryNameMutation(menuId);
-    // if (
-    // isChangeCategoryNamePending
-    // isUpdateDishOrderPending ||
-    // isDeleteMenuDishPending
-    // isUpdateDishOrderPending
-    // ) {
-    //     return <CartItemCardSkeleton />;
-    // }
+    const queryClient = useQueryClient();
+    console.debug("isChangeCategoryNamePending", isChangeCategoryNamePending);
+    if (
+        isChangeCategoryNamePending
+        // isUpdateDishOrderPending ||
+        // isDeleteMenuDishPending
+        // isUpdateDishOrderPending
+    ) {
+        return <CartItemCardSkeleton />;
+    }
     const handleDishMove = async (categoryName, dishId, direction) => {
         const category = categoryData.find(
             (c) => c.categoryName === categoryName,
@@ -59,6 +63,11 @@ function MenuSection({ sectionRefs, categoryData, menuId }) {
         await updateDishOrder({ categoryName, newOrder });
     };
 
+    const menuCategoryList = queryClient.getQueryData([
+        "menuCategoryList",
+        menuId,
+    ]);
+
     return (
         <div className="font-notoTC relative  flex flex-col justify-start container mx-auto p-4">
             {categoryData?.map((category, _) => (
@@ -67,7 +76,12 @@ function MenuSection({ sectionRefs, categoryData, menuId }) {
                     ref={(el) => (sectionRefs.current[_] = el)}
                     className="w-full mb-8"
                 >
-                    <CategoryHeader categoryData={category} menuId={menuId} />
+                    <Suspense fallback={<Skeleton className={"w-10 h-4"} />}>
+                        <CategoryHeader
+                            categoryName={menuCategoryList[_]?.categoryName}
+                            menuId={menuId}
+                        />
+                    </Suspense>
                     <div className="grid gap-4">
                         {category?.dishes.map((dish, _) => (
                             <Suspense

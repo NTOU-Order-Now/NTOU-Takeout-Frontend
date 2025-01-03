@@ -1,28 +1,43 @@
 import { useEffect, useState } from "react";
 import { Edit2, Save } from "lucide-react";
 import PropTypes from "prop-types";
-import { useCategoryNameMutation } from "../../../../hooks/store/useCategoryNameMutation.jsx";
-const CategoryHeader = ({ categoryData, menuId }) => {
+import { useCategoryNameMutation } from "@/hooks/store/useCategoryNameMutation.jsx";
+import { useQueryClient } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast.js";
+const CategoryHeader = ({ categoryName, menuId }) => {
     const [isEditing, setIsEditing] = useState(false);
-    const [newName, setNewName] = useState(
-        categoryData?.categoryName || "未命名類別",
-    );
-    const { changeCategoryName } = useCategoryNameMutation(menuId);
-    // 當 categoryData 改變時更新 newName
-    useEffect(() => {
-        setNewName(categoryData?.categoryName || "未命名類別");
-    }, [categoryData]);
+    const [newName, setNewName] = useState(categoryName || "未命名類別");
 
+    const { changeCategoryName } = useCategoryNameMutation(menuId);
+    const queryClient = useQueryClient();
+    const menuCategoryList = queryClient.getQueryData([
+        "menuCategoryList",
+        menuId,
+    ]);
+    useEffect(() => {
+        setNewName(categoryName || "未命名類別");
+    }, [categoryName]);
+
+    const { toast } = useToast();
     const handleSubmit = async (e) => {
         e.preventDefault();
         e.stopPropagation();
         if (
-            newName.trim() !== "" &&
-            newName.trim() !== categoryData?.categoryName
+            menuCategoryList.find(
+                (category) => category.categoryName === newName,
+            )
         ) {
+            toast({
+                title: "類別名稱不可重複",
+                description: "類別名稱幣必須不重複，請重新設定",
+                variant: "destructive",
+            });
+            return;
+        }
+        if (newName.trim() !== "" && newName.trim() !== categoryName) {
             try {
                 await changeCategoryName({
-                    oldCategoryName: categoryData?.categoryName,
+                    oldCategoryName: categoryName,
                     newCategoryName: newName.trim(),
                 });
             } catch (error) {
@@ -38,7 +53,7 @@ const CategoryHeader = ({ categoryData, menuId }) => {
         if (e.key === "Enter") {
             await handleSubmit(e);
         } else if (e.key === "Escape") {
-            setNewName(categoryData?.categoryName || "未命名類別");
+            setNewName(categoryName || "未命名類別");
             setIsEditing(false);
         }
     };
@@ -65,7 +80,7 @@ const CategoryHeader = ({ categoryData, menuId }) => {
                 />
             ) : (
                 <h2 className="text-2xl font-bold h-10 flex items-center px-1">
-                    {categoryData?.categoryName || "未命名類別"}
+                    {categoryName || "未命名類別"}
                 </h2>
             )}
 
@@ -85,10 +100,7 @@ const CategoryHeader = ({ categoryData, menuId }) => {
 };
 
 CategoryHeader.propTypes = {
-    categoryData: PropTypes.shape({
-        categoryName: PropTypes.string,
-        dishes: PropTypes.array,
-    }),
+    categoryName: PropTypes.string.isRequired,
     menuId: PropTypes.string.isRequired,
 };
 export default CategoryHeader;
