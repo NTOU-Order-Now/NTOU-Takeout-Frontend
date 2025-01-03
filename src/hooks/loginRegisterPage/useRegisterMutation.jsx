@@ -21,12 +21,13 @@ export const useRegisterMutation = (isEnabled = true) => {
                 password: hashedPassword,
                 gender: "OTHER",
                 role: userDetails.role,
+                loginType: "LOCAL",
             };
 
             return await registerClient.registerUser(payload);
         },
         onSuccess: () => {
-            navigate("/auth/login",{replace:true})
+            navigate("/auth/login", { replace: true });
         },
         onError: (error) => {
             console.error("Registration failed:", error);
