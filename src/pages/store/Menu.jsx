@@ -59,9 +59,9 @@ const Menu = () => {
     }, [menuCategoryList, setNavbarItems]);
 
     // if merchant data is not fetched yet, show loading spinner
-    if (merchantId && !merchantData) {
-        return <MenuPageSkeleton />;
-    }
+    // if (merchantId && !merchantData) {
+    //     return <MenuPageSkeleton />;
+    // }
     const onAddClick = async () => {
         await createDish(menuId);
     };
