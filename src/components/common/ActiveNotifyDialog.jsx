@@ -14,9 +14,10 @@ import PropTypes from "prop-types";
 import { Bell } from "lucide-react";
 import { useWebSocketContext } from "@/context/WebSocketContextProvider.jsx";
 const ActiveNotifyDialog = () => {
-    const { enableSound, isSoundEnabled } = useWebSocketContext();
+    const { enableSound, isSoundEnabled, isActiveNotifyDialogShow } =
+        useWebSocketContext();
     return (
-        <Dialog defaultOpen={true}>
+        <Dialog open={isActiveNotifyDialogShow}>
             <DialogTrigger asChild>
                 <button
                     className={`${isSoundEnabled ? "bg-green-500" : "bg-gray-500"} text-white rounded-lg px-3 py-1 font-sm shadow-md`}
