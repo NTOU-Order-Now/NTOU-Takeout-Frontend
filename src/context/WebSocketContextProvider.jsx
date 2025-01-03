@@ -240,6 +240,7 @@ export const WebSocketContextProvider = ({ children }) => {
                 enableSound,
                 isSoundEnabled,
                 isActiveNotifyDialogShow,
+                setIsActiveNotifyDialogShow,
             }}
         >
             {children}

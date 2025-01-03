@@ -59,6 +59,8 @@ const Sidebar = () => {
                         iconSize="2xl"
                         iconColor={"#053766"}
                         style={"py-8"}
+                        path="/store/pos"
+                        isShowSelected={false}
                     />
                     <SidebarButton
                         text="主頁"
