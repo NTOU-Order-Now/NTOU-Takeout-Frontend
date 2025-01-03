@@ -63,7 +63,7 @@ const Dashboard = ({ merchantName = "商家名稱", merchantId }) => {
     ];
 
     return (
-        <div className="px-4 h-[calc(100vh-4rem)] min-w-full">
+        <div className="px-4 h-[calc(100vh-4rem)] min-w-full overflow-hidden">
             <div className="max-w-7xl mx-auto">
                 <header className="flex items-center  bg-white rounded-xl p-6 mb-5">
                     <Store className="w-8 h-8 text-blue-800 mr-4" />

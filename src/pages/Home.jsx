@@ -17,9 +17,16 @@ function Home() {
         const scrollableEl = scrollableRef.current;
         if (!scrollableEl) return;
         let lastScrollTop = 0;
-        const THRESHOLD = 15;
+        const THRESHOLD = 3;
         const handleScroll = () => {
             const currentScrollTop = scrollableEl.scrollTop;
+            const isAtBottom =
+                scrollableEl.scrollHeight - scrollableEl.clientHeight <=
+                currentScrollTop + 1;
+
+            if (currentScrollTop < 0 || isAtBottom) {
+                return;
+            }
             if (currentScrollTop < 0) {
                 return;
             }
@@ -72,7 +79,7 @@ function Home() {
                     <Searchbar />
                 </div>
                 <div
-                    className={`fixed  w-full left-0 ${showHeader ? "h-[calc(100dvh-120px)]" : "h-[calc(100dvh-80px)]"} transition-all duration-300 overflow-y-auto ${showHeader ? "top-[120px]" : "top-[80px]"} `}
+                    className={`fixed  w-full pb-10 left-0 ${showHeader ? "h-[calc(100dvh-120px)]" : "h-[calc(100dvh-80px)]"} transition-all  ease-in-out duration-300 overflow-y-auto ${showHeader ? "top-[120px]" : "top-[80px]"} `}
                     ref={scrollableRef}
                 >
                     <MerchantList />
