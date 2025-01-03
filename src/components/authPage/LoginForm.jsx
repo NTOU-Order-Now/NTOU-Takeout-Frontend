@@ -60,6 +60,11 @@ const LoginForm = () => {
                     value={password}
                     autoComplete="current-password"
                     onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            handleSubmit();
+                        }
+                    }}
                     className="w-full px-4 py-2 mb-2 border rounded-lg focus:outline-none focus:ring focus:ring-orange-300"
                 />
 
