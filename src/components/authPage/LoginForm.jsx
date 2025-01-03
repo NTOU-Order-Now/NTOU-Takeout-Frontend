@@ -5,6 +5,7 @@ import { useLoginMutation } from "../../hooks/loginRegisterPage/useLoginMutation
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons/faEllipsis";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { googleSignIn } from "@/api/auth/googleSignIn.js";
+import { GoogleIcon } from "@/assets/GoogleIcon.jsx";
 
 const LoginForm = () => {
     const [email, setEmail] = useState("");
@@ -103,10 +104,10 @@ const LoginForm = () => {
                     </button>
                     <button
                         onClick={googleSignIn}
-                        className="w-full text-center text-black py-1 rounded-lg border-2 border-gray-600 transition"
+                        className="w-full flex items-center justify-center gap-2 text-black py-1 rounded-lg bg-white border-zinc-200 border-2 transition"
                     >
-                        <FontAwesomeIcon icon={faGoogle} className="mr-2" />
-                        Google 登入
+                        <GoogleIcon />
+                        <span>Google 登入</span>
                     </button>
                     <button
                         ref={loginButtonRef}
