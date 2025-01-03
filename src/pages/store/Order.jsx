@@ -33,9 +33,7 @@ const Order = () => {
     );
 
     console.debug("isActiveNotifyDialogShow", isActiveNotifyDialogShow);
-    const notifyButton = (
-        <ActiveNotifyDialog isOpen={isActiveNotifyDialogShow} />
-    );
+    const notifyButton = <ActiveNotifyDialog />;
 
     const handleToUnaccepted = () => {
         setNavBarStatus(0);
