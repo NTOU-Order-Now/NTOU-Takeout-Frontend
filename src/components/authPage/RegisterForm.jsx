@@ -35,7 +35,6 @@ const RegisterForm = () => {
 
     const handleSubmit = async (e, role) => {
         e.preventDefault();
-        console.debug(role);
         setError("");
         if (!validateForm()) {
             return;
@@ -47,6 +46,7 @@ const RegisterForm = () => {
                 phone,
                 password,
                 role,
+                loginType: "LOCAL",
             });
         } catch (err) {
             setError(err.message || "註冊失敗，請稍後再試");
