@@ -37,16 +37,17 @@ export const useCategoryNameMutation = (menuId) => {
             };
         },
         onMutate: async ({ oldCategoryName, newCategoryName }) => {
-            await Promise.all([
-                queryClient.cancelQueries(["menuCategoryList", menuId]),
-                queryClient.cancelQueries(["categoryDishes", oldCategoryName]),
-            ]);
+            // await Promise.all([
+            //     queryClient.cancelQueries(["menuCategoryList", menuId]),
+            //     queryClient.cancelQueries(["categoryDishes", oldCategoryName]),
+            // ]);
 
             // keep previous state
             const previousMenuCategoryList = queryClient.getQueryData([
                 "menuCategoryList",
                 menuId,
             ]);
+            //for every Dishes change category name
             const previousCategoryDishes = queryClient.getQueryData([
                 "categoryDishes",
                 oldCategoryName,
@@ -63,12 +64,15 @@ export const useCategoryNameMutation = (menuId) => {
 
             if (previousCategoryDishes) {
                 // remove old status
-                queryClient.removeQueries(["categoryDishes", oldCategoryName]);
+                // queryClient.removeQueries(["categoryDishes", oldCategoryName]);
                 //set new status
-                queryClient.setQueryData(
-                    ["categoryDishes", newCategoryName],
-                    previousCategoryDishes,
-                );
+                queryClient.setQueryData(["categoryDishes", newCategoryName], {
+                    categoryName: newCategoryName,
+                    dishes: previousCategoryDishes.dishes.map((dish) => ({
+                        ...dish,
+                        category: newCategoryName,
+                    })),
+                });
             }
 
             return {
@@ -87,12 +91,10 @@ export const useCategoryNameMutation = (menuId) => {
             }
 
             if (context?.previousCategoryDishes) {
-                // 恢復舊的類別數據
                 queryClient.setQueryData(
                     ["categoryDishes", context.oldCategoryName],
                     context.previousCategoryDishes,
                 );
-                // 移除錯誤的新類別數據
                 queryClient.removeQueries([
                     "categoryDishes",
                     variables.newCategoryName,
@@ -102,18 +104,17 @@ export const useCategoryNameMutation = (menuId) => {
             console.error("Update category name error:", error);
         },
         onSettled: (data) => {
-            // 重新驗證所有相關的查詢
-            // queryClient.invalidateQueries(["menuCategoryList", menuId]);
-            // if (data) {
-            //     queryClient.invalidateQueries([
-            //         "categoryDishes",
-            //         data.oldCategoryName,
-            //     ]);
-            //     queryClient.invalidateQueries([
-            //         "categoryDishes",
-            //         data.newCategoryName,
-            //     ]);
-            // }
+            queryClient.invalidateQueries(["menuCategoryList", menuId]);
+            if (data) {
+                queryClient.invalidateQueries([
+                    "categoryDishes",
+                    data.oldCategoryName,
+                ]);
+                queryClient.invalidateQueries([
+                    "categoryDishes",
+                    data.newCategoryName,
+                ]);
+            }
         },
     });
     return {
