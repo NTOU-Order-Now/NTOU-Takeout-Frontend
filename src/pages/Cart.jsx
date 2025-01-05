@@ -27,14 +27,12 @@ const Cart = () => {
         refetchCart();
     }
     const navigate = useNavigate();
+    const [remark, setRemark] = useState("");
     const { categoryData, isQueriesSuccess } = useCategoryQueries(
         menuCategoryList,
         merchantData?.[0].menuId,
         userInfo !== undefined && userInfo?.role === "CUSTOMER",
     );
-
-    const [remark, setRemark] = useState("");
-    const navigate = useNavigate();
     // Create a map of dishes for easy access
     const dishesMap = useMemo(() => {
         if (!categoryData) return {};
