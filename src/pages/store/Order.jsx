@@ -32,7 +32,6 @@ const Order = () => {
         </button>
     );
 
-    console.debug("isActiveNotifyDialogShow", isActiveNotifyDialogShow);
     const notifyButton = (
         <ActiveNotifyDialog isOpen={isActiveNotifyDialogShow} />
     );

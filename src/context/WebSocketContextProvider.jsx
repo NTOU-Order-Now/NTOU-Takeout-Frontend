@@ -93,7 +93,7 @@ export const WebSocketContextProvider = ({ children }) => {
     const handleStatusChange = useCallback(
         (notification, prevStatus) => {
             // when truly changed that can change
-            if (prevStatus !== notification.status) {
+            if (prevStatus !== notification.status && prevStatus !== "") {
                 toast({
                     title: `訂單${notification.orderId.slice(-5)} 變更狀態通知`,
                     description: `訂單${notification.orderId.slice(-5)} ${userInfo?.role === "MERCHANT" ? getStatusData(notification.status).store : getStatusData(notification.status).customer}`,
@@ -107,10 +107,7 @@ export const WebSocketContextProvider = ({ children }) => {
                 );
             }
 
-            if (
-                userInfo?.role === "MERCHANT" &&
-                prevStatus === notification.status
-            ) {
+            if (userInfo?.role === "MERCHANT") {
                 playSound();
                 toast({
                     title: `您有一筆新訂單`,
@@ -166,17 +163,26 @@ export const WebSocketContextProvider = ({ children }) => {
             });
 
             client.onConnect = () => {
-                // console.debug(`Connected to order ${orderId}`);
                 const subscription = client.subscribe(
-                    userInfo?.role === "CUSTOMER"
-                        ? `/topic/order/${id}`
-                        : `/topic/order/send/${id}`,
+                    `/topic/order/${id}`,
+
                     (message) => {
                         const notification = JSON.parse(message.body);
                         const prevStatus = statusMapRef.current.get(id);
                         handleStatusChange(notification, prevStatus);
                     },
                 );
+                if (userInfo?.role === "MERCHANT") {
+                    const subscription = client.subscribe(
+                        `/topic/order/send/${id}`,
+                        (message) => {
+                            const notification = JSON.parse(message.body);
+                            const prevStatus = statusMapRef.current.get(id);
+                            handleStatusChange(notification, prevStatus);
+                        },
+                    );
+                    subscriptionsRef.current.set(id, subscription);
+                }
 
                 subscriptionsRef.current.set(id, subscription);
                 // client.publish({
@@ -195,13 +201,11 @@ export const WebSocketContextProvider = ({ children }) => {
             client.activate();
             stompClientsRef.current.set(id, client);
         },
-        [handleStatusChange, disconnectFromOrder, userInfo],
+        [handleStatusChange, disconnectFromOrder, userInfo, WebSocket_Url],
     );
 
     // loop all socket client
     useEffect(() => {
-        if (!flatOrders.length) return;
-
         //disconnect exist connect
         stompClientsRef.current.forEach((_, orderId) => {
             if (!flatOrders.find((order) => order.id === orderId)) {
@@ -211,11 +215,12 @@ export const WebSocketContextProvider = ({ children }) => {
 
         //establish new connect
         flatOrders.forEach((order) => {
-            connectToOrder(
-                userInfo?.role === "CUSTOMER" ? order.id : order.storeId,
-                order.status,
-            );
+            connectToOrder(order.id, order.status);
         });
+
+        if (userInfo?.role === "MERCHANT") {
+            connectToOrder(userInfo?.storeId, "");
+        }
 
         const currentStompClientRef = stompClientsRef.current;
         //call back disconnect all
