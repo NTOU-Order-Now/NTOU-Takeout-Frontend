@@ -20,7 +20,7 @@ function MenuSection({ sectionRefs, categoryData, menuId }) {
     const { isPending: isChangeCategoryNamePending } =
         useCategoryNameMutation(menuId);
     const queryClient = useQueryClient();
-    console.debug("isChangeCategoryNamePending", isChangeCategoryNamePending);
+
     if (
         isChangeCategoryNamePending
         // isUpdateDishOrderPending ||

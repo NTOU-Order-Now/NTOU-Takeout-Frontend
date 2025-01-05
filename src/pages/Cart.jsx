@@ -26,7 +26,7 @@ const Cart = () => {
         console.error("Cart not found, refetchCart");
         refetchCart();
     }
-
+    const navigate = useNavigate();
     const { categoryData, isQueriesSuccess } = useCategoryQueries(
         menuCategoryList,
         merchantData?.[0].menuId,
