@@ -1,73 +1,11 @@
-import { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faCircle,
-    faFilter,
-    faSearch,
-} from "@fortawesome/free-solid-svg-icons";
-import useSelectionStore from "../../stores/selectionStore";
-import SearchSelectionBar from "./SearchSelectionBar";
-
+import { Search } from "lucide-react";
+import filterStoreDataStore from "@/stores/filterStoreDataStore.js";
+import { FilterDrawer } from "@/components/homePage/FilterDrawer.jsx";
 const Searchbar = () => {
-    const showSelectionBar = useSelectionStore(
-        (state) => state.showSelectionBar,
-    );
-    const setShowSelectionBar = useSelectionStore(
-        (state) => state.setShowSelectionBar,
-    );
-    const selectedSortBy = useSelectionStore((state) => state.selectedSortBy);
-    const selectedSortDir = useSelectionStore((state) => state.selectedSortDir);
-    const selectedKeyword = useSelectionStore((state) => state.selectedKeyword);
-    const setSelectedSortBy = useSelectionStore(
-        (state) => state.setSelectedSortBy,
-    );
-    const setSelectedSortDir = useSelectionStore(
-        (state) => state.setSelectedSortDir,
-    );
-    const setSelectedKeyword = useSelectionStore(
-        (state) => state.setSelectedKeyword,
-    );
-    const setIsSubmitted = useSelectionStore((state) => state.setIsSubmitted);
-
-    useEffect(() => {
-        const storedSortBy = localStorage.getItem("selectedSortBy");
-        const storedSortDir = localStorage.getItem("selectedSortDir");
-        const storedKeyword = localStorage.getItem("selectedKeyword");
-        if (storedSortBy === "null")
-            localStorage.setItem("selectedSortBy", "rating");
-        if (storedSortDir === "null")
-            localStorage.setItem("selectedSortDir", "desc");
-        if (storedKeyword === "null")
-            localStorage.setItem("selectedKeyword", "");
-        if (storedSortBy) setSelectedSortBy(storedSortBy);
-        else setSelectedSortBy("rating");
-        if (storedSortDir) setSelectedSortDir(storedSortDir);
-        else setSelectedSortDir("desc");
-        if (storedKeyword) setSelectedKeyword(storedKeyword);
-        else setSelectedKeyword("");
-    }, [setSelectedKeyword, setSelectedSortBy, setSelectedSortDir]);
-
-    useEffect(() => {
-        localStorage.setItem("selectedSortBy", selectedSortBy);
-        localStorage.setItem("selectedSortDir", selectedSortDir);
-        localStorage.setItem("selectedKeyword", selectedKeyword);
-    }, [selectedSortBy, selectedSortDir, selectedKeyword]);
-
-    const [inputValue, setInputValue] = useState(
-        localStorage.getItem("selectedKeyword"),
-    );
-    const toggleSelectionBar = () => {
-        setShowSelectionBar(!showSelectionBar);
-    };
+    const { isOpen, setIsOpen, setKeyword, keyword } = filterStoreDataStore();
 
     const handleSubmit = () => {
-        const keyword = document.getElementById("inputKeyword").value;
-        // console.log("trigger");
-
-        setInputValue(keyword);
-        setSelectedKeyword(keyword);
-        setIsSubmitted(true);
-        setShowSelectionBar(false);
+        console.debug("keyword:", keyword);
     };
     const handleEnter = (event) => {
         if (event.key === "Enter") {
@@ -75,43 +13,29 @@ const Searchbar = () => {
             event.preventDefault();
         }
     };
-
     return (
-        <div className="font-notoTC flex flex-col items-center w-full max-w-[800px] my-5 mx-auto box-border">
-            <div className="flex items-center justify-between w-full px-2">
-                <div
-                    className="relative text-2xl flex items-center justify-center cursor-pointer"
-                    onClick={toggleSelectionBar}
-                >
-                    <FontAwesomeIcon icon={faFilter} />
-                    {!(selectedSortBy === "" && selectedSortDir === "") && (
-                        <div className="absolute -top-[17px] right-[-4px] z-45">
-                            <FontAwesomeIcon
-                                icon={faCircle}
-                                className="w-3"
-                                style={{ color: "#ff0a0a" }}
-                            />
-                        </div>
-                    )}
+        <div className="font-notoTC flex flex-row items-center w-full  mt-5 px-5 ">
+            <div className="bg-zinc-100 flex flex-row items-center w-full px-3 rounded-xl shadow-md h-9">
+                <div>
+                    <Search strokeWidth={3} size={18} color={"#52525b"} />
                 </div>
+
                 <input
                     type="text"
-                    className="flex-grow mx-2 border-b-2 border-black outline-none text-lg py-1"
-                    placeholder="想吃什麼..."
+                    className="w-full mx-2 text-gray-500 outline-none text-[15px] py-1 bg-zinc-100"
+                    placeholder="搜尋想找的店家"
                     id="inputKeyword"
                     onKeyDown={handleEnter}
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
+                    value={keyword}
+                    onChange={(e) => setKeyword(e.target.value)}
                 />
-                <div
-                    className="text-2xl flex items-center justify-center cursor-pointer"
-                    onClick={handleSubmit}
+                <button
+                    className="rounded-lg w-10 h-6 justify-center flex items-center hover:bg-zinc-300"
+                    onClick={() => setIsOpen(!isOpen)}
                 >
-                    <FontAwesomeIcon icon={faSearch} />
-                </div>
+                    <FilterDrawer />
+                </button>
             </div>
-
-            {showSelectionBar && <SearchSelectionBar></SearchSelectionBar>}
         </div>
     );
 };

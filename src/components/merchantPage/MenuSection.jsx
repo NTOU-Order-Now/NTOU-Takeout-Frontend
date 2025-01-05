@@ -16,7 +16,7 @@ function MenuSection({
     };
 
     return (
-        <div className="font-notoTC relative min-h-screen flex flex-col justify-center container mx-auto p-4 ">
+        <div className="font-notoTC relative h-fullflex flex-col  container mx-auto p-4 ">
             {categoryData.map((category, index) => (
                 <div
                     key={category?.categoryName || `section-${index}`}
@@ -28,7 +28,7 @@ function MenuSection({
                             <p className="text-2xl font-notoTC my-2 font-bold">
                                 {category.categoryName}
                             </p>
-                            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 ">
                                 {category.dishes.map((food, index) => (
                                     <Suspense
                                         fallback={<CartItemCardSkeleton />}

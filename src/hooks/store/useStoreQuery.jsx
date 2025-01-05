@@ -1,16 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
-import { getStoreData } from "../../api/store/getStoreData.js";
+import { getStoreDataById } from "@/api/store/getStoreDataById.js";
 
-export const useStoreQuery = (storeIdList) => {
+export const useStoreQuery = (storeIdList, isEnable = true) => {
     const {
         data: storeData,
         isLoading,
         isError,
         refetch,
     } = useQuery({
-        queryKey: ["store", storeIdList],
-        queryFn: ({ signal }) => getStoreData(storeIdList, signal),
-        enabled: storeIdList.length > 0,
+        queryKey: ["storeData", storeIdList],
+        queryFn: async ({ signal }) => {
+            const res = await getStoreDataById(storeIdList, signal);
+            return res.data;
+        },
+        enabled: !!storeIdList?.[0] && isEnable,
         staleTime: 15 * 60 * 1000, // 15 minutes
     });
     return { storeData, isLoading, isError, refetch };

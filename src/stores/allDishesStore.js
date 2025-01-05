@@ -8,10 +8,7 @@ const useAllDishesStore = create((set) => ({
                 ...state.dishes,
                 ...newDishes,
             },
-
-        }),
-            console.debug("setDishes", newDishes)
-        ),
+        })),
 }));
 
 export default useAllDishesStore;

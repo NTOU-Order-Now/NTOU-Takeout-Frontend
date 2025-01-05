@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUpload } from "@fortawesome/free-solid-svg-icons";
+import { faSpinner, faUpload } from "@fortawesome/free-solid-svg-icons";
 import BusinessHoursSelector from "../../authPage/BusinessHoursSelector";
 import { useStoreInfoQuery } from "../../../hooks/setting/useStoreInfoQuery.jsx";
 import { useEffect } from "react";
@@ -146,16 +146,29 @@ function StoreForm({
                             />
                         </div>
                         <div className="flex-none w-30">
-                            <label
-                                htmlFor="file-upload"
-                                className="bg-orange-500 text-white px-4 py-2 rounded-lg cursor-pointer whitespace-nowrap"
-                            >
-                                <FontAwesomeIcon
-                                    icon={faUpload}
-                                    className="mr-1"
-                                />
-                                上傳圖片
-                            </label>
+                            {isImageUploaing ? (
+                                <label
+                                    htmlFor="file-upload"
+                                    className="bg-gray-500 text-white px-4 py-2 rounded-lg cursor-pointer whitespace-nowrap"
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faSpinner}
+                                        className="mr-2 animate-spin"
+                                    />
+                                    上傳中
+                                </label>
+                            ) : (
+                                <label
+                                    htmlFor="file-upload"
+                                    className="bg-orange-500 text-white px-4 py-2 rounded-lg cursor-pointer whitespace-nowrap"
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faUpload}
+                                        className="mr-1"
+                                    />
+                                    上傳圖片
+                                </label>
+                            )}
                         </div>
                         <input
                             id="file-upload"

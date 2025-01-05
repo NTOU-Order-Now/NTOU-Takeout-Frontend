@@ -1,10 +1,9 @@
-import PropTypes from "prop-types";
 import useOrderStore from "../stores/orderStore";
 import UserInfo from "../components/orderPage/UserInfo";
 import OrderNote from "../components/orderPage/OrderNote";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/storePage/home/Header";
-import { faArrowLeft, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSystemContext } from "../context/useSystemContext.jsx";
 import { useCategoryQueries } from "../hooks/menu/useCategoryQueries.jsx";
@@ -13,9 +12,23 @@ import EstimatedTime from "../components/orderPage/EstimatedTime.jsx";
 import { useStoreQuery } from "../hooks/store/useStoreQuery.jsx";
 import HeaderSkeleton from "../skeleton/common/HeaderSkeleton.jsx";
 import { useCategoryListQuery } from "../hooks/menu/useCategoryListQuery.jsx";
-const OrderDetails = () => {
+import { useEffect, useState } from "react";
+import AddReview from "../components/history/AddReview.jsx";
+import AddReviewBtn from "../components/history/AddReviewBtn.jsx";
+const CustomerOrderDetail = () => {
     const orderData = useOrderStore((state) => state.orderData);
+    const navigate = useNavigate();
+    const [showAddReview, setShowAddReview] = useState(false);
+    const { userInfo } = useSystemContext();
+    useEffect(() => {
+        if (orderData === null) {
+            navigate("/history/order");
+        }
+    }, [orderData, navigate]);
 
+    if (orderData === null) {
+        return <HeaderSkeleton />;
+    }
     const statusConfig = {
         PENDING: { text: "未接單", bgColor: "bg-stone-600" },
         PROCESSING: { text: "製作中", bgColor: "bg-blue-500" },
@@ -23,7 +36,6 @@ const OrderDetails = () => {
         PICKED_UP: { text: "已取餐", bgColor: "bg-green-500" },
         CANCELED: { text: "取消", bgColor: "bg-gray-300" },
     };
-    const navigate = useNavigate();
 
     const currentStatus = (status) =>
         statusConfig[status] || {
@@ -39,29 +51,26 @@ const OrderDetails = () => {
         </button>
     );
 
-    const { userInfo } = useSystemContext();
-    if (orderData === null) {
-        navigate("/history/order");
-        return;
-    }
     const {
         storeData,
-        isLoaing: isStoreDataLoading,
+        isLoading: isStoreDataLoading,
         isError: isStoreDataError,
         // eslint-disable-next-line react-hooks/rules-of-hooks
     } = useStoreQuery([orderData.storeId]);
 
     const menuId = storeData ? storeData[0].menuId : null;
+
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const { menuCategoryList } = useCategoryListQuery(menuId);
+
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const { categoryData } = useCategoryQueries(
         menuCategoryList,
         menuId,
         userInfo !== undefined && menuId !== undefined,
     );
-    const handleBackClick = () => {
-        navigate(-1);
+    const handleBackClick = async () => {
+        await navigate(-1);
     };
     const findDishPicture = (targetId) => {
         const allDishes = categoryData.flatMap((category) => category.dishes);
@@ -72,6 +81,17 @@ const OrderDetails = () => {
     if (isStoreDataLoading || storeData === undefined || isStoreDataError) {
         return <HeaderSkeleton />;
     }
+
+    if (orderData?.status === "PICKED_UP" && showAddReview && storeData) {
+        return (
+            <AddReview
+                storeName={storeData[0]?.name}
+                setShowAddReview={setShowAddReview}
+                storeId={orderData.storeId}
+            />
+        );
+    }
+
     return (
         <div className="flex flex-col h-screen">
             <div className="sticky mt-[54px] z-50 shadow-sm">
@@ -104,34 +124,22 @@ const OrderDetails = () => {
                     })}
                 </div>
                 {/* Footer */}
-                <div className="fixed bottom-0 left-0 right-0 w-full">
-                    <EstimatedTime value={orderData.estimatedPrepTime} />
-                </div>
+                {orderData?.status === "PICKED_UP" ? (
+                    <div className="fixed bottom-0 left-0 right-0 w-full">
+                        <AddReviewBtn setShowAddReview={setShowAddReview} />
+                    </div>
+                ) : (
+                    orderData?.status !== "CANCELED" && (
+                        <div className="fixed bottom-0 left-0 right-0 w-full">
+                            <EstimatedTime
+                                value={orderData.estimatedPrepTime}
+                            />
+                        </div>
+                    )
+                )}
             </div>
         </div>
     );
 };
 
-OrderDetails.propTypes = {
-    // orderData: PropTypes.shape({
-    //     id: PropTypes.string.isRequired,
-    //     userId: PropTypes.string.isRequired,
-    //     email: PropTypes.string.isRequired,
-    //     phone: PropTypes.string.isRequired,
-    //     time: PropTypes.string.isRequired,
-    //     total: PropTypes.number.isRequired,
-    //     note: PropTypes.string.isRequired,
-    //     items: PropTypes.arrayOf(
-    //         PropTypes.shape({
-    //             id: PropTypes.number.isRequired,
-    //             name: PropTypes.string.isRequired,
-    //             imageUrl: PropTypes.string.isRequired,
-    //             price: PropTypes.number.isRequired,
-    //             quantity: PropTypes.number.isRequired,
-    //         }),
-    //     ),
-    //     estimatedTime: PropTypes.number.isRequired,
-    // }),
-};
-
-export default OrderDetails;
+export default CustomerOrderDetail;

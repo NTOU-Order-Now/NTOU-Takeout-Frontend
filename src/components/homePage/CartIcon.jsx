@@ -2,11 +2,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { useSystemContext } from "../../context/useSystemContext.jsx";
 const CartIcon = () => {
-    const { cartCount, refetchCart } = useSystemContext();
-    if (cartCount === undefined) {
+    const { cartCount, refetchCart, userInfo } = useSystemContext();
+    if (userInfo && cartCount === undefined) {
         refetchCart();
     }
-    console.debug("CartIcon cartCount:", cartCount);
     return (
         <div className="relative inline-flex items-center right-2 top-1">
             <FontAwesomeIcon icon={faShoppingCart} className="text-xl" />

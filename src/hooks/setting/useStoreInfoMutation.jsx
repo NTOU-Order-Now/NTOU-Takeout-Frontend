@@ -18,14 +18,6 @@ export const useStoreInfoMutation = (storeId) => {
             description,
             businessHours,
         }) => {
-            console.debug("updateStoreInformation", {
-                name,
-                picture,
-                address,
-                description,
-                businessHours,
-            });
-
             if (abortControllerRef.current) {
                 abortControllerRef.current.abort();
             }

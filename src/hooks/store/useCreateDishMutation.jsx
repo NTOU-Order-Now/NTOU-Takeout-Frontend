@@ -77,7 +77,6 @@ export const useCreateDishMutation = (menuId) => {
             console.error("Create new dish error:", err);
         },
         onSettled: () => {
-            console.debug("onSettled");
             queryClient.invalidateQueries(["menuCategoryList", menuId]);
             queryClient.invalidateQueries(["categoryDishes"], defaultCategory);
         },

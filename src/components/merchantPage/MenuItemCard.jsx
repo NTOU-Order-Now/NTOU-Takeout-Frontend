@@ -19,7 +19,7 @@ const MenuItemCard = ({ food, onClick }) => {
         >
             <div className=" h-[17rem] flex max-w-xl bg-white text-white">
                 {/* Lazy loaded Image */}
-                <div className="w-64 overflow-hidden aspect-auto">
+                <div className="w-40 flex-shrink-0 overflow-hidden aspect-auto relative">
                     <LazyLoadImage
                         src={picture}
                         alt={name}
@@ -30,27 +30,25 @@ const MenuItemCard = ({ food, onClick }) => {
                 </div>
 
                 {/* Content */}
-                <div className="relative flex flex-col w-2/3 py-4 pl-2 pr-1">
-                    <div className="flex-1">
-                        {/* Title */}
-                        <h2 className="text-2xl font-bold mb-2 text-black">
-                            {name}
-                        </h2>
+                <div className="flex-1 min-w-0 relative w-full p-4">
+                    {/* Title */}
+                    <h2 className="text-2xl font-bold mb-2 text-black truncate">
+                        {name}
+                    </h2>
 
-                        {/* Description */}
-                        <p className="text-sm text-gray-600 line-clamp-3 text-ellipsis ">
-                            {description}
-                        </p>
-                    </div>
-                    <div className="mt-auto flex justify-between items-center w-full pb-1 pr-2">
+                    {/* Description */}
+                    <p className="text-sm text-gray-600 mt-4 line-clamp-3 overflow-hidden break-words">
+                        {description}
+                    </p>
+                    <div className="absolute bottom-4  left-4 right-4 space-x-2 flex flex-row justify-between w-full">
                         {/* Price */}
-                        <p className="text-2xl font-bold text-gray-800 py-2">
+                        <p className="text-xl text-gray-800 relative content-center font-bold">
                             ${price}
                         </p>
 
                         {/* Add button */}
                         {user !== undefined && user.role === "CUSTOMER" && (
-                            <div className="flex justify-end  ">
+                            <div className="pr-8 ">
                                 <MenuItemButton
                                     dishId={id}
                                     onClick={handleButtonClick}

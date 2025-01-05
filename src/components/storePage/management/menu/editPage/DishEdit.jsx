@@ -4,7 +4,7 @@ import DishForm from "./DishForm";
 import DishOptionList from "./DishOptionList";
 import { useState } from "react";
 import menuStore from "../../../../../stores/pos/menuStore.js";
-import { useUpdateDishMutation } from "../../../../../hooks/store/useUpdateDishMutation.jsx";
+import { useUpdateDishMutation } from "@/hooks/store/useUpdateDishMutation.jsx";
 
 function DishEdit({ onClose, categoryNames, menuId }) {
     const dishData = menuStore((state) => state.selectedDish);
@@ -13,7 +13,7 @@ function DishEdit({ onClose, categoryNames, menuId }) {
     const [price, setPrice] = useState(dishData.price);
     const [categoryName, setCategoryName] = useState(dishData.category);
     const [groups, setGroups] = useState(dishData.dishAttributes);
-    const [dishImage, setDishImage] = useState("");
+    const [dishImage, setDishImage] = useState(dishData.picture);
 
     const handleImageChange = ({ url }) => {
         if (url) {

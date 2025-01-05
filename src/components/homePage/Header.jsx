@@ -6,7 +6,7 @@ import userInfoStore from "../../stores/user/userInfoStore.js";
 import CartIcon from "./CartIcon";
 import Cookies from "js-cookie";
 // Header Component
-const Header = ({ title, onLeftClick = () => {} }) => {
+const Header = ({ title, onLeftClick = () => {}, className }) => {
     const navigate = useNavigate();
     const authToken = Cookies.get("authToken");
     const user = userInfoStore((state) => state.user);
@@ -20,14 +20,19 @@ const Header = ({ title, onLeftClick = () => {} }) => {
     };
 
     return (
-        <header className="fixed z-30  top-0 left-0 w-full flex justify-between items-center bg-white shadow-md transition-shadow duration-300 ease-in-out p-2 font-notoTC">
-            <div className="text-xl cursor-pointer" onClick={onLeftClick}>
+        <header
+            className={`flex justify-between bg-white shadow-md  p-2 font-notoTC ${className}`}
+        >
+            <div className="text-xl pl-2 cursor-pointer" onClick={onLeftClick}>
                 <FontAwesomeIcon icon={faUser} />
             </div>
             <h1 className="font-noto font-bold text-2xl m-0">
                 <a href="/Order-Now-Frontend/">{title}</a>
             </h1>
-            <div className="text-xl cursor-pointer" onClick={handleRightClick}>
+            <div
+                className="text-xl pr-2 cursor-pointer"
+                onClick={handleRightClick}
+            >
                 <CartIcon />
             </div>
         </header>
@@ -40,6 +45,7 @@ Header.propTypes = {
     rightIcon: PropTypes.object,
     onLeftClick: PropTypes.func,
     onRightClick: PropTypes.func,
+    className: PropTypes.string,
 };
 
 export default Header;

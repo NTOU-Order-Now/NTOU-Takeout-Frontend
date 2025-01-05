@@ -60,7 +60,7 @@ const getNextStatus = (currentStatus) => {
     }
 };
 
-const OrderCard = ({ order, showStatus = true }) => {
+const CustomerStoreOrderCard = ({ order, showStatus = true }) => {
     const { bgColor, textColor, statusText } = getStatusColors(order.status);
     const { updateOrderStatusAsync, isLoading } = useOrderStatusMutation();
     const setOrderData = useOrderStore((state) => state.setOrderData);
@@ -88,17 +88,19 @@ const OrderCard = ({ order, showStatus = true }) => {
         <div className="relative flex justify-between rounded-lg p-4 shadow-lg mb-6 bg-gray-50">
             {/* Order Info */}
             <div className="flex flex-col items-start text-start">
-                <p className="text-xl font-bold ">
-                    單號： {order.id.slice(-5)}
-                </p>
-                <p className="text-sm font-semibold ">
-                    預估製作時間: {order.estimatedPrepTime} 分鐘
-                </p>
-                <p className="text-sm font-medium">
-                    下單時間: {order.orderTime}
-                </p>
+                <div className="flex flex-col max-w-[200px]">
+                    <p className="text-xl font-bold break-words">
+                        單號： {order.id.slice(-5)}
+                    </p>
+                    <p className="text-sm font-semibold break-words">
+                        預估製作時間: {order.estimatedPrepTime} 分鐘
+                    </p>
+                    <p className="text-sm font-medium break-words">
+                        下單時間: {order.orderTime}
+                    </p>
+                </div>
                 <button
-                    className="bg-orange-500 mt-6 text-white px-3 py-1 text-sm font-bold rounded hover:bg-orange-600"
+                    className="bg-orange-500 mt-6 text-white px-3 py-1 text-sm font-bold rounded hover:bg-orange-600 whitespace-nowrap"
                     onClick={handleSeeDetail}
                 >
                     訂單內容
@@ -129,7 +131,7 @@ const OrderCard = ({ order, showStatus = true }) => {
     );
 };
 
-OrderCard.propTypes = {
+CustomerStoreOrderCard.propTypes = {
     order: PropTypes.shape({
         id: PropTypes.string.isRequired,
         status: PropTypes.string.isRequired,
@@ -143,4 +145,4 @@ OrderCard.propTypes = {
     showStatus: PropTypes.bool,
 };
 
-export default OrderCard;
+export default CustomerStoreOrderCard;

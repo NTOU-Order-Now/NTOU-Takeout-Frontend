@@ -22,18 +22,17 @@ const Cart = () => {
         totalQuantity,
         refetchCart,
     } = useSystemContext();
-    if (cartData === undefined) {
+    if (userInfo && cartData === undefined) {
         console.error("Cart not found, refetchCart");
         refetchCart();
     }
     const navigate = useNavigate();
+    const [remark, setRemark] = useState("");
     const { categoryData, isQueriesSuccess } = useCategoryQueries(
         menuCategoryList,
-        merchantData?.menuId,
+        merchantData?.[0].menuId,
         userInfo !== undefined && userInfo?.role === "CUSTOMER",
     );
-
-    const [remark, setRemark] = useState("");
     // Create a map of dishes for easy access
     const dishesMap = useMemo(() => {
         if (!categoryData) return {};
@@ -45,7 +44,7 @@ const Cart = () => {
         }, {});
     }, [categoryData]);
     // console.debug("cartData:", cartData);
-    // console.debug("merchantData:", merchantData);
+    // console.debug("merchantData:", merchantData?.[0]);
     // console.debug("isMerchantLoading:", isMerchantLoading);
     // console.debug("isQueriesSuccess:", isQueriesSuccess);
     // console.debug("dishesMap:", dishesMap);
@@ -73,14 +72,12 @@ const Cart = () => {
                 <NormalHeader
                     leftIcon={faTimes}
                     title={"購物車"}
-                    handleClick={() => {
-                        navigate(-1);
-                    }}
+                    handleClick={async () => await navigate(-1)}
                 />
                 <CartTotalSpend
                     orderDetail={{
                         cartData: cartData,
-                        merchantName: merchantData?.name,
+                        merchantName: merchantData?.[0].name,
                         totalSpend: totalSpend,
                     }}
                 />

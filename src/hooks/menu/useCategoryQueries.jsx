@@ -1,5 +1,5 @@
 import { useQueries } from "@tanstack/react-query";
-import { getDishsByCategory } from "../../api/menu/getDishsByCategory.js";
+import { getDishsByCategory } from "@/api/menu/getDishsByCategory.js";
 
 export const useCategoryQueries = (
     menuCategoryList,

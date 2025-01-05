@@ -2,10 +2,9 @@ import { useParams } from "react-router-dom";
 import { useRef, useState, useEffect, lazy, Suspense } from "react";
 import { useCategoryQueries } from "../hooks/menu/useCategoryQueries";
 import { useCategoryListQuery } from "../hooks/menu/useCategoryListQuery";
-import useMerchantStore from "../stores/merchantStore";
 import useNavStore from "../stores/merchantMenuNav";
-import getStoreClient from "../api/store/getStoreClient";
 import MenuPageSkeleton from "../skeleton/menu/MenuPageSkeleton.jsx";
+import { useStoreQuery } from "@/hooks/store/useStoreQuery.jsx";
 const NavbarSkeleton = lazy(() => import("../skeleton/menu/NavbarSkeleton"));
 const MenuHeaderSkeleton = lazy(
     () => import("../skeleton/menu/MenuHeaderSkeleton"),
@@ -30,6 +29,13 @@ function Menu() {
     const sectionRefs = useRef([]);
     const [isNavbarFixed, setIsNavbarFixed] = useState(false);
     const setNavbarItems = useNavStore((state) => state.setNavbarItems);
+    const { storeData, isLoading, isError } = useStoreQuery([merchantId]);
+    const { menuCategoryList } = useCategoryListQuery(storeData?.[0].menuId);
+    const { categoryData } = useCategoryQueries(
+        menuCategoryList,
+        storeData?.[0].menuId,
+    );
+    const [selectedDish, setSelectedDish] = useState(null);
 
     // handle scroll to section
     const handleScrollToSection = (index) => {
@@ -51,38 +57,6 @@ function Menu() {
         };
     }, []);
 
-    const getMerchantById = useMerchantStore((state) => state.getMerchantById);
-    const [menuId, setMenuId] = useState(null);
-    const [merchant, setMerchant] = useState(null);
-
-    // get merchant data
-    useEffect(() => {
-        const merchantData = getMerchantById(merchantId);
-        if (merchantData) {
-            setMerchant(merchantData);
-            setMenuId(merchantData?.menuId);
-        } else {
-            // if merchant data is not in store, fetch it
-            const fetchMerchantData = async () => {
-                try {
-                    return await getStoreClient.getMerchantsByIdList([
-                        merchantId,
-                    ]);
-                } catch (error) {
-                    console.error("Failed to fetch merchant data:", error);
-                }
-            };
-            fetchMerchantData().then((res) => {
-                setMerchant(res.data[0]);
-                setMenuId(res.data[0]?.menuId);
-            });
-        }
-    }, [merchantId, getMerchantById]);
-
-    const { menuCategoryList } = useCategoryListQuery(menuId);
-    const { categoryData } = useCategoryQueries(menuCategoryList, menuId);
-    const [selectedDish, setSelectedDish] = useState(null);
-
     // set navbar items
     useEffect(() => {
         setNavbarItems(
@@ -90,14 +64,13 @@ function Menu() {
         );
     }, [menuCategoryList, setNavbarItems]);
 
-    // if merchant data is not fetched yet, show loading spinner
-    if (merchantId && !merchant) {
+    if (isLoading && !storeData) {
         return <MenuPageSkeleton />;
     }
     return (
         <div className="flex flex-col ">
             <Suspense fallback={<MenuHeaderSkeleton />}>
-                <MenuHeader merchantData={merchant} />
+                <MenuHeader merchantData={storeData?.[0]} />
             </Suspense>
             <Suspense fallback={<NavbarSkeleton isNavbarFixed={false} />}>
                 <MenuNavbar

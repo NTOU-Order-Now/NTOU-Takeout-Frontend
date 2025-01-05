@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useActiveTabStore } from "../../stores/common/useActiveTabStore";
+import { useActiveTabStore } from "@/stores/common/useActiveTabStore.js";
 import PropTypes from "prop-types";
 
 const ToggleNavBar = ({
@@ -30,10 +30,10 @@ const ToggleNavBar = ({
 
     return (
         <div
-            className={`relative border border-gray-300 rounded-2xl p-1 ${width}`}
+            className={`relative rounded-2xl p-1 ${width} bg-zinc-100`}
             style={{ height }}
         >
-            <div className="relative w-full h-full flex overflow-hidden rounded-xl">
+            <div className="relative w-full h-full flex overflow-hidden rounded-md">
                 {/* Highlight bar */}
                 <div
                     className="absolute h-full bg-orange-500 transition-transform duration-300 ease-in-out rounded-xl"
@@ -53,7 +53,7 @@ const ToggleNavBar = ({
                                 options[key]();
                             }}
                             className={`
-                                relative flex-1 text-center text-lg font-bold 
+                                relative flex-1 text-center text-[15px] font-semibold font-notoTC py-1
                                 transition-colors duration-300 ease-in-out z-10
                                 ${isActive ? "text-white" : "text-black"}
                             `}

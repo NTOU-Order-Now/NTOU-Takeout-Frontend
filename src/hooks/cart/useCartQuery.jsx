@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { getCart } from "../../api/cart/getCart";
 
 export const useCartQuery = (enabled = true) => {
-    console.debug("isEnable", enabled);
     const {
         data: cartData,
         isLoading,
@@ -11,9 +10,6 @@ export const useCartQuery = (enabled = true) => {
     } = useQuery({
         queryKey: ["cart"],
         queryFn: async ({ signal }) => {
-            if (!enabled) {
-                return null;
-            }
             const res = await getCart(signal);
             return res.data;
         },

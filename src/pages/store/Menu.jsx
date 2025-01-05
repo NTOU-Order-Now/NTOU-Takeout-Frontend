@@ -27,10 +27,10 @@ const Menu = () => {
     const { userInfo, merchantData, menuCategoryList } = useSystemContext();
     const merchantId = userInfo?.id;
     const storeId = userInfo?.storeId;
-    const menuId = merchantData?.menuId;
+    const menuId = merchantData?.[0].menuId;
     const { categoryData } = useCategoryQueries(
         menuCategoryList,
-        merchantData?.menuId,
+        merchantData?.[0].menuId,
         userInfo !== undefined,
     );
     const navigate = useNavigate();
@@ -58,10 +58,6 @@ const Menu = () => {
         );
     }, [menuCategoryList, setNavbarItems]);
 
-    // if merchant data is not fetched yet, show loading spinner
-    if (merchantId && !merchantData) {
-        return <MenuPageSkeleton />;
-    }
     const onAddClick = async () => {
         await createDish(menuId);
     };
@@ -93,7 +89,6 @@ const Menu = () => {
         </button>
     );
 
-    // 取得 categoryNames
     const categoryNames = menuCategoryList.map(
         (category) => category.categoryName,
     );

@@ -1,4 +1,4 @@
-import { useState, lazy } from "react";
+import { lazy } from "react";
 import PropTypes from "prop-types";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -6,23 +6,20 @@ import {
     faArrowLeft,
     faShareNodes,
     faStar,
-    faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
-const MenuInfo = lazy(() => import("./MenuInfo"));
+const MenuInfo = lazy(() => import("./MenuInfoDrawer.jsx"));
 const MenuHeader = ({ merchantData }) => {
     const {
         name,
         distance = 10,
         averageSpend,
         rating,
-        reviewIdList,
         picture,
         id,
     } = merchantData;
     const merchantId = id;
-    const [showMenuInfo, setShowMenuInfo] = useState(false);
     const navigate = useNavigate();
     return (
         <div>
@@ -56,7 +53,7 @@ const MenuHeader = ({ merchantData }) => {
             <div className="relative z-10 bg-white rounded-t-2xl px-4 pt-4 -mt-8 font-notoTC">
                 <div className="flex items-center justify-between">
                     <div className="flex flex-col bg-green">
-                        <h2 className="text-xl font-bold">{name}</h2>
+                        <h2 className="text-xl font-bold mb-5">{name}</h2>
                         <p className="text-gray-400 text-sm">
                             距離您約
                             {distance}
@@ -67,47 +64,33 @@ const MenuHeader = ({ merchantData }) => {
                         </p>
                     </div>
                     <div className="flex flex-col items-end">
-                        <div className="text-xl text-gray-500 ">
-                            <FontAwesomeIcon
-                                icon={faInfoCircle}
-                                onClick={() => setShowMenuInfo(true)}
-                                className="cursor-pointer"
-                            />
+                        <div className="text-xl text-gray-500 mb-5">
+                            <MenuInfo merchantData={merchantData} />
                         </div>
                         <Link to={`/menu/${merchantId}/review`}>
-                            {" "}
-                            <div className="flex items-center mt-3">
+                            <div className="flex flex-row items-center justify-end">
                                 <FontAwesomeIcon
                                     icon={faStar}
-                                    className="text-yellow-400 ml-2 mt-1"
+                                    size="xs"
+                                    className="text-yellow-400"
                                 />
-                                <span className="text-xl font-semibold">
+                                <span className="font-semibold text-xs">
                                     &nbsp;{rating.toFixed(1)}
                                 </span>
-                                <span className="text-gray-400 ml-1 mt-0.5">
-                                    (
-                                    <span className="border-b border-gray-400">
-                                        {reviewIdList.length}+
-                                    </span>
-                                    )
-                                </span>
                             </div>
+                            <span className="text-gray-400 ml-1  underline text-xs">
+                                查看評論
+                            </span>
                         </Link>
                     </div>
                 </div>
             </div>
-            {showMenuInfo && (
-                <MenuInfo
-                    merchantData={merchantData}
-                    onClose={() => setShowMenuInfo(false)}
-                />
-            )}
         </div>
     );
 };
 
 MenuHeader.propTypes = {
-    merchantData: PropTypes.object.isRequired,
+    merchantData: PropTypes.object,
 };
 
 export default MenuHeader;

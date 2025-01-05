@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useCartQuery } from "../hooks/cart/useCartQuery";
-import { useMerchantDataQuery } from "../hooks/merchant/useMerchantDataQuery";
 import { useCategoryListQuery } from "../hooks/menu/useCategoryListQuery";
 import { useUserInfoQuery } from "../hooks/user/useUserInfoQuery.jsx";
 import { SystemContext } from "./SystemContext.jsx";
 import PropTypes from "prop-types";
 import userInfoStore from "../stores/user/userInfoStore.js";
 import Cookies from "js-cookie";
+import { useStoreQuery } from "@/hooks/store/useStoreQuery.jsx";
 
 export const SystemContextProvider = ({ children }) => {
     console.debug("SystemContextProvider mounted");
@@ -23,7 +23,7 @@ export const SystemContextProvider = ({ children }) => {
             setUser(userInfo);
         }
     }, [userInfo, setUser, isUserInfoLoading, setLoading]);
-    console.debug("userInfo", userInfo);
+    // console.debug("userInfo", userInfo);
     const {
         cartData,
         isLoading: isCartLoading,
@@ -34,22 +34,24 @@ export const SystemContextProvider = ({ children }) => {
         !!userInfo && userInfo?.role === "CUSTOMER",
     );
 
-    const { merchantData, isMerchantLoading, refetchMerchantData } =
-        useMerchantDataQuery(
-            userInfo?.role === "CUSTOMER"
-                ? cartData?.storeId
-                : userInfo?.storeId,
-            // don't need fetch when user is undefined or role is MERCHANT
-            userInfo !== undefined,
-        );
-
+    const {
+        storeData: merchantData,
+        isLoading: isMerchantLoading,
+        refetch: refetchMerchantData,
+    } = useStoreQuery(
+        userInfo?.role === "CUSTOMER"
+            ? [cartData?.storeId]
+            : [userInfo?.storeId],
+        // don't need fetch when user is undefined or role is MERCHANT
+        userInfo !== undefined,
+    );
     const {
         menuCategoryList,
         refetch: refetchMenuCategoryList,
         isError: isMenuCategoryListError,
         isLoading: isMenuCategoryListLoading,
     } = useCategoryListQuery(
-        merchantData?.menuId ?? null,
+        merchantData?.[0].menuId ?? null,
         // don't need fetch when user is undefined or role is MERCHANT
         userInfo !== undefined,
     );

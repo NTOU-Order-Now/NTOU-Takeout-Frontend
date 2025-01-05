@@ -1,11 +1,10 @@
 import { API } from "../axios.config";
 import axios from "axios";
-export const getStoreData = async (idList, signal) => {
+export const getStoreDataById = async (idList, signal) => {
     try {
-        const res = await API.post(`/v1/stores/query`, idList, {
+        const res = await API.post(`/v2/stores/query`, idList, {
             signal,
         });
-
         return res.data;
     } catch (error) {
         if (axios.isCancel(error)) {

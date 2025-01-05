@@ -21,7 +21,7 @@ const UserInfo = ({ user, storeData, role }) => {
                     {storeData.name}
                 </p>
                 <button
-                    className="font-notoTC font-medium h-6 text-center text-xs  bg-orange-500 px-2 py-1 rounded-lg text-white"
+                    className="font-notoTC font-medium h-6 text-center text-xs w-15 bg-orange-500 px-2 py-1 whitespace-nowrap flex-shrink-0 rounded-lg text-white"
                     onClick={() => {
                         navigate(`/menu/${storeData.id}`);
                     }}
