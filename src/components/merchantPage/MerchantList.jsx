@@ -1,7 +1,6 @@
 import { useEffect, Suspense } from "react";
 import { useInView } from "react-intersection-observer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import MerchantCard from "./MerchantCard.jsx";
 import MerchantCardSkeleton from "../../skeleton/merchant/MerchantCardSkeleton";
 import { useStoreInfiniteQuery } from "@/hooks/store/useStoreInfiniteQuery.jsx";
@@ -35,6 +34,7 @@ function MerchantList() {
     if (isError) {
         return <div className="text-center">{error}</div>;
     }
+
     if (isLoading) {
         return (
             <div className="py-2 flex items-center justify-center text-lg">
@@ -44,6 +44,17 @@ function MerchantList() {
                     size="lg"
                     className="mr-2"
                 />
+            </div>
+        );
+    }
+
+    if (
+        storeData?.pages.length === 1 &&
+        storeData?.pages[0].content.length === 0
+    ) {
+        return (
+            <div className="py-12 font-notoTC font-bold text-gray-500 flex items-center justify-center text-lg">
+                尋找不到符合篩選條件的店家
             </div>
         );
     }
@@ -71,16 +82,7 @@ function MerchantList() {
                 }),
             )}
             <div ref={ref}>
-                {hasNextPage && isFetchingNextPage && (
-                    <div className="flex items-center justify-center text-lg">
-                        <FontAwesomeIcon
-                            icon={faEllipsis}
-                            beatFade
-                            size="lg"
-                            className="mr-2"
-                        />
-                    </div>
-                )}
+                {hasNextPage && isFetchingNextPage && <MerchantCardSkeleton />}
             </div>
         </div>
     );
