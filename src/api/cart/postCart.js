@@ -4,16 +4,12 @@ import axios from "axios";
 export const postCart = async (signal, payload) => {
     try {
         const authToken = Cookies.get("authToken");
-        const res = await API.post(
-            `/v1/cart/dishes`,
-            payload,
-            {
-                headers: {
-                    Authorization: `Bearer ${authToken}`,
-                },
-                signal,
-            }
-        );
+        const res = await API.post(`/v1/cart/dishes`, payload, {
+            headers: {
+                Authorization: `Bearer ${authToken}`,
+            },
+            signal,
+        });
         return res.data;
     } catch (error) {
         if (axios.isCancel(error)) {
