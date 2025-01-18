@@ -30,7 +30,6 @@ export const useCartAddMutation = () => {
         },
         // optimistic update
         onMutate: async (payload) => {
-            await queryClient.cancelQueries(["cart"]);
             const previousCart = queryClient.getQueryData(["cart"]);
 
             const newCart = previousCart

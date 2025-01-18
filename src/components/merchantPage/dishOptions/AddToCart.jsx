@@ -14,6 +14,7 @@ const AddToCart = ({ dishId, onRequiredMissing, onClose }) => {
     const allDishAttributes = useDishDetailStore(
         (state) => state.allDishAttributes,
     );
+
     const { deleteCartAsync } = useCartDeleteMutation();
     const { postCartAsync } = useCartAddMutation();
     const handleConfirm = async () => {
@@ -34,6 +35,7 @@ const AddToCart = ({ dishId, onRequiredMissing, onClose }) => {
         if (!dishDetail) {
             return;
         }
+
         const choosenAttributes = dishDetail.chosenAttributes || [];
         const requiredAttributes = allDishAttributes[dishId] || [];
 
@@ -59,7 +61,7 @@ const AddToCart = ({ dishId, onRequiredMissing, onClose }) => {
             storeId: dishDetail.storeId,
             quantity: dishDetail.quantity,
             note: dishDetail.note,
-            choosenAttributes: dishDetail.chosenAttributes,
+            chosenAttributes: dishDetail.chosenAttributes,
         };
 
         await postCartAsync(payload);
