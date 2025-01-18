@@ -29,7 +29,7 @@ const CategoryHeader = ({ categoryName, menuId }) => {
         ) {
             toast({
                 title: "類別名稱不可重複",
-                description: "類別名稱幣必須不重複，請重新設定",
+                description: "類別名稱必須不重複，請重新設定",
                 variant: "destructive",
             });
             return;
