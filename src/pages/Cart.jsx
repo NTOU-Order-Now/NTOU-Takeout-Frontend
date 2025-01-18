@@ -48,7 +48,7 @@ const Cart = () => {
     // console.debug("isMerchantLoading:", isMerchantLoading);
     // console.debug("isQueriesSuccess:", isQueriesSuccess);
     // console.debug("dishesMap:", dishesMap);
-    if (cartData === undefined || !isQueriesSuccess) {
+    if (cartData === undefined) {
         return <CartSkeleton />;
     }
     let predictedTime = 10 * totalQuantity;
