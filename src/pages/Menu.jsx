@@ -30,10 +30,10 @@ function Menu() {
     const [isNavbarFixed, setIsNavbarFixed] = useState(false);
     const setNavbarItems = useNavStore((state) => state.setNavbarItems);
     const { storeData, isLoading, isError } = useStoreQuery([merchantId]);
-    const { menuCategoryList } = useCategoryListQuery(storeData?.[0].menuId);
+    const { menuCategoryList } = useCategoryListQuery(storeData?.[0]?.menuId);
     const { categoryData } = useCategoryQueries(
         menuCategoryList,
-        storeData?.[0].menuId,
+        storeData?.[0]?.menuId,
     );
     const [selectedDish, setSelectedDish] = useState(null);
 

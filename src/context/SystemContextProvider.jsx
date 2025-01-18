@@ -51,7 +51,7 @@ export const SystemContextProvider = ({ children }) => {
         isError: isMenuCategoryListError,
         isLoading: isMenuCategoryListLoading,
     } = useCategoryListQuery(
-        merchantData?.[0].menuId ?? null,
+        merchantData?.[0]?.menuId,
         // don't need fetch when user is undefined or role is MERCHANT
         userInfo !== undefined,
     );
