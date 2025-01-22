@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useRegisterMutation } from "../../hooks/loginRegisterPage/useRegisterMutation.jsx";
+import { Loader2 } from "lucide-react";
 
 const RegisterForm = () => {
     const [username, setUsername] = useState("");
@@ -99,46 +98,40 @@ const RegisterForm = () => {
                 {error && (
                     <p className="text-red-500 text-xs pl-2 mb-4">{error}</p>
                 )}
-                <button
-                    type="submit"
-                    className="fixed bottom-[6rem] left-[15%] w-[70%] bg-white border-orange-500 border-2 text-orange-500 py-2 rounded-lg hover:bg-gray-200 transition"
-                    disabled={isPending}
-                    onClick={(e) => handleSubmit(e, "MERCHANT")}
-                >
+                <div className="fixed bottom-[2rem]  h-[140px] flex flex-col justify-between w-[70vw]">
                     {isPending ? (
-                        <FontAwesomeIcon
-                            icon={faSpinner}
-                            spin
-                            className="mr-2"
-                        />
+                        <div className="flex items-center justify-center w-full">
+                            <Loader2 className="animate-spin" />
+                        </div>
                     ) : (
-                        "註冊為商家"
-                    )}
-                </button>
+                        <>
+                            <button
+                                type="submit"
+                                className="fixed bottom-[6rem] left-[15%] w-[70%] bg-white border-orange-500 border-2 text-orange-500 py-2 rounded-lg hover:bg-gray-200 transition"
+                                disabled={isPending}
+                                onClick={(e) => handleSubmit(e, "MERCHANT")}
+                            >
+                                註冊為商家
+                            </button>
 
-                <button
-                    type="submit"
-                    className="fixed bottom-[2rem] left-[15%] w-[70%] bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition"
-                    disabled={isPending}
-                    onClick={(e) => handleSubmit(e, "CUSTOMER")}
-                >
-                    {isPending ? (
-                        <FontAwesomeIcon
-                            icon={faSpinner}
-                            spin
-                            className="mr-2"
-                        />
-                    ) : (
-                        "註冊"
+                            <button
+                                type="submit"
+                                className="fixed bottom-[2rem] left-[15%] w-[70%] bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition"
+                                disabled={isPending}
+                                onClick={(e) => handleSubmit(e, "CUSTOMER")}
+                            >
+                                註冊
+                            </button>
+                            {/*<button*/}
+                            {/*    type="submit"*/}
+                            {/*    className="fixed bottom-[2rem] left-[15%] w-[70%] text-black py-2 rounded-lg border border-gray-600 transition"*/}
+                            {/*>*/}
+                            {/*    <FontAwesomeIcon icon={faGoogle} className="mr-2" />*/}
+                            {/*    使用 Google 帳號登入*/}
+                            {/*</button>*/}
+                        </>
                     )}
-                </button>
-                {/* <button
-                    type="submit"
-                    className="fixed bottom-[2rem] left-[15%] w-[70%] text-black py-2 rounded-lg border border-gray-600 transition"
-                >
-                    <FontAwesomeIcon icon={faGoogle} className="mr-2" />
-                    使用 Google 帳號登入
-                </button> */}
+                </div>
             </form>
         </div>
     );

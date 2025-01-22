@@ -1,21 +1,25 @@
 import { useState, useRef, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../hooks/loginRegisterPage/useLoginMutation.jsx";
-import { faEllipsis } from "@fortawesome/free-solid-svg-icons/faEllipsis";
-import { faGoogle } from "@fortawesome/free-brands-svg-icons";
-import { googleSignIn } from "@/api/auth/googleSignIn.js";
 import { GoogleIcon } from "@/assets/GoogleIcon.jsx";
+import { useAuth } from "@/context/AuthContext.jsx";
+import { Loader2 } from "lucide-react";
 
 const LoginForm = () => {
+    const { loginWithGoogle, currentUser, isLoading } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
     const { loginMutation, isPending, isLoginSuccess } = useLoginMutation();
-
     const loginButtonRef = useRef(null);
 
+    const handleGoogleLogin = async (e) => {
+        e.preventDefault();
+        if (!currentUser) {
+            await loginWithGoogle();
+        }
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -81,52 +85,42 @@ const LoginForm = () => {
                 >
                     忘記密碼
                 </p>
-                <div className="fixed bottom-[2rem] left-1/2 transform -translate-x-1/2 h-[140px] flex flex-col justify-between w-[70vw]">
-                    <button
-                        ref={loginButtonRef}
-                        type="submit"
-                        className="w-full bg-white border-orange-500 border-2 text-orange-500 py-1 rounded-lg hover:bg-gray-200 transition"
-                        disabled={isPending}
-                        onClick={() => {
-                            navigate("/");
-                        }}
-                    >
-                        {isPending ? (
-                            <FontAwesomeIcon
-                                icon={faEllipsis}
-                                beatFade
-                                size="lg"
-                                className="mr-2"
-                            />
-                        ) : (
-                            "返回首頁"
-                        )}
-                    </button>
-                    <button
-                        onClick={googleSignIn}
-                        className="w-full flex items-center justify-center gap-2 text-black py-1 rounded-lg bg-white border-zinc-200 border-2 transition"
-                    >
-                        <GoogleIcon />
-                        <span>Google 登入</span>
-                    </button>
-                    <button
-                        ref={loginButtonRef}
-                        type="submit"
-                        className="w-full bg-orange-500 text-white py-1 rounded-lg hover:bg-orange-600 transition"
-                        disabled={isPending}
-                        onClick={handleSubmit}
-                    >
-                        {isPending ? (
-                            <FontAwesomeIcon
-                                icon={faEllipsis}
-                                beatFade
-                                size="lg"
-                                className="mr-2"
-                            />
-                        ) : (
-                            "登入"
-                        )}
-                    </button>
+                <div className="fixed bottom-[2rem]  h-[140px] flex flex-col justify-between w-[70vw]">
+                    {isPending || isLoading ? (
+                        <div className="flex items-center justify-center w-full">
+                            <Loader2 className="animate-spin" />
+                        </div>
+                    ) : (
+                        <>
+                            <button
+                                ref={loginButtonRef}
+                                type="submit"
+                                className="w-full bg-white border-orange-500 border-2 text-orange-500 py-1 rounded-lg hover:bg-gray-200 transition"
+                                disabled={isPending}
+                                onClick={() => {
+                                    navigate("/");
+                                }}
+                            >
+                                返回首頁
+                            </button>
+                            <button
+                                onClick={handleGoogleLogin}
+                                className="w-full flex items-center justify-center gap-2 text-black py-1 rounded-lg bg-white border-zinc-200 border-2 transition"
+                            >
+                                <GoogleIcon />
+                                <span>Google 登入</span>
+                            </button>
+                            <button
+                                ref={loginButtonRef}
+                                type="submit"
+                                className="w-full bg-orange-500 text-white py-1 rounded-lg hover:bg-orange-600 transition"
+                                disabled={isPending}
+                                onClick={handleSubmit}
+                            >
+                                登入
+                            </button>
+                        </>
+                    )}
                 </div>
             </form>
         </div>
