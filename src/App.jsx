@@ -29,6 +29,7 @@ import MerchantProtectedRoute from "./route/MerchantProtectedRoute.jsx";
 import CustomerProtectedRoute from "./route/CustomerProtectedRoute.jsx";
 import RootLayout from "@/RootLayout.jsx";
 import { WebSocketContextProvider } from "@/context/WebSocketContextProvider.jsx";
+import { AuthProvider } from "@/context/AuthContext.jsx";
 
 const router = createBrowserRouter(
     [
@@ -193,11 +194,13 @@ function App() {
     }, []);
     return (
         <QueryClientProvider client={queryClient}>
-            <SystemContextProvider>
-                <WebSocketContextProvider>
-                    <RouterProvider router={router} />
-                </WebSocketContextProvider>
-            </SystemContextProvider>
+            <AuthProvider>
+                <SystemContextProvider>
+                    <WebSocketContextProvider>
+                        <RouterProvider router={router} />
+                    </WebSocketContextProvider>
+                </SystemContextProvider>
+            </AuthProvider>
             <RootLayout />
             {/*<ReactQueryDevtools initialIsOpen={false} />*/}
         </QueryClientProvider>
