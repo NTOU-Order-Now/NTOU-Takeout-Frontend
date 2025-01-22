@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../hooks/loginRegisterPage/useLoginMutation.jsx";
 import { GoogleIcon } from "@/assets/GoogleIcon.jsx";
@@ -12,8 +12,6 @@ const LoginForm = () => {
     const [error, setError] = useState("");
     const navigate = useNavigate();
     const { loginMutation, isPending, isLoginSuccess } = useLoginMutation();
-    const loginButtonRef = useRef(null);
-
     const handleGoogleLogin = async (e) => {
         e.preventDefault();
         if (!currentUser) {
@@ -42,11 +40,6 @@ const LoginForm = () => {
             setError(err.message || "登入失敗，請稍後再試");
         }
     };
-    useEffect(() => {
-        if (loginButtonRef.current) {
-            loginButtonRef.current.focus();
-        }
-    }, []);
 
     return (
         <div className="mt-8 w-[70vw]">
@@ -93,7 +86,6 @@ const LoginForm = () => {
                     ) : (
                         <>
                             <button
-                                ref={loginButtonRef}
                                 type="submit"
                                 className="w-full bg-white border-orange-500 border-2 text-orange-500 py-1 rounded-lg hover:bg-gray-200 transition"
                                 disabled={isPending}
@@ -105,13 +97,12 @@ const LoginForm = () => {
                             </button>
                             <button
                                 onClick={handleGoogleLogin}
-                                className="w-full flex items-center justify-center gap-2 text-black py-1 rounded-lg bg-white border-zinc-200 border-2 transition"
+                                className="w-full flex items-center justify-center gap-2 text-black py-1 rounded-lg bg-white hover:bg-gray-200 border-zinc-200 border-2 transition"
                             >
                                 <GoogleIcon />
                                 <span>Google 登入</span>
                             </button>
                             <button
-                                ref={loginButtonRef}
                                 type="submit"
                                 className="w-full bg-orange-500 text-white py-1 rounded-lg hover:bg-orange-600 transition"
                                 disabled={isPending}
