@@ -27,3 +27,4 @@ Dockerfile
 .dockerignore
 .devcontainer/
 .env
+src/config/firebase.js
